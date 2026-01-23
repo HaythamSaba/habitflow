@@ -15,7 +15,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <div className="min-h-screen">
       <Navbar displayName={displayName} signOut={signOut} />
-      <div className="flex bg-linear-to-r from-white to-primary-200 min-h-screen">
+      <div className="flex bg-linear-to-r from-white to-primary-100 min-h-screen">
         <SideBar />
         <main className="flex-1 flex flex-col p-4 gap-8 ml-76">{children}</main>
       </div>

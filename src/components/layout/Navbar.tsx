@@ -61,7 +61,7 @@ export default function Navbar({
         <div className="flex-1 p-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3>Happy {currentDay} {displayName} !</h3>
+              <h3>Happy {currentDay} !</h3>
               <p className="text-gray-600 text-sm">{currentDate}</p>
             </div>
             <div className="flex items-center gap-4 relative">
