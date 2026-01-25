@@ -18,6 +18,8 @@ import {
   CheckCircle2,
   Flame,
 } from "lucide-react";
+import { useHabitStreak } from "@/hooks/useHabitStreak";
+import Spinner from "../ui/Spinner";
 
 interface HabitCardProps {
   habit: Habit;
@@ -63,6 +65,19 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
     ? lightenColor(habit.color, 92)
     : "white";
 
+  const { streak, isLoading: isLoadingStreak } = useHabitStreak(habit.id);
+
+  // Helper function (add at top of component, before return)
+  const getStreakColor = (streak: number) => {
+    if (streak >= 30) {
+      return "bg-orange-100 text-orange-700 border border-orange-300";
+    } else if (streak >= 7) {
+      return "bg-yellow-100 text-yellow-700 border border-yellow-300";
+    } else {
+      return "bg-gray-100 text-gray-600 border border-gray-300";
+    }
+  };
+
   return (
     <div
       className="rounded-xl p-4 border-l-4 shadow-sm hover:shadow-md transition-all duration-200"
@@ -88,13 +103,13 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
         {/* Content */}
         <div className="flex-1">
           <div className="flex items-center gap-2 flex-wrap">
-            <div className="p-2 rounded-full bg-white" style={{ backgroundColor: habit.color }} >
+            <div
+              className="p-2 rounded-full bg-white"
+              style={{ backgroundColor: habit.color }}
+            >
               {HABIT_ICONS.filter((icon) => icon.name === habit.icon).map(
                 (icon) => (
-                  <icon.icon
-                    key={icon.name}
-                    className={`w-5 h-5 text-white`}
-                  />
+                  <icon.icon key={icon.name} className={`w-5 h-5 text-white`} />
                 ),
               )}
             </div>
@@ -130,8 +145,22 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
                 {habit.target_count}x per day
               </span>
             )}
+            <div className="flex items-center gap-2">
+              {isLoadingStreak ? (
+                <Spinner />
+              ) : (
+                streak > 0 && (
+                  <span
+                    className={`text-xs px-2 py-1 rounded-full font-semibold flex items-center gap-1 ${getStreakColor(streak)}`}
+                    title={`${streak} day streak! Keep it up! 🔥`}
+                  >
+                    <span>🔥</span>
+                    <span>{streak}</span>
+                  </span>
+                )
+              )}
+            </div>
           </div>
-
           {/* Description */}
           {habit.description && (
             <p

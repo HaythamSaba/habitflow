@@ -142,3 +142,22 @@ export async function getHabitCompletionCountToday(
   if (error) throw new Error(error.message);
   return count || 0;
 }
+
+/**
+ * Get all completions for a specific habit
+ * Used for: Calculating streaks, viewing history
+ */
+export async function getHabitCompletions(
+  habitId: string, 
+  userId: string
+) {
+  const { data, error } = await supabase
+    .from("completions")
+    .select("*")
+    .eq("habit_id", habitId)
+    .eq("user_id", userId)
+    .order("completed_at", { ascending: false }); // Newest first
+
+  if (error) throw new Error(error.message);
+  return data || [];
+}
