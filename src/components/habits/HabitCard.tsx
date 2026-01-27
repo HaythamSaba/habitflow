@@ -65,7 +65,11 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
     ? lightenColor(habit.color, 92)
     : "white";
 
-  const { streak, isLoading: isLoadingStreak } = useHabitStreak(habit.id);
+  const {
+    currentStreak,
+    longestStreak,
+    isLoading: isLoadingStreak,
+  } = useHabitStreak(habit.id);
 
   // Helper function (add at top of component, before return)
   const getStreakColor = (streak: number) => {
@@ -77,6 +81,8 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
       return "bg-gray-100 text-gray-600 border border-gray-300";
     }
   };
+
+  const isNewRecord = currentStreak > 0 && currentStreak === longestStreak;
 
   return (
     <div
@@ -149,15 +155,29 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
               {isLoadingStreak ? (
                 <Spinner />
               ) : (
-                streak > 0 && (
-                  <span
-                    className={`text-xs px-2 py-1 rounded-full font-semibold flex items-center gap-1 ${getStreakColor(streak)}`}
-                    title={`${streak} day streak! Keep it up! 🔥`}
-                  >
-                    <span>🔥</span>
-                    <span>{streak}</span>
-                  </span>
-                )
+                <>
+                  {/* Current Streak */}
+                  {currentStreak > 0 && (
+                    <span
+                      className={`text-xs px-2 py-1 rounded-full font-semibold flex items-center gap-1 transition-all duration-300 animate-fadeIn ${getStreakColor(currentStreak)}`}
+                      title={`Current ${currentStreak} day streak`}
+                    >
+                      <span>{isNewRecord ? "🎉" : "🔥"}</span>
+                      <span>{currentStreak}</span>
+                    </span>
+                  )}
+
+                  {/* Longest Streak (only if different from current) */}
+                  {longestStreak > currentStreak && (
+                    <span
+                      className="text-xs px-2 py-1 rounded-full font-semibold flex items-center gap-1 bg-purple-100 text-purple-700 border border-purple-300 transition-all duration-300 animate-fadeIn"
+                      title={`Personal best streak: ${longestStreak} days`}
+                    >
+                      <span>🏆</span>
+                      <span>{longestStreak}</span>
+                    </span>
+                  )}
+                </>
               )}
             </div>
           </div>

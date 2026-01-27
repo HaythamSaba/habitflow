@@ -67,3 +67,54 @@ function subtractOneDay(dateStr: string): string {
   date.setDate(date.getDate() - 1);
   return date.toISOString().split("T")[0];
 }
+
+export function calculateLongestStreak(completions: Completion[]): number {
+  // STEP 1: Handle empty case
+  if (!completions || completions.length === 0) {
+    return 0;
+  }
+
+  // STEP 2: Get unique dates
+  const uniqueDates = Array.from(
+    new Set(
+      completions.map(
+        (c) => new Date(c.completed_at).toISOString().split("T")[0],
+      ),
+    ),
+  );
+
+  // STEP 3: Sort dates from newest to oldest
+  uniqueDates.sort((a, b) => b.localeCompare(a));
+
+  // Edge case: Only 1 unique date
+  if (uniqueDates.length === 1) {
+    return 1;
+  }
+
+  // STEP 4: Find all streaks in history
+  const streaks: number[] = [];
+  let currentStreak = 1;
+
+  for (let i = 1; i < uniqueDates.length; i++) {
+    const previousDate = uniqueDates[i - 1]; // Newer date
+    const currentDate = uniqueDates[i]; // Older date
+
+    // Check if dates are consecutive (1 day apart)
+    const expectedDate = subtractOneDay(previousDate);
+
+    if (currentDate === expectedDate) {
+      // ✅ Consecutive! Continue counting
+      currentStreak += 1;
+    } else {
+      // ❌ Gap found! Save this streak and start new one
+      streaks.push(currentStreak);
+      currentStreak = 1;
+    }
+  }
+
+  // ⭐ Don't forget the last streak!
+  streaks.push(currentStreak);
+
+  // STEP 5: Return the longest streak
+  return Math.max(...streaks);
+}

@@ -5,11 +5,14 @@ import HabitsContianer from "@/components/habits/HabitsContianer";
 import { useHabits } from "@/hooks/useHabits";
 import TodayProgress from "@/components/dashboard/TodayProgress";
 import { useCompletions } from "@/hooks/useCompletions";
+import { useDashboardStreak } from "@/hooks/useDashboardStreak";
 
 export function DashboardPage() {
   const { user } = useAuth();
   const { habits } = useHabits();
   const { completions } = useCompletions();
+  const { maxStreak } = useDashboardStreak(); // ⭐ NEW
+
   // Extract display name from user metadata or email
   const displayName =
     user?.user_metadata?.display_name || user?.email?.split("@")[0] || "User";
@@ -28,7 +31,8 @@ export function DashboardPage() {
       {/* Welcome Section */}
       <div>
         <h2 className="text-3xl font-bold text-gray-900 mb-2">
-          Welcome back, <span className="text-primary-500 ">{displayName}</span> ! 👋
+          Welcome back, <span className="text-primary-500 ">{displayName}</span>{" "}
+          ! 👋
         </h2>
         <p className="text-gray-600">
           Ready to continue your habit journey? Let's make today count!
@@ -46,7 +50,7 @@ export function DashboardPage() {
               className="text-2xl font-bold text-gray-900"
               style={{ fontFamily: "Sora, sans-serif" }}
             >
-              {habits?.length || 0} {/* ✅ Real habit count */}
+              {habits?.length || 0}
             </span>
           </div>
           <h3 className="text-sm font-medium text-gray-600 mb-1">
@@ -59,24 +63,29 @@ export function DashboardPage() {
           </p>
         </div>
 
-        {/* Current Streak Card */}
+        {/* Current Streak Card - ⭐ UPDATED */}
         <div className="card bg-white rounded-xl p-6 border border-gray-200 shadow-md shadow-primary-100 hover:shadow-xl transition-all hover:scale-105">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
               <TrendingUp className="w-6 h-6 text-secondary" />
             </div>
             <span
-              className="text-2xl font-bold text-gray-900"
+              className="text-2xl font-bold text-gray-900 flex items-center gap-2"
               style={{ fontFamily: "Sora, sans-serif" }}
             >
-              0
+              {maxStreak > 0 && <span>🔥</span>}
+              {maxStreak}
             </span>
           </div>
           <h3 className="text-sm font-medium text-gray-600 mb-1">
             Current Streak
           </h3>
           <p className="text-xs text-gray-500">
-            Complete habits daily to build streaks
+            {maxStreak === 0 && "Start a habit today!"}
+            {maxStreak === 1 && "Great start!"}
+            {maxStreak >= 2 && maxStreak < 7 && "Keep it up!"}
+            {maxStreak >= 7 && maxStreak < 30 && "On fire! 🔥"}
+            {maxStreak >= 30 && "Incredible! 🏆"}
           </p>
         </div>
 
@@ -137,7 +146,6 @@ export function DashboardPage() {
           completion tracking, and more!
         </p>
       </div>
-      {/* ... rest of your dashboard content ... */}
     </DashboardLayout>
   );
 }
