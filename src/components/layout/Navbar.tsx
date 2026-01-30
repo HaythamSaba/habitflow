@@ -2,7 +2,7 @@ import { ChevronDown, LogOut, Moon, Settings } from "lucide-react";
 import { Button } from "../ui/Button";
 import { useRef, useState } from "react";
 import { useClickOutside } from "@/hooks/useClickOutside";
-
+import { LevelBadge } from "@/components/ui/LevelBadge";
 export default function Navbar({
   displayName,
   signOut,
@@ -65,6 +65,7 @@ export default function Navbar({
               <p className="text-gray-600 text-sm">{currentDate}</p>
             </div>
             <div className="flex items-center gap-4 relative">
+              <LevelBadge />
               <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer">
                 <Moon className="w-5 h-5 text-gray-600" />
               </button>

@@ -1,35 +1,53 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "./useAuth";
+import { useCompletions } from "./useCompletions";
 import {
   createCompletion,
-  getTodayCompletions,
   deleteCompletion,
+  updateUserPoints,
 } from "@/lib/api";
-import { useAuth } from "./useAuth";
-import toast from "react-hot-toast";
+import { POINTS_PER_COMPLETION } from "@/lib/points";
 
 export function useToggleCompletion() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { getHabitCompletionCount, getHabitCompletionIds } = useCompletions();
 
   return useMutation({
-    mutationFn: async (habitId: string) => {
-      if (!user) throw new Error("Not logged in");
+    mutationFn: async ({
+      habitId,
+      targetCount,
+    }: {
+      habitId: string;
+      targetCount: number;
+    }) => {
+      if (!user) throw new Error("Not authenticated");
 
-      const completions = await getTodayCompletions(user.id);
-      const existing = completions.find((c) => c.habit_id === habitId);
+      const currentCount = getHabitCompletionCount(habitId);
 
-      if (existing) {
-        await deleteCompletion(existing.id, user.id);
-        return "removed";
+      if (currentCount >= targetCount) {
+        // Remove one completion
+        const completionIds = getHabitCompletionIds(habitId);
+        const lastCompletionId = completionIds[completionIds.length - 1];
+
+        if (lastCompletionId) {
+          await deleteCompletion(lastCompletionId, user.id);
+          // Deduct points (negative)
+          await updateUserPoints(user.id, -POINTS_PER_COMPLETION);
+        }
       } else {
+        // Add completion
         await createCompletion(habitId, user.id);
-        return "added";
+        // Award points!
+        await updateUserPoints(user.id, POINTS_PER_COMPLETION);
       }
     },
-
-    onSuccess: (result) => {
+    onSuccess: () => {
+      // Invalidate all related queries
+      queryClient.invalidateQueries({ queryKey: ["habits"] });
       queryClient.invalidateQueries({ queryKey: ["completions"] });
-      toast.success(result === "added" ? "✓ Done!" : "Unmarked");
+      queryClient.invalidateQueries({ queryKey: ["user-stats"] }); // ⭐ NEW
     },
   });
 }
+ 

@@ -147,10 +147,7 @@ export async function getHabitCompletionCountToday(
  * Get all completions for a specific habit
  * Used for: Calculating streaks, viewing history
  */
-export async function getHabitCompletions(
-  habitId: string, 
-  userId: string
-) {
+export async function getHabitCompletions(habitId: string, userId: string) {
   const { data, error } = await supabase
     .from("completions")
     .select("*")
@@ -160,4 +157,49 @@ export async function getHabitCompletions(
 
   if (error) throw new Error(error.message);
   return data || [];
+}
+
+/**
+ * Get user stats (points, level, etc.)
+ */
+export async function getUserStats(userId: string) {
+  console.log("🔍 getUserStats called with userId:", userId);
+
+  const { data, error } = await supabase
+    .from("user_stats")
+    .select("*")
+    .eq("user_id", userId)
+    .single();
+
+  console.log("📊 getUserStats response:", { data, error });
+
+  if (error) {
+    console.error("❌ getUserStats error:", error);
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+/**
+ * Update user's total points
+ */
+export async function updateUserPoints(userId: string, pointsToAdd: number) {
+  // First, get current points
+  const stats = await getUserStats(userId);
+  const newTotal = (stats.total_points || 0) + pointsToAdd;
+
+  // Update with new total
+  const { data, error } = await supabase
+    .from("user_stats")
+    .update({
+      total_points: newTotal,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("user_id", userId)
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+  return data;
 }

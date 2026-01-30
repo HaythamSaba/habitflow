@@ -56,8 +56,10 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
   // ⭐ Handle toggle
   const handleToggle = () => {
     if (isLoading) return;
-
-    toggleCompletion.mutate(habit.id);
+    toggleCompletion.mutate({
+      habitId: habit.id,
+      targetCount: habit.target_count,
+    });
   };
 
   // ⭐ Get background color based on completion

@@ -6,12 +6,15 @@ import { useHabits } from "@/hooks/useHabits";
 import TodayProgress from "@/components/dashboard/TodayProgress";
 import { useCompletions } from "@/hooks/useCompletions";
 import { useDashboardStreak } from "@/hooks/useDashboardStreak";
+import { useUserStats } from "@/hooks/useUserStats";
+import LevelProgress from "@/components/dashboard/LevelProgress";
 
 export function DashboardPage() {
   const { user } = useAuth();
   const { habits } = useHabits();
   const { completions } = useCompletions();
-  const { maxStreak } = useDashboardStreak(); // ⭐ NEW
+  const { maxStreak } = useDashboardStreak();
+  const { totalPoints, levelData } = useUserStats();
 
   // Extract display name from user metadata or email
   const displayName =
@@ -29,15 +32,19 @@ export function DashboardPage() {
   return (
     <DashboardLayout>
       {/* Welcome Section */}
-      <div>
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">
-          Welcome back, <span className="text-primary-500 ">{displayName}</span>{" "}
-          ! 👋
-        </h2>
-        <p className="text-gray-600">
-          Ready to continue your habit journey? Let's make today count!
-        </p>
+      <div className="flex items-center justify-between gap-18 mb-6">
+        <div>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            Welcome back,{" "}
+            <span className="text-primary-500 ">{displayName}</span> ! 👋
+          </h2>
+          <p className="text-gray-600">
+            Ready to continue your habit journey? Let's make today count!
+          </p>
+        </div>
+        <LevelProgress />
       </div>
+
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 ">
         {/* Total Habits Card */}
@@ -124,7 +131,8 @@ export function DashboardPage() {
               className="text-2xl font-bold text-gray-900"
               style={{ fontFamily: "Sora, sans-serif" }}
             >
-              0
+              {levelData?.emoji}
+              {totalPoints}
             </span>
           </div>
           <h3 className="text-sm font-medium text-gray-600 mb-1">
