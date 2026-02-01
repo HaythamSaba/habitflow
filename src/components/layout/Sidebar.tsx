@@ -3,12 +3,14 @@ import {
   LayoutDashboard,
   Settings,
   SquareCheckBig,
+  Trophy,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
   { path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { path: "/habits", icon: SquareCheckBig, label: "Habits" },
+  { path: "/achievements", icon: Trophy, label: "Achievements" },
   { path: "/analytics", icon: ChartSpline, label: "Analytics" },
   { path: "/settings", icon: Settings, label: "Settings" },
 ];

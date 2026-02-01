@@ -12,6 +12,7 @@ import { HabitsPage } from "./pages/HabitsPage";
 import { SettingsPage } from "./pages/SettingsPage";
 
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
+import { AchievementsPage } from "./pages/AchievementsPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -95,7 +96,14 @@ function AppContent() {
             </ProtectedRoute>
           }
         />
-
+        <Route
+          path="/achievements"
+          element={
+            <ProtectedRoute>
+              <AchievementsPage />
+            </ProtectedRoute>
+          }
+        />
         {/* Redirect root to dashboard */}
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
 

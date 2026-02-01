@@ -203,3 +203,120 @@ export async function updateUserPoints(userId: string, pointsToAdd: number) {
   if (error) throw new Error(error.message);
   return data;
 }
+
+/**
+ * ============================================
+ * ACHIEVEMENT API FUNCTIONS
+ * ============================================
+ */
+
+// Get All Achievements
+/**
+ * ============================================
+ * ACHIEVEMENT API FUNCTIONS
+ * ============================================
+ */
+
+/**
+ * Get all achievements (master list)
+ */
+export async function getAllAchievements() {
+  const { data, error } = await supabase
+    .from("achievements")
+    .select("*")
+    .order("sort_order", { ascending: true });
+
+  if (error) throw new Error(error.message);
+  return data || [];
+}
+
+/**
+ * Get user's unlocked achievements
+ */
+export async function getUserAchievements(userId: string) {
+  const { data, error } = await supabase
+    .from("user_achievements")
+    .select(
+      `
+      *,
+      achievement:achievements(*)
+    `,
+    )
+    .eq("user_id", userId);
+
+  if (error) throw new Error(error.message);
+  return data || [];
+}
+
+/**
+ * Unlock an achievement for a user
+ */
+export async function unlockAchievement(userId: string, achievementId: string) {
+  // Check if already unlocked
+  const { data: existing } = await supabase
+    .from("user_achievements")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("achievement_id", achievementId)
+    .maybeSingle();
+
+  if (existing) {
+    return { alreadyUnlocked: true, data: existing };
+  }
+
+  // Unlock the achievement
+  const { data, error } = await supabase
+    .from("user_achievements")
+    .insert({
+      user_id: userId,
+      achievement_id: achievementId,
+      unlocked_at: new Date().toISOString(),
+      progress: 100, // 100% since it's unlocked
+    })
+    .select(
+      `
+      *,
+      achievement:achievements(*)
+    `,
+    )
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  // Award bonus points
+  if (data.achievement) {
+    const pointsReward = data.achievement.points_reward || 0;
+    if (pointsReward > 0) {
+      await updateUserPoints(userId, pointsReward);
+    }
+  }
+
+  return { alreadyUnlocked: false, data };
+}
+
+/**
+ * Update progress on an achievement
+ */
+export async function updateAchievementProgress(
+  userId: string,
+  achievementId: string,
+  progress: number,
+) {
+  const { data, error } = await supabase
+    .from("user_achievements")
+    .upsert(
+      {
+        user_id: userId,
+        achievement_id: achievementId,
+        progress: progress,
+      },
+      {
+        onConflict: "user_id,achievement_id",
+      },
+    )
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+  return data;
+}
