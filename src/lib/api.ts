@@ -320,3 +320,12 @@ export async function updateAchievementProgress(
   if (error) throw new Error(error.message);
   return data;
 }
+
+export async function updateUserProfile(displayName: string) {
+  const { data, error } = await supabase.auth.updateUser({
+    data: { display_name: displayName }, // ← Updates user metadata!
+  });
+
+  if (error) throw new Error(error.message);
+  return data;
+}
