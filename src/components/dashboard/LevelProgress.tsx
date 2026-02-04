@@ -9,7 +9,7 @@ export default function LevelProgress() {
   const isMaxLevel = pointsToNext === 0;
 
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm border- border-gray-200 flex-1 ">
+    <div className="bg-secondary-300 rounded-xl p-6 shadow-sm border- border-gray-200 flex-1 ">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <span className="text-2xl">{levelData.emoji}</span>

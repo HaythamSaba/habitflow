@@ -1,6 +1,8 @@
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useUpdateUserInfo } from "@/hooks/useUpdateUserInfo";
 import {
@@ -22,6 +24,7 @@ type SettingsFormData = {
 
 export function SettingsPage() {
   const { user, signOut } = useAuth();
+  const { theme } = useTheme();
   const updateUserInfo = useUpdateUserInfo();
 
   const [originalName, setUserName] = useState("");
@@ -153,14 +156,19 @@ export function SettingsPage() {
 
             <div className="space-y-4">
               {/* Dark Mode (Coming Soon) */}
-              <div className="flex items-center justify-between py-3 border-b border-gray-200">
+              <div className="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
                 <div>
-                  <h3 className="text-sm font-medium text-gray-900">
-                    🌙 Dark Mode
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    {theme === "dark" ? "🌙" : "☀️"}{" "}
+                    {theme === "dark" ? "Dark Mode" : "Light Mode"}
                   </h3>
-                  <p className="text-xs text-gray-500 mt-1">Coming soon!</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {theme === "dark"
+                      ? "Dark theme active"
+                      : "Light theme active"}
+                  </p>
                 </div>
-                <div className="w-12 h-6 bg-gray-200 rounded-full opacity-50 cursor-not-allowed" />
+                <ThemeToggle /> {/* ⭐ REPLACE the placeholder toggle */}
               </div>
 
               {/* Notifications (Coming Soon) */}

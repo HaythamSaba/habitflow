@@ -20,12 +20,14 @@ import {
 } from "lucide-react";
 import { useHabitStreak } from "@/hooks/useHabitStreak";
 import Spinner from "../ui/Spinner";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface HabitCardProps {
   habit: Habit;
   onEdit: (habit: Habit) => void;
   onDelete: (habitId: string) => void;
 }
+
 const HABIT_ICONS = [
   { name: "dumbbell", icon: Dumbbell, label: "Exercise" },
   { name: "book", icon: Book, label: "Reading" },
@@ -40,20 +42,19 @@ const HABIT_ICONS = [
   { name: "check", icon: CheckCircle2, label: "Task" },
   { name: "flame", icon: Flame, label: "Streak" },
 ];
+
 export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
-  // ⭐ Get completion data
-  const { isHabitCompletedToday, getHabitCompletionCount } = useCompletions(); // ← Fixed!
+  const { theme } = useTheme();
+  const { isHabitCompletedToday, getHabitCompletionCount } = useCompletions();
   const toggleCompletion = useToggleCompletion();
   const isCompleted = isHabitCompletedToday(habit.id);
 
-  // ⭐ Calculate completion status
   const completionCount = getHabitCompletionCount(habit.id);
   const isFullyCompleted = completionCount >= habit.target_count;
   const isPartiallyCompleted =
     completionCount > 0 && completionCount < habit.target_count;
   const isLoading = toggleCompletion.isPending;
 
-  // ⭐ Handle toggle
   const handleToggle = () => {
     if (isLoading) return;
     toggleCompletion.mutate({
@@ -62,40 +63,43 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
     });
   };
 
-  // ⭐ Get background color based on completion
-  const backgroundColor = isFullyCompleted
-    ? lightenColor(habit.color, 92)
-    : "white";
-
   const {
     currentStreak,
     longestStreak,
     isLoading: isLoadingStreak,
   } = useHabitStreak(habit.id);
 
-  // Helper function (add at top of component, before return)
   const getStreakColor = (streak: number) => {
     if (streak >= 30) {
-      return "bg-orange-100 text-orange-700 border border-orange-300";
+      return "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 border border-orange-300 dark:border-orange-700";
     } else if (streak >= 7) {
-      return "bg-yellow-100 text-yellow-700 border border-yellow-300";
+      return "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 border border-yellow-300 dark:border-yellow-700";
     } else {
-      return "bg-gray-100 text-gray-600 border border-gray-300";
+      return "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-gray-600";
     }
   };
 
   const isNewRecord = currentStreak > 0 && currentStreak === longestStreak;
 
+  // Smart background color based on theme
+  const getBackgroundColor = () => {
+    if (!isFullyCompleted) return "transparent";
+
+    return theme === "dark"
+      ? lightenColor(habit.color, 29) // Dark mode: 15% lightness
+      : lightenColor(habit.color, 92); // Light mode: 92% lightness
+  };
+
   return (
     <div
-      className="rounded-xl p-4 border-l-4 shadow-sm hover:shadow-md transition-all duration-200"
+      className="rounded-xl p-4 border-l-4 shadow-sm hover:shadow-md transition-all duration-200 bg-white dark:bg-gray-800"
       style={{
         borderLeftColor: habit.color,
-        backgroundColor,
+        backgroundColor: getBackgroundColor(),
       }}
     >
       <div className="flex items-center justify-between gap-4">
-        {/* ⭐ Checkbox - Now functional! */}
+        {/* Checkbox */}
         <button
           onClick={handleToggle}
           disabled={isLoading}
@@ -104,7 +108,7 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
           {isCompleted ? (
             <CircleCheck className="w-6 h-6" style={{ color: habit.color }} />
           ) : (
-            <Circle className="w-6 h-6 text-gray-400" />
+            <Circle className="w-6 h-6 text-gray-400 dark:text-gray-500" />
           )}
         </button>
 
@@ -112,30 +116,30 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
         <div className="flex-1">
           <div className="flex items-center gap-2 flex-wrap">
             <div
-              className="p-2 rounded-full bg-white"
+              className="p-2 rounded-full"
               style={{ backgroundColor: habit.color }}
             >
               {HABIT_ICONS.filter((icon) => icon.name === habit.icon).map(
                 (icon) => (
-                  <icon.icon key={icon.name} className={`w-5 h-5 text-white`} />
+                  <icon.icon key={icon.name} className="w-5 h-5 text-white" />
                 ),
               )}
             </div>
             <h3
-              className={`font-bold text-lg ${isCompleted ? "line-through opacity-60" : ""}`}
+              className={`font-bold text-lg text-gray-900 dark:text-gray-100 ${isCompleted ? "line-through opacity-60" : ""}`}
             >
               {habit.name}
             </h3>
 
-            {/* ⭐ Task 5: Completion counter badge */}
+            {/* Completion counter badge */}
             {habit.target_count > 1 && (
               <span
                 className={`text-xs px-2 py-1 rounded-full font-semibold transition-colors ${
                   isFullyCompleted
-                    ? "bg-green-100 text-green-700"
+                    ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
                     : isPartiallyCompleted
-                      ? "bg-yellow-100 text-yellow-700"
-                      : "bg-gray-100 text-gray-600"
+                      ? "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400"
+                      : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
                 }`}
               >
                 {completionCount}/{habit.target_count}
@@ -143,16 +147,18 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
             )}
 
             {/* Frequency badge */}
-            <span className="text-xs bg-gray-100 px-2 py-1 rounded capitalize">
+            <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded capitalize">
               {habit.frequency}
             </span>
 
-            {/* Target count (only show if target is 1) */}
+            {/* Target count */}
             {habit.target_count === 1 && (
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-gray-500 dark:text-gray-400">
                 {habit.target_count}x per day
               </span>
             )}
+
+            {/* Streaks */}
             <div className="flex items-center gap-2">
               {isLoadingStreak ? (
                 <Spinner />
@@ -169,10 +175,10 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
                     </span>
                   )}
 
-                  {/* Longest Streak (only if different from current) */}
+                  {/* Longest Streak */}
                   {longestStreak > currentStreak && (
                     <span
-                      className="text-xs px-2 py-1 rounded-full font-semibold flex items-center gap-1 bg-purple-100 text-purple-700 border border-purple-300 transition-all duration-300 animate-fadeIn"
+                      className="text-xs px-2 py-1 rounded-full font-semibold flex items-center gap-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border border-purple-300 dark:border-purple-700 transition-all duration-300 animate-fadeIn"
                       title={`Personal best streak: ${longestStreak} days`}
                     >
                       <span>🏆</span>
@@ -183,10 +189,11 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
               )}
             </div>
           </div>
+
           {/* Description */}
           {habit.description && (
             <p
-              className={`text-sm text-gray-600 mt-1 ${
+              className={`text-sm text-gray-600 dark:text-gray-400 mt-1 ${
                 isFullyCompleted ? "line-through opacity-60" : ""
               }`}
             >
@@ -201,7 +208,7 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
             size="sm"
             variant="ghost"
             onClick={() => onEdit(habit)}
-            disabled={isLoading} // ⭐ Disable during loading
+            disabled={isLoading}
           >
             <Pencil className="w-4 h-4" />
           </Button>
@@ -209,8 +216,8 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
             size="sm"
             variant="ghost"
             onClick={() => onDelete(habit.id)}
-            disabled={isLoading} // ⭐ Disable during loading
-            className="text-red-600 hover:bg-red-50"
+            disabled={isLoading}
+            className="text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
           >
             <Trash2 className="w-4 h-4" />
           </Button>

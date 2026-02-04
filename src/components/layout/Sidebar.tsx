@@ -21,7 +21,7 @@ export default function SideBar() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <aside className="w-76 min-h-screen border-r border-gray-300 bg-white fixed  ">
+    <aside className="w-76 min-h-screen border-r border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 fixed  ">
       <nav className="p-4">
         <div className="flex flex-col gap-1">
           {navItems.map(({ path, icon: Icon, label }) => (
@@ -31,7 +31,7 @@ export default function SideBar() {
               className={`flex flex-row gap-2 p-2 rounded-xl font-semibold cursor-pointer transition duration-300 ease-in-out ${
                 isActive(path)
                   ? "bg-primary-500 text-white shadow-sm"
-                  : "text-gray-700 hover:bg-gray-100"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
               <Icon className="w-5 h-5" />
