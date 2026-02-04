@@ -74,7 +74,7 @@ export function Modal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className={`relative w-full ${sizeClasses[size]} bg-white rounded-2xl shadow-2xl max-h-[90vh] flex flex-col`}
+            className={`relative w-full ${sizeClasses[size]} bg-white dark:bg-gray-950 rounded-2xl shadow-2xl max-h-[90vh] flex flex-col`}
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
@@ -86,7 +86,7 @@ export function Modal({
                 {title && (
                   <h2
                     id="modal-title"
-                    className="text-xl font-bold text-gray-900"
+                    className="text-xl font-bold text-gray-900 dark:text-gray-100"
                     style={{ fontFamily: 'Sora, sans-serif' }}
                   >
                     {title}
@@ -111,7 +111,7 @@ export function Modal({
 
             {/* Footer */}
             {footer && (
-              <div className="flex items-center rounded-2xl justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-gray-50">
+              <div className="flex items-center rounded-b-2xl justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-gray-50 dark:bg-gray-900 dark:border-gray-800">
                 {footer}
               </div>
             )}

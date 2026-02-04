@@ -9,7 +9,7 @@ export default function LevelProgress() {
   const isMaxLevel = pointsToNext === 0;
 
   return (
-    <div className="bg-secondary-300 rounded-xl p-6 shadow-sm border- border-gray-200 flex-1 ">
+    <div className="bg-primary-500 rounded-xl p-6 shadow-sm border- border-gray-200 flex-1 ">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <span className="text-2xl">{levelData.emoji}</span>
@@ -17,7 +17,7 @@ export default function LevelProgress() {
             <h3 className="text-sm font-semibold text-gray-900">
               Level {currentLevel} - {levelData.label}
             </h3>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-100">
               {isMaxLevel
                 ? "Max level reached!"
                 : `${pointsToNext} points to Level ${currentLevel + 1}`}
@@ -28,7 +28,7 @@ export default function LevelProgress() {
           <p className="text-2xl font-bold" style={{ color: levelData.color }}>
             {totalPoints}
           </p>
-          <p className="text-xs text-gray-500">Total Points</p>
+          <p className="text-xs text-gray-100">Total Points</p>
         </div>
       </div>
 

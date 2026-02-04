@@ -45,7 +45,7 @@ export default function Navbar({
   };
 
   return (
-    <header className="bg-white border-b border-gray-300 dark:border-gray-700 sticky top-0 z-10 dark:bg-gray-800 ">
+    <header className="bg-white border-b border-gray-300 dark:border-gray-700 sticky top-0 z-10 dark:bg-gray-950 ">
       <div className="container mx-auto flex items-center">
         <div className="flex items-center gap-3 border-r border-gray-300 dark:border-gray-700 pr-4 md:pr-8 p-4 h-22 w-76">
           <div className="w-10 h-10 flex items-center justify-center">

@@ -86,8 +86,8 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
     if (!isFullyCompleted) return "transparent";
 
     return theme === "dark"
-      ? lightenColor(habit.color, 29) // Dark mode: 15% lightness
-      : lightenColor(habit.color, 92); // Light mode: 92% lightness
+      ? lightenColor(habit.color, 20)
+      : lightenColor(habit.color, 92);
   };
 
   return (

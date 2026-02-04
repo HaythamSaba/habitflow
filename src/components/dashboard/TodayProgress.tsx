@@ -24,7 +24,7 @@ export function TodayProgress() {
   if (totalHabits === 0) return null;
 
   return (
-    <div className="bg-white dark:bg-gray-800 flex-1 rounded-xl p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl  border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-500">
+    <div className="bg-white dark:bg-gray-950 flex-1 rounded-xl p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl  border-gray-200 dark:border-primary-700 hover:shadow-xl transition-shadow duration-500">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
@@ -46,9 +46,14 @@ export function TodayProgress() {
       {/* Stats */}
       <div className="flex items-center justify-between text-sm">
         <span className="text-gray-600 dark:text-gray-400">
-          <span className="font-bold text-gray-900 dark:text-gray-100">{completedCount}</span> of{" "}
-          <span className="font-bold text-gray-900 dark:text-gray-100">{totalHabits}</span> habits
-          completed
+          <span className="font-bold text-gray-900 dark:text-gray-100">
+            {completedCount}
+          </span>{" "}
+          of{" "}
+          <span className="font-bold text-gray-900 dark:text-gray-100">
+            {totalHabits}
+          </span>{" "}
+          habits completed
         </span>
         <span className="font-bold text-primary">{percentage}%</span>
       </div>

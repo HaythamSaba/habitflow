@@ -1,8 +1,7 @@
 import { useUserStats } from "@/hooks/useUserStats";
 
 export function LevelBadge() {
-  const { currentLevel, levelData, totalPoints, pointsToNext } =
-    useUserStats();
+  const { currentLevel, levelData, totalPoints, pointsToNext } = useUserStats();
 
   if (!levelData) return null;
 
@@ -28,7 +27,9 @@ export function LevelBadge() {
       </span>
 
       {/* Points */}
-      <span className="text-xs text-gray-600 font-medium">{totalPoints}</span>
+      <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">
+        {totalPoints}
+      </span>
     </div>
   );
 }

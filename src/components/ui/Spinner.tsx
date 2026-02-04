@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Spinner() {
   return (
     <div className="flex items-center justify-center">
@@ -9,7 +7,7 @@ export default function Spinner() {
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className="w-6 h-6 animate-spin"
+        className="w-6 h-6 animate-spin text-gray-600 dark:text-gray-400"
       >
         <path
           strokeLinecap="round"

@@ -19,9 +19,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <div className="min-h-screen">
       <Navbar displayName={displayName} signOut={signOut} />
-      <div className="flex bg-linear-to-r from-white to-primary-100 min-h-screen">
+      <div className="flex min-h-screen">
         <SideBar />
-        <main className="flex-1 flex flex-col p-4 gap-8 ml-76 dark:bg-gray-900">{children}</main>
+        <main className="flex-1 flex flex-col p-4 gap-8 ml-76  bg-linear-to-r from-white to-primary-100 dark:bg-linear-to-r dark:from-gray-950 dark:to-primary-900">{children}</main>
       </div>
     </div>
   );

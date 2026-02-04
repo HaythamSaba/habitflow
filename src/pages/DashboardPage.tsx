@@ -61,7 +61,7 @@ export function DashboardPage() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Active Habits Card */}
-          <div className="bg-white dark:bg-gray-800 flex-1 rounded-xl p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl  border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-500">
+          <div className="bg-white dark:bg-gray-950 flex-1 rounded-xl p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl  border-gray-200 dark:border-primary-700 hover:shadow-xl transition-shadow duration-500">
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center">
                 <CheckCircle2 className="w-6 h-6 text-primary" />
@@ -84,7 +84,7 @@ export function DashboardPage() {
           </div>
 
           {/* Current Streak Card */}
-          <div className="bg-white dark:bg-gray-800 flex-1 rounded-xl p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl  border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-500">
+          <div className="bg-white dark:bg-gray-950 flex-1 rounded-xl p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl  border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-500">
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
                 <TrendingUp className="w-6 h-6 text-secondary" />
@@ -110,7 +110,7 @@ export function DashboardPage() {
           </div>
 
           {/* Completion Rate Card */}
-          <div className="bg-white dark:bg-gray-800 flex-1 rounded-xl p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl  border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-500">
+          <div className="bg-white dark:bg-gray-950 flex-1 rounded-xl p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl  border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-500">
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
                 <Target className="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -135,7 +135,7 @@ export function DashboardPage() {
           </div>
 
           {/* Points Card */}
-          <div className="bg-white dark:bg-gray-800 flex-1 rounded-xl p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl  border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-500">
+          <div className="bg-white dark:bg-gray-950 flex-1 rounded-xl p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl  border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-500">
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
                 <Award className="w-6 h-6 text-purple-600 dark:text-purple-400" />
@@ -167,7 +167,7 @@ export function DashboardPage() {
           <TodayProgress />
 
           {/* Achievement Count Card */}
-          <div className="card bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-md shadow-primary-100 dark:shadow-gray-900 hover:shadow-xl transition-all">
+          <div className="bg-white dark:bg-gray-950 flex-1 rounded-xl p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl border-gray-200 dark:border-primary-700 hover:shadow-xl transition-shadow duration-500">
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
                 <Trophy className="w-6 h-6 text-orange-600 dark:text-orange-400" />
@@ -203,7 +203,7 @@ export function DashboardPage() {
         {/* Recent Achievements Section */}
         {unlockedAchievements.length > 0 && (
           <div>
-            <div className="card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg shadow-primary-200 dark:shadow-gray-900 border border-gray-300 dark:border-gray-700">
+            <div className="card bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg shadow-primary-200 dark:shadow-gray-900 border border-gray-300 dark:border-gray-700">
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
@@ -271,7 +271,7 @@ export function DashboardPage() {
 
         {/* Next Achievement Preview */}
         {unlockedAchievements.length < allAchievements.length && (
-          <div className="bg-gradient-to-r from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 rounded-xl p-6 border border-primary/20 dark:border-primary/30">
+          <div className="bg-linear-to-r from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 rounded-xl p-6 border border-primary-800 dark:border-primary-100">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -294,7 +294,7 @@ export function DashboardPage() {
         )}
 
         {/* Habits Container */}
-        <div className="card bg-white dark:bg-gray-800 rounded-2xl p-12 shadow-lg shadow-primary-200 dark:shadow-gray-900 border border-gray-300 dark:border-gray-700">
+        <div className="card bg-white dark:bg-gray-950 rounded-2xl p-12 shadow-lg shadow-primary-200 dark:shadow-gray-900 border border-gray-300 dark:border-gray-700">
           <HabitsContianer />
         </div>
       </div>

@@ -69,20 +69,22 @@ export function AchievementsPage() {
       <div className="space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             🏆 Achievements
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Unlock achievements by completing challenges and milestones!
           </p>
         </div>
 
         {/* Stats Overview */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+        <div className="bg-white dark:bg-gray-950 rounded-xl p-6 border border-gray-200 dark:border-primary-700">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Your Progress</h2>
-              <p className="text-sm text-gray-600">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                Your Progress
+              </h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 {unlockedCount} of {totalCount} achievements unlocked
               </p>
             </div>
@@ -92,9 +94,9 @@ export function AchievementsPage() {
           </div>
 
           {/* Progress bar */}
-          <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+          <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-4 overflow-hidden">
             <div
-              className="bg-primary h-full transition-all duration-500"
+              className="bg-primary-500 h-full transition-all duration-500"
               style={{ width: `${completionPercentage}%` }}
             />
           </div>
@@ -109,8 +111,8 @@ export function AchievementsPage() {
                 onClick={() => setSelectedCategory(category)}
                 className={`px-4 py-2 rounded-lg font-medium transition-all ${
                   selectedCategory === category
-                    ? "bg-primary text-primary-500 border border-primary-500 shadow-md"
-                    : "bg-white text-gray-700 border border-gray-300 hover:border-primary"
+                    ? "bg-primary text-primary-500 border border-primary-500 shadow-md dark:bg-primary-900 dark:text-primary-300 dark:border-primary-300"
+                    : "bg-white text-gray-700 border border-gray-300 hover:border-primary dark:bg-gray-950 dark:text-gray-400 dark:border-gray-600 hover:dark:border-primary-500"
                 }`}
               >
                 {category.charAt(0).toUpperCase() + category.slice(1)}
@@ -122,7 +124,7 @@ export function AchievementsPage() {
         {/* Unlocked Achievements */}
         {unlockedAchievements.length > 0 && (
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               ✨ Unlocked ({unlockedAchievements.length})
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -141,7 +143,7 @@ export function AchievementsPage() {
         {/* Locked Achievements */}
         {lockedAchievements.length > 0 && (
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               🔒 Locked ({lockedAchievements.length})
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
