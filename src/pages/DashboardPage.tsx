@@ -9,6 +9,8 @@ import { useDashboardStreak } from "@/hooks/useDashboardStreak";
 import { useUserStats } from "@/hooks/useUserStats";
 import LevelProgress from "@/components/dashboard/LevelProgress";
 import { useAchievements } from "@/hooks/useAchievements";
+import { HabitPerformanceChart } from "@/components/analytics/HabitPerformanceChart";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 // Type definition for Achievement
 type Achievement = {
@@ -27,7 +29,7 @@ export function DashboardPage() {
   const { maxStreak } = useDashboardStreak();
   const { totalPoints, levelData } = useUserStats();
   const { unlockedAchievements, allAchievements } = useAchievements();
-
+  const { barChartData } = useAnalytics();
   // Extract display name from user metadata or email
   const displayName =
     user?.user_metadata?.display_name || user?.email?.split("@")[0] || "User";
@@ -293,9 +295,20 @@ export function DashboardPage() {
           </div>
         )}
 
-        {/* Habits Container */}
-        <div className="card bg-white dark:bg-gray-950 rounded-2xl p-12 shadow-lg shadow-primary-200 dark:shadow-gray-900 border border-gray-300 dark:border-gray-700">
-          <HabitsContianer />
+        <div className="block xl:flex justify-between items-center gap-4">
+          {/* Habits Container */}
+          <div className="card bg-white dark:bg-gray-950 rounded-2xl p-12 shadow-lg shadow-primary-200 dark:shadow-gray-900 border border-gray-300 dark:border-gray-700 mb-6 xl:mb-0">
+            <HabitsContianer />
+          </div>
+          <div className="w-full xl:w-1/2 ">
+            {barChartData.length > 0 ? (
+              <HabitPerformanceChart data={barChartData} />
+            ) : (
+              <div className="h-75 flex items-center justify-center text-gray-500 dark:text-gray-400">
+                <p>No habit data available</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </DashboardLayout>
