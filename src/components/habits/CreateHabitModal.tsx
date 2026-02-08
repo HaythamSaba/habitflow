@@ -21,6 +21,7 @@ import {
   Flame,
 } from "lucide-react";
 import { useCreateHabit } from "@/hooks/useCreateHabit";
+import { useCategories } from "@/hooks/useCategories";
 
 // Available icons for habits
 const HABIT_ICONS = [
@@ -52,6 +53,7 @@ const habitSchema = z.object({
   color: z.string().min(1, "Please select a color"),
   frequency: z.enum(["daily", "weekly", "custom"]),
   target_count: z.number().min(1).max(10),
+  category_id: z.string().optional().nullable(),
 });
 
 type HabitFormData = z.infer<typeof habitSchema>;
@@ -67,6 +69,7 @@ export function CreateHabitModal({ isOpen, onClose }: CreateHabitModalProps) {
   const [targetCount, setTargetCount] = useState(1);
 
   const createHabit = useCreateHabit();
+  const { categories } = useCategories();
 
   const {
     register,
@@ -294,6 +297,25 @@ export function CreateHabitModal({ isOpen, onClose }: CreateHabitModalProps) {
           </div>
           <p className="mt-1.5 text-sm text-gray-500 dark:text-gray-400">
             How many times per day do you want to complete this habit?
+          </p>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+            Category (Optional)
+          </label>
+          <select
+            {...register("category_id")}
+            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          >
+            <option value="">No Category</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.icon} {category.name}
+              </option>
+            ))}
+          </select>
+          <p className="mb-1.5 text-sm text-gray-500 dark:text-gray-400">
+            Organizer your habits into a category
           </p>
         </div>
       </form>

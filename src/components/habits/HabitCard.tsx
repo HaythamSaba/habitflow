@@ -21,6 +21,8 @@ import {
 import { useHabitStreak } from "@/hooks/useHabitStreak";
 import Spinner from "../ui/Spinner";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useCategories } from "@/hooks/useCategories";
+import { CategoryBadge } from "../categories/CategoryBadge";
 
 interface HabitCardProps {
   habit: Habit;
@@ -45,6 +47,7 @@ const HABIT_ICONS = [
 
 export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
   const { theme } = useTheme();
+  const { categories } = useCategories();
   const { isHabitCompletedToday, getHabitCompletionCount } = useCompletions();
   const toggleCompletion = useToggleCompletion();
   const isCompleted = isHabitCompletedToday(habit.id);
@@ -54,6 +57,7 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
   const isPartiallyCompleted =
     completionCount > 0 && completionCount < habit.target_count;
   const isLoading = toggleCompletion.isPending;
+  const habitCategory = categories.find((cat) => cat.id === habit.category_id);
 
   const handleToggle = () => {
     if (isLoading) return;
@@ -150,6 +154,10 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
             <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded capitalize">
               {habit.frequency}
             </span>
+
+            {/* Category Badge */}
+            {habitCategory && <CategoryBadge category={habitCategory} size="sm" />}
+
 
             {/* Target count */}
             {habit.target_count === 1 && (

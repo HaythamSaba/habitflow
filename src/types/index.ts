@@ -17,6 +17,7 @@ export interface Habit {
   created_at: string
   updated_at: string
   checked: boolean
+  category_id: string | null;
 }
 
 export interface Completion {
@@ -252,4 +253,19 @@ export interface ExportData {
   stats: UserStats
   exported_at: string
   version: string
+}
+
+// Category type
+export interface Category {
+  id: string;
+  user_id: string;
+  name: string;
+  color: string;
+  icon: string;
+  created_at: string;
+}
+
+// Habit with category joined (for display)
+export interface HabitWithCategory extends Habit {
+  category?: Category | null;
 }

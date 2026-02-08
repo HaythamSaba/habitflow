@@ -22,6 +22,7 @@ import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HABIT_COLORS } from "@/lib/utils";
+import { useCategories } from "@/hooks/useCategories";
 
 interface EditHabitModalProps {
   isOpen: boolean;
@@ -57,6 +58,7 @@ const habitSchema = z.object({
   color: z.string().min(1, "Please select a color"),
   frequency: z.enum(["daily", "weekly", "custom"]),
   target_count: z.number().min(1).max(10),
+  category_id: z.string().optional().nullable(),
 });
 
 type HabitFormData = z.infer<typeof habitSchema>;
@@ -71,7 +73,7 @@ export function EditHabitModal({
   const [targetCount, setTargetCount] = useState(1);
 
   const updateHabit = useUpdateHabit();
-
+  const { categories } = useCategories();
   const {
     register,
     handleSubmit,
@@ -95,6 +97,7 @@ export function EditHabitModal({
         color: habit.color,
         frequency: habit.frequency,
         target_count: habit.target_count,
+        category_id: habit.category_id,
       });
       setSelectedIcon(habit.icon);
       setSelectedColor(habit.color);
@@ -311,6 +314,25 @@ export function EditHabitModal({
           </div>
           <p className="mt-1.5 text-sm text-gray-500 dark:text-gray-400">
             How many times per day do you want to complete this habit?
+          </p>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+            Category (Optional)
+          </label>
+          <select
+            {...register("category_id")}
+            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          >
+            <option value="">No Category</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.icon} {category.name}
+              </option>
+            ))}
+          </select>
+          <p className="mt-1.5 text-sm text-gray-500 dark:text-gray-400">
+            Organize your habit into a category
           </p>
         </div>
       </form>

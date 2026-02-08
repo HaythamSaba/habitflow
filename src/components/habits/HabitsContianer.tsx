@@ -9,11 +9,22 @@ import { useDeleteHabit } from "@/hooks/useDeleteHabit";
 import { Habit } from "@/types";
 import { HabitCardSkeleton } from "./HabitCardSkeleton";
 
-export default function HabitsContainer() {
+// ⭐ ADD THIS INTERFACE
+interface HabitsContainerProps {
+  filteredHabits?: Habit[];
+}
+
+// ⭐ UPDATE TO ACCEPT PROPS
+export default function HabitsContainer({
+  filteredHabits,
+}: HabitsContainerProps) {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
-  const { isLoading, habits, error } = useHabits();
+  const { isLoading, habits: allHabits, error } = useHabits();
   const deleteHabit = useDeleteHabit();
+
+  // ⭐ USE FILTERED HABITS IF PROVIDED, OTHERWISE USE ALL HABITS
+  const habits = filteredHabits !== undefined ? filteredHabits : allHabits;
 
   const handleEdit = (habit: Habit) => {
     setEditingHabit(habit);

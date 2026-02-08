@@ -1,3 +1,4 @@
+import { Category } from "@/types";
 import { supabase } from "./supabase";
 export async function getAchievements() {
   const { data: achievements, error } = await supabase
@@ -9,7 +10,6 @@ export async function getAchievements() {
   return achievements;
 }
 
-// src/lib/api.ts
 export async function getHabits(userId: string | undefined) {
   const { data, error } = await supabase
     .from("habits")
@@ -19,6 +19,40 @@ export async function getHabits(userId: string | undefined) {
     .order("position", { ascending: true });
 
   if (error) throw error;
+  return data;
+}
+
+export async function createHabit(
+  userId: string,
+  habitData: {
+    name: string;
+    description?: string;
+    icon: string;
+    color: string;
+    frequency: "daily" | "weekly" | "custom";
+    target_count: number;
+    category_id?: string | null;
+  },
+) {
+  const { data, error } = await supabase
+    .from("habits")
+    .insert({
+      user_id: userId,
+      name: habitData.name,
+      description: habitData.description || null,
+      icon: habitData.icon,
+      color: habitData.color,
+      frequency: habitData.frequency,
+      target_count: habitData.target_count,
+      category_id: habitData.category_id || null,
+      archived: false,
+      position: 0, // or calculate next position
+      created_at: new Date().toISOString(),
+    })
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
   return data;
 }
 
@@ -46,6 +80,7 @@ export async function updateHabit(
     frequency?: "daily" | "weekly" | "custom";
     target_count?: number;
     frequency_days?: number[] | null;
+    category_id?: string | null;
   },
 ) {
   const { data, error } = await supabase
@@ -203,15 +238,7 @@ export async function updateUserPoints(userId: string, pointsToAdd: number) {
   if (error) throw new Error(error.message);
   return data;
 }
-
-/**
- * ============================================
- * ACHIEVEMENT API FUNCTIONS
- * ============================================
- */
-
-// Get All Achievements
-/**
+/*
  * ============================================
  * ACHIEVEMENT API FUNCTIONS
  * ============================================
@@ -328,4 +355,73 @@ export async function updateUserProfile(displayName: string) {
 
   if (error) throw new Error(error.message);
   return data;
+}
+
+// ==================== CATEGORIES ====================
+export async function fetchCategories(): Promise<Category[]> {
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*")
+    .order("created_at", { ascending: true });
+
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+export async function createCategory(categoryData: {
+  name: string;
+  color: string;
+  icon: string;
+}): Promise<Category> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("User not authenticated");
+  }
+
+  const { data, error } = await supabase
+    .from("categories")
+    .insert({
+      user_id: user.id,
+      name: categoryData.name,
+      color: categoryData.color,
+      icon: categoryData.icon,
+    })
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+// Update a category
+export async function updateCategory(
+  categoryId: string,
+  updates: {
+    name?: string;
+    color?: string;
+    icon?: string;
+  },
+): Promise<Category> {
+  const { data, error } = await supabase
+    .from("categories")
+    .update(updates)
+    .eq("id", categoryId)
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+// Delete a category
+export async function deleteCategory(categoryId: string): Promise<void> {
+  const { error } = await supabase
+    .from("categories")
+    .delete()
+    .eq("id", categoryId);
+
+  if (error) throw new Error(error.message);
 }

@@ -1,38 +1,37 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "./useAuth";
 import { updateHabit } from "@/lib/api";
-import { CreateHabitFormData } from "@/types";
+import { useAuth } from "./useAuth";
 import toast from "react-hot-toast";
 
-interface UpdateHabitParams {
-  habitId: string;
-  updates: Partial<CreateHabitFormData>;
-}
-
 export function useUpdateHabit() {
-  const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
+
   return useMutation({
-    mutationFn: async ({ habitId, updates }: UpdateHabitParams) => {
-      if (!user) throw new Error("User not authenticated");
+    mutationFn: ({
+      habitId,
+      updates,
+    }: {
+      habitId: string;
+      updates: {
+        name?: string;
+        description?: string | null;
+        icon?: string;
+        color?: string;
+        frequency?: "daily" | "weekly" | "custom";
+        target_count?: number;
+        category_id?: string | null;  // ⭐ ADD THIS
+      };
+    }) => {
+      if (!user?.id) throw new Error("User not authenticated");
       return updateHabit(habitId, user.id, updates);
     },
-
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["habits", user?.id] });
-      toast.success("Habit updated successfully! 🎉");
+      queryClient.invalidateQueries({ queryKey: ["habits"] });
+      toast.success("Habit updated! ✨");
     },
-
-    onError: (error) => {
-      console.error("Error creating habit:", error);
-      const message =
-        error instanceof Error ? error.message : "Failed to create habit";
-
-      if (message.includes("Faild to fetch") || message.includes("Network")) {
-        toast.error("Failed to create habit. Please try again.");
-      } else {
-        toast.error(message);
-      }
+    onError: (error: Error) => {
+      toast.error(`Failed to update habit: ${error.message}`);
     },
   });
 }

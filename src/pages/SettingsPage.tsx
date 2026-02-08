@@ -1,3 +1,4 @@
+import { CategoryManager } from "@/components/categories/CategoryManager";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -144,6 +145,10 @@ export function SettingsPage() {
                 </Button>
               </div>
             </form>
+          </div>
+          {/* ⭐ ADD THIS - Categories Section */}
+          <div className="card bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+            <CategoryManager />
           </div>
           {/* Preferences Section (Placeholder) */}
           <div className="card bg-white rounded-xl p-6 shadow-sm border border-gray-200">

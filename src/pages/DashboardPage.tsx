@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { CheckCircle2, TrendingUp, Target, Award, Trophy } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
@@ -11,7 +12,9 @@ import LevelProgress from "@/components/dashboard/LevelProgress";
 import { useAchievements } from "@/hooks/useAchievements";
 import { HabitPerformanceChart } from "@/components/analytics/HabitPerformanceChart";
 import { useAnalytics } from "@/hooks/useAnalytics";
-
+import { useCategories } from "@/hooks/useCategories";
+import { CategoryChips } from "@/components/categories/CategoryChips";
+import HabitsContainer from "@/components/habits/HabitsContianer";
 // Type definition for Achievement
 type Achievement = {
   id: string;
@@ -24,20 +27,43 @@ type Achievement = {
 
 export function DashboardPage() {
   const { user } = useAuth();
+  const { categories } = useCategories();
   const { habits } = useHabits();
   const { completions } = useCompletions();
   const { maxStreak } = useDashboardStreak();
   const { totalPoints, levelData } = useUserStats();
   const { unlockedAchievements, allAchievements } = useAchievements();
   const { barChartData } = useAnalytics();
+
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
+    null,
+  );
+
+  // Filter habits based on selected category
+  const filteredHabits = selectedCategoryId
+    ? habits?.filter((habit) => habit.category_id === selectedCategoryId)
+    : habits;
+
+  // Calculate habits count for each category
+  const habitCounts = {
+    all: habits?.length || 0,
+    ...categories.reduce(
+      (acc, category) => {
+        acc[category.id] =
+          habits?.filter((habit) => habit.category_id === category.id).length ||
+          0;
+        return acc;
+      },
+      {} as Record<string, number>,
+    ),
+  };
   // Extract display name from user metadata or email
   const displayName =
     user?.user_metadata?.display_name || user?.email?.split("@")[0] || "User";
 
-  const totalTargets = habits?.reduce(
-    (sum, habit) => sum + (habit.target_count || 0),
-    0,
-  );
+  const totalTargets =
+    filteredHabits?.reduce((sum, habit) => sum + habit.target, 0) || 0;
+
   const completionRate =
     totalTargets > 0
       ? Math.round(((completions?.length || 0) / totalTargets) * 100)
@@ -294,11 +320,21 @@ export function DashboardPage() {
             </div>
           </div>
         )}
-
+        {/* Category Filter */}
+        {categories.length > 0 && (
+          <div className="flex items-center justify-between gap-4">
+            <CategoryChips
+              categories={categories}
+              selectedCategoryId={selectedCategoryId}
+              onSelectCategory={setSelectedCategoryId}
+              habitCounts={habitCounts}
+            />
+          </div>
+        )}
         <div className="block xl:flex justify-between items-center gap-4">
           {/* Habits Container */}
           <div className="card bg-white dark:bg-gray-950 rounded-2xl p-12 shadow-lg shadow-primary-200 dark:shadow-gray-900 border border-gray-300 dark:border-gray-700 mb-6 xl:mb-0">
-            <HabitsContianer />
+            <HabitsContainer filteredHabits={filteredHabits} />
           </div>
           <div className="w-full xl:w-1/2 ">
             {barChartData.length > 0 ? (
