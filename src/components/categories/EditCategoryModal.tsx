@@ -179,7 +179,7 @@ export function EditCategoryModal({
                 }`}
                 style={{
                   backgroundColor: color,
-                  ringColor: color,
+                  borderColor: color,
                 }}
                 title={color}
               />

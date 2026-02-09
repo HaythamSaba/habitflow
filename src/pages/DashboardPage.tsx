@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { CheckCircle2, TrendingUp, Target, Award, Trophy } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import HabitsContianer from "@/components/habits/HabitsContianer";
 import { useHabits } from "@/hooks/useHabits";
 import TodayProgress from "@/components/dashboard/TodayProgress";
 import { useCompletions } from "@/hooks/useCompletions";
