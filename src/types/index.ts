@@ -269,3 +269,16 @@ export interface Category {
 export interface HabitWithCategory extends Habit {
   category?: Category | null;
 }
+
+// adding template type
+export interface HabitTemplate {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  color: string;
+  frequency: 'daily' | 'weekly' | 'custom';
+  target_count: number;
+  category_name: string;
+  tags: string[];
+}

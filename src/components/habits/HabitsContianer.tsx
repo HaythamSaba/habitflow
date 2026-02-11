@@ -1,4 +1,4 @@
-import { CheckCircle2, Info, Plus } from "lucide-react";
+import { CheckCircle2, Info, Plus, Sparkles } from "lucide-react";
 import { Button } from "../ui/Button";
 import { useState } from "react";
 import { CreateHabitModal } from "./CreateHabitModal";
@@ -8,6 +8,7 @@ import { useHabits } from "@/hooks/useHabits";
 import { useDeleteHabit } from "@/hooks/useDeleteHabit";
 import { Habit } from "@/types";
 import { HabitCardSkeleton } from "./HabitCardSkeleton";
+import { useNavigate } from "react-router-dom";
 
 // ⭐ ADD THIS INTERFACE
 interface HabitsContainerProps {
@@ -18,6 +19,7 @@ interface HabitsContainerProps {
 export default function HabitsContainer({
   filteredHabits,
 }: HabitsContainerProps) {
+  const navigate = useNavigate();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
   const { isLoading, habits: allHabits, error } = useHabits();
@@ -107,14 +109,24 @@ export default function HabitsContainer({
           <p className="text-gray-600 dark:text-gray-300 mb-6">
             Start your journey by creating your first habit!
           </p>
-          <Button
-            variant="primary"
-            size="lg"
-            leftIcon={<Plus className="w-5 h-5" />}
-            onClick={() => setIsCreateModalOpen(true)}
-          >
-            Create Your First Habit
-          </Button>
+          <div>
+            <Button
+              variant="primary"
+              onClick={() => setIsCreateModalOpen(true)}
+              size="lg"
+              leftIcon={<Plus className="w-5 h-5" />}
+            >
+              Create Custom Habit
+            </Button>
+            <Button
+              variant="secondary"
+              size="lg"
+              leftIcon={<Sparkles className="w-5 h-5" />}
+              onClick={() => navigate("/templates")}
+            >
+              Browse Templates
+            </Button>
+          </div>
         </div>
       )}
 

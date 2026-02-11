@@ -2,6 +2,7 @@ import {
   ChartSpline,
   LayoutDashboard,
   Settings,
+  Sparkles,
   SquareCheckBig,
   Trophy,
 } from "lucide-react";
@@ -13,6 +14,7 @@ const navItems = [
   { path: "/achievements", icon: Trophy, label: "Achievements" },
   { path: "/analytics", icon: ChartSpline, label: "Analytics" },
   { path: "/settings", icon: Settings, label: "Settings" },
+  { path: "/templates", icon: Sparkles, label: "Templates" },
 ];
 
 export default function SideBar() {
@@ -28,13 +30,13 @@ export default function SideBar() {
             <Link
               key={path}
               to={path}
-              className={`flex flex-row gap-2 p-2 rounded-xl font-semibold cursor-pointer transition duration-300 ease-in-out ${
+              className={`flex flex-row items-center gap-2 p-3 rounded-xl font-light text-md  cursor-pointer transition duration-300 ease-in-out ${
                 isActive(path)
                   ? "bg-primary-500 text-white shadow-sm"
                   : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
-              <Icon className="w-5 h-5" />
+              <Icon className="font-light w-6 h-6" />
               <span>{label}</span>
             </Link>
           ))}

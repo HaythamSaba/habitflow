@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { CheckCircle2, TrendingUp, Target, Award, Trophy } from "lucide-react";
+import {
+  CheckCircle2,
+  TrendingUp,
+  Target,
+  Award,
+  Trophy,
+  Sparkles,
+} from "lucide-react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { useHabits } from "@/hooks/useHabits";
 import TodayProgress from "@/components/dashboard/TodayProgress";
@@ -14,6 +21,9 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 import { useCategories } from "@/hooks/useCategories";
 import { CategoryChips } from "@/components/categories/CategoryChips";
 import HabitsContainer from "@/components/habits/HabitsContianer";
+import { Button } from "@/components/ui/Button";
+import { useNavigate } from "react-router-dom";
+import { FeaturedTemplates } from "@/components/templates/FeaturedTemplates";
 // Type definition for Achievement
 type Achievement = {
   id: string;
@@ -25,6 +35,7 @@ type Achievement = {
 };
 
 export function DashboardPage() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { categories } = useCategories();
   const { habits } = useHabits();
@@ -81,6 +92,14 @@ export function DashboardPage() {
             <p className="text-gray-600 dark:text-gray-400">
               Ready to continue your habit journey? Let's make today count!
             </p>
+            <Button
+              variant="primary"
+              className="mt-2"
+              leftIcon={<Sparkles className="w-4 h-4" />}
+              onClick={() => navigate("/templates")}
+            >
+              Browse Templates
+            </Button>
           </div>
           <LevelProgress />
         </div>
@@ -345,6 +364,7 @@ export function DashboardPage() {
             )}
           </div>
         </div>
+        {habits && habits.length > 0 && <FeaturedTemplates />}
       </div>
     </DashboardLayout>
   );

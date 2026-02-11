@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, startTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -61,9 +61,24 @@ type HabitFormData = z.infer<typeof habitSchema>;
 interface CreateHabitModalProps {
   isOpen: boolean;
   onClose: () => void;
+  prefilledData?: {
+    name: string;
+    description: string;
+    icon: string;
+    color: string;
+    frequency: "daily" | "weekly" | "custom";
+    target_count: number;
+    category_id: string | null;
+  };
+  onSuccess?: () => void;
 }
 
-export function CreateHabitModal({ isOpen, onClose }: CreateHabitModalProps) {
+export function CreateHabitModal({
+  isOpen,
+  onClose,
+  prefilledData,
+  onSuccess,
+}: CreateHabitModalProps) {
   const [selectedIcon, setSelectedIcon] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [targetCount, setTargetCount] = useState(1);
@@ -98,11 +113,8 @@ export function CreateHabitModal({ isOpen, onClose }: CreateHabitModalProps) {
   const handleFormSubmit = async (data: HabitFormData) => {
     try {
       await createHabit.mutateAsync(data);
-      reset();
-      setSelectedIcon("");
-      setSelectedColor("");
-      setTargetCount(1);
-      onClose();
+      handleClose();
+      onSuccess?.();
     } catch (error) {
       console.error("Error creating habit:", error);
     }
@@ -112,8 +124,29 @@ export function CreateHabitModal({ isOpen, onClose }: CreateHabitModalProps) {
     reset();
     setSelectedIcon("");
     setSelectedColor("");
+    setTargetCount(1);
     onClose();
   };
+  useEffect(() => {
+    if (prefilledData && isOpen) {
+      // Use startTransition to batch updates
+      startTransition(() => {
+        reset({
+          name: prefilledData.name || "",
+          description: prefilledData.description || "",
+          icon: prefilledData.icon || "",
+          color: prefilledData.color || "",
+          frequency: prefilledData.frequency || "daily",
+          target_count: prefilledData.target_count || 1,
+          category_id: prefilledData.category_id || "",
+        });
+
+        setSelectedIcon(prefilledData.icon || "");
+        setSelectedColor(prefilledData.color || "");
+        setTargetCount(prefilledData.target_count || 1);
+      });
+    }
+  }, [isOpen, prefilledData, reset]);
 
   return (
     <Modal
