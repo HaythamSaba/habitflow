@@ -30,7 +30,7 @@ export default function SideBar() {
             <Link
               key={path}
               to={path}
-              className={`flex flex-row items-center gap-2 p-3 rounded-xl font-light text-md  cursor-pointer transition duration-300 ease-in-out ${
+              className={`flex flex-row items-center gap-2 p-3 rounded-2xl font-light text-md  cursor-pointer transition duration-300 ease-in-out ${
                 isActive(path)
                   ? "bg-primary-500 text-white shadow-sm"
                   : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
