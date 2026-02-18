@@ -7,7 +7,7 @@ export function LevelBadge() {
 
   return (
     <div
-      className="flex items-center gap-2 px-3 py-1.5 rounded-full transition-all hover:scale-105 cursor-pointer"
+      className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full transition-all hover:scale-105 cursor-pointer"
       style={{
         backgroundColor: `${levelData.color}15`,
         border: `1.5px solid ${levelData.color}40`,
@@ -18,16 +18,16 @@ export function LevelBadge() {
           : "Max level reached!"
       }
     >
-      {/* Level emoji */}
-      <span className="text-lg">{levelData.emoji}</span>
+      <span className="text-sm sm:text-lg">{levelData.emoji}</span>
 
-      {/* Level number */}
-      <span className="text-sm font-bold" style={{ color: levelData.color }}>
-        Lv. {currentLevel}
+      <span
+        className="text-xs sm:text-sm font-bold"
+        style={{ color: levelData.color }}
+      >
+        Lv.{currentLevel}
       </span>
 
-      {/* Points */}
-      <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">
+      <span className="hidden sm:inline text-xs text-gray-600 dark:text-gray-400 font-medium">
         {totalPoints}
       </span>
     </div>

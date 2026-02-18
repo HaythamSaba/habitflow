@@ -104,11 +104,12 @@ export function EditCategoryModal({
       title="Edit Category"
       size="lg"
       footer={
-        <>
+        <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto sm:justify-end">
           <Button
             variant="ghost"
             onClick={handleClose}
             disabled={updateCategory.isPending}
+            className="min-h-11 w-full sm:w-auto"
           >
             Cancel
           </Button>
@@ -116,13 +117,14 @@ export function EditCategoryModal({
             variant="primary"
             onClick={handleSubmit(handleFormSubmit)}
             isLoading={updateCategory.isPending}
+            className="min-h-11 w-full sm:w-auto"
           >
             Save Changes
           </Button>
-        </>
+        </div>
       }
     >
-      <form className="space-y-6">
+      <form className="space-y-4 sm:space-y-5 lg:space-y-6">
         {/* Category Name */}
         <Input
           label="Category Name"
@@ -134,28 +136,28 @@ export function EditCategoryModal({
 
         {/* Icon Picker */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 sm:mb-3">
             Choose an Icon
           </label>
-          <div className="grid grid-cols-10 gap-2">
+          <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-1.5 sm:gap-2">
             {CATEGORY_ICONS.map((icon) => (
               <button
                 key={icon}
                 type="button"
                 onClick={() => handleIconSelect(icon)}
-                className={`flex items-center justify-center p-2 rounded-lg border-2 transition-all hover:scale-110 ${
+                className={`flex items-center justify-center p-1.5 sm:p-2 min-h-11 rounded-lg border-2 transition-all hover:scale-110 ${
                   selectedIcon === icon
-                    ? "border-primary bg-primary-50 dark:bg-primary-900/20 ring-2 ring-primary ring-offset-2 dark:ring-offset-gray-800"
+                    ? "border-primary bg-primary-50 dark:bg-primary-900/20 ring-2 ring-primary ring-offset-1 sm:ring-offset-2 dark:ring-offset-gray-800"
                     : "border-gray-200 dark:border-gray-700 hover:border-primary"
                 }`}
                 title={icon}
               >
-                <span className="text-2xl">{icon}</span>
+                <span className="text-lg sm:text-2xl">{icon}</span>
               </button>
             ))}
           </div>
           {errors.icon && (
-            <p className="mt-2 text-sm text-red-600 dark:text-red-400">
+            <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-red-600 dark:text-red-400">
               {errors.icon.message}
             </p>
           )}
@@ -163,16 +165,16 @@ export function EditCategoryModal({
 
         {/* Color Picker */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 sm:mb-3">
             Choose a Color
           </label>
-          <div className="flex gap-3 flex-wrap">
+          <div className="flex gap-2 sm:gap-3 flex-wrap">
             {CATEGORY_COLORS.map((color) => (
               <button
                 key={color}
                 type="button"
                 onClick={() => handleColorSelect(color)}
-                className={`w-12 h-12 rounded-full transition-all hover:scale-110 ${
+                className={`w-9 h-9 sm:w-12 sm:h-12 rounded-full transition-all hover:scale-110 ${
                   selectedColor === color
                     ? "ring-4 ring-offset-2 dark:ring-offset-gray-800"
                     : "hover:ring-2 ring-offset-1 dark:ring-offset-gray-800"
@@ -186,7 +188,7 @@ export function EditCategoryModal({
             ))}
           </div>
           {errors.color && (
-            <p className="mt-2 text-sm text-red-600 dark:text-red-400">
+            <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-red-600 dark:text-red-400">
               {errors.color.message}
             </p>
           )}
@@ -194,11 +196,11 @@ export function EditCategoryModal({
 
         {/* Preview */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 sm:mb-3">
             Preview
           </label>
           <div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border-2 transition-all"
+            className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border-2 transition-all max-w-full"
             style={{
               borderColor: selectedColor || "#e5e7eb",
               backgroundColor: selectedColor
@@ -206,9 +208,11 @@ export function EditCategoryModal({
                 : "transparent",
             }}
           >
-            <span className="text-2xl">{selectedIcon || "❓"}</span>
+            <span className="text-lg sm:text-2xl shrink-0">
+              {selectedIcon || "❓"}
+            </span>
             <span
-              className="font-medium"
+              className="font-medium text-sm sm:text-base truncate"
               style={{
                 color: selectedColor || "#6b7280",
               }}

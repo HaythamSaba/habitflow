@@ -17,17 +17,17 @@ export function CategoryTest() {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
-      <h3 className="font-bold mb-4">Category Test</h3>
-      
-      <Button onClick={handleTestCreate} className="mb-4">
+    <div className="p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-lg">
+      <h3 className="font-bold text-sm sm:text-base mb-3 sm:mb-4">Category Test</h3>
+
+      <Button onClick={handleTestCreate} className="mb-3 sm:mb-4 min-h-11">
         Create Test Category
       </Button>
 
       <div>
-        <p>Categories: {categories.length}</p>
+        <p className="text-sm sm:text-base">Categories: {categories.length}</p>
         {categories.map((cat) => (
-          <div key={cat.id} className="p-2 bg-gray-100 dark:bg-gray-700 rounded mt-2">
+          <div key={cat.id} className="p-2 sm:p-3 bg-gray-100 dark:bg-gray-700 rounded mt-2 text-sm sm:text-base">
             {cat.icon} {cat.name}
           </div>
         ))}

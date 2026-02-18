@@ -14,15 +14,23 @@ export function CategoryChips({
   habitCounts = {},
 }: CategoryChipsProps) {
   return (
-    <div className="flex items-center gap-2 flex-wrap">
+    <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide -mx-1 px-1 pb-1">
       <button
         onClick={() => onSelectCategory(null)}
-        className={`inline-flex items-center gap-2 py-2 px-4 rounded-full font-medium transition-all ${selectedCategoryId === null ? "bg-primary-500 text-white shadow-md" : "bg-gray-100 text-gray-700 dark:text--gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"}`}
+        className={`inline-flex items-center gap-1 sm:gap-2 py-1.5 sm:py-2 px-3 sm:px-4 min-h-11 rounded-full font-medium text-xs sm:text-sm transition-all whitespace-nowrap shrink-0 ${
+          selectedCategoryId === null
+            ? "bg-primary-500 text-white shadow-md"
+            : "bg-gray-100 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+        }`}
       >
-        <span>All Habits</span>
+        <span>All</span>
         {habitCounts.all !== undefined && (
           <span
-            className={`text-sx px-2 py-0.5 rounded-full ${selectedCategoryId === null ? "bg-white/20" : "bg-gray-200 dark:bg-gray-600"}`}
+            className={`text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full ${
+              selectedCategoryId === null
+                ? "bg-white/20"
+                : "bg-gray-200 dark:bg-gray-600"
+            }`}
           >
             {habitCounts.all}
           </span>
@@ -34,7 +42,7 @@ export function CategoryChips({
         <button
           key={category.id}
           onClick={() => onSelectCategory(category.id)}
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-all ${
+          className={`inline-flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 min-h-11 rounded-full font-medium text-xs sm:text-sm transition-all whitespace-nowrap shrink-0 ${
             selectedCategoryId === category.id
               ? "shadow-md ring-2 ring-offset-2 dark:ring-offset-gray-900"
               : "hover:scale-105"
@@ -55,11 +63,12 @@ export function CategoryChips({
               selectedCategoryId === category.id ? category.color : undefined,
           }}
         >
-          <span className="text-lg">{category.icon}</span>
+          {/* RESPONSIVE: Smaller emoji on mobile */}
+          <span className="text-sm sm:text-lg">{category.icon}</span>
           <span>{category.name}</span>
           {habitCounts[category.id] !== undefined && (
             <span
-              className={`text-xs px-1.5 py-0.5 rounded-full ${
+              className={`text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded-full ${
                 selectedCategoryId === category.id
                   ? "bg-white/20"
                   : "bg-gray-200 dark:bg-gray-600"

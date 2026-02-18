@@ -198,7 +198,6 @@ export async function getHabitCompletions(habitId: string, userId: string) {
  * Get user stats (points, level, etc.)
  */
 export async function getUserStats(userId: string) {
-  console.log("🔍 getUserStats called with userId:", userId);
 
   const { data, error } = await supabase
     .from("user_stats")
@@ -206,7 +205,6 @@ export async function getUserStats(userId: string) {
     .eq("user_id", userId)
     .single();
 
-  console.log("📊 getUserStats response:", { data, error });
 
   if (error) {
     console.error("❌ getUserStats error:", error);

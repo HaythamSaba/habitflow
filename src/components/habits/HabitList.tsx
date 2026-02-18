@@ -10,7 +10,7 @@ interface HabitListProps {
 
 export function HabitList({ habits, onEdit, onDelete }: HabitListProps) {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-3 sm:gap-4 lg:gap-6">
       {habits.map((habit) => (
         <HabitCard
           key={habit.id}

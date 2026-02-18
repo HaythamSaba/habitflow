@@ -24,18 +24,18 @@ export function TodayProgress() {
   if (totalHabits === 0) return null;
 
   return (
-    <div className="bg-white dark:bg-gray-950 flex-1 rounded-xl p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl  border-gray-200 dark:border-primary-700 hover:shadow-xl transition-shadow duration-500">
+    <div className="bg-white dark:bg-gray-950 flex-1 rounded-xl p-4 sm:p-5 lg:p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl border-gray-200 dark:border-primary-700 hover:shadow-xl transition-shadow duration-500">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+      <div className="flex items-center justify-between mb-3 lg:mb-4">
+        <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100">
           Today's Progress
         </h3>
-        <CheckCircle2 className="w-5 h-5 text-primary" />
+        <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
       </div>
 
       {/* Progress Bar */}
-      <div className="mb-3">
-        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+      <div className="mb-2 sm:mb-3">
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 sm:h-3 overflow-hidden">
           <div
             className="h-full bg-secondary-500 transition-all duration-500 rounded-full"
             style={{ width: `${percentage}%` }}
@@ -44,7 +44,7 @@ export function TodayProgress() {
       </div>
 
       {/* Stats */}
-      <div className="flex items-center justify-between text-sm">
+      <div className="flex items-center justify-between text-xs sm:text-sm">
         <span className="text-gray-600 dark:text-gray-400">
           <span className="font-bold text-gray-900 dark:text-gray-100">
             {completedCount}
@@ -53,29 +53,29 @@ export function TodayProgress() {
           <span className="font-bold text-gray-900 dark:text-gray-100">
             {totalHabits}
           </span>{" "}
-          habits completed
+          completed
         </span>
-        <span className="font-bold text-primary">{percentage}%</span>
+        <span className="font-bold text-primary shrink-0 ml-2">{percentage}%</span>
       </div>
 
       {/* Motivational Message */}
       {percentage === 100 && (
-        <p className="mt-3 text-sm text-green-600 dark:text-green-400 font-medium">
+        <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-green-600 dark:text-green-400 font-medium">
           🎉 Perfect day! All habits completed!
         </p>
       )}
       {percentage >= 50 && percentage < 100 && (
-        <p className="mt-3 text-sm text-secondary-700 dark:text-secondary-400 font-medium">
+        <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-secondary-700 dark:text-secondary-400 font-medium">
           🔥 You're on fire! Keep going!
         </p>
       )}
       {percentage > 0 && percentage < 50 && (
-        <p className="mt-3 text-sm text-blue-600 dark:text-blue-400 font-medium">
+        <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-medium">
           💪 Great start! You can do this!
         </p>
       )}
       {percentage === 0 && totalHabits > 0 && (
-        <p className="mt-3 text-sm text-gray-500 dark:text-gray-400 font-medium">
+        <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-500 dark:text-gray-400 font-medium">
           ⏰ Ready to start your day?
         </p>
       )}

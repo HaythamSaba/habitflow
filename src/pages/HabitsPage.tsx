@@ -117,38 +117,41 @@ export function HabitsPage() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-8">
+      <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6">
+        {/* Hero Header */}
         <div className="relative">
-          <div className="absolute inset-0  bg-linear-to-r from-primary-500  via-secondary-500/10 to-purple-500/10 blur-3xl dark:from-primary-400/10 dark:via-secondary-400/10 dark:to-purple-400/10" />
-          <div className="flex items-start justify-between gap-4 flex-wrap">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <Sparkles className="w-8 h-8 text-primary-500" />
-                <h1 className="text-4xl font-bold bg-linear-to-r from-primary-500 to-secondary-500 dark:from-primary-400 dark:to-secondary-400 bg-clip-text text-transparent">
+          <div className="absolute inset-0 bg-linear-to-r from-primary-500 via-secondary-500/10 to-purple-500/10 blur-3xl dark:from-primary-400/10 dark:via-secondary-400/10 dark:to-purple-400/10" />
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4 text-center md:text-left">
+            <div className="flex flex-col gap-1 sm:gap-2 text-center md:text-left">
+              <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2 mx-auto md:mx-0">
+                <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-primary-500 shrink-0" />
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-linear-to-r from-primary-500 to-secondary-500 dark:from-primary-400 dark:to-secondary-400 bg-clip-text text-transparent">
                   My Habits Library
                 </h1>
               </div>
-              <p className="text-gray-600 dark:text-gray-400 text-lg">
+              <p className="text-sm sm:text-base lg:text-lg text-gray-600 dark:text-gray-400">
                 Master your habits with elegance
               </p>
             </div>
             {/* Action Buttons */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0  mx-auto md:mx-0">
               <Button
                 variant="ghost"
                 onClick={() => navigate("/templates")}
-                leftIcon={<Sparkles className="w-5 h-5" />}
-                className="border border-primary-200 dark:border-primary-800 hover:bg-primary-50 dark:hover:bg-primary-900/20"
+                leftIcon={<Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />}
+                className="border border-primary-200 dark:border-primary-800 hover:bg-primary-50 dark:hover:bg-primary-900/20 text-sm sm:text-base min-h-11"
               >
-                Browse Templates
+                <span className="hidden sm:inline">Browse Templates</span>
+                <span className="sm:hidden">Templates</span>
               </Button>
               <Button
                 variant="primary"
-                leftIcon={<Plus className="w-5 h-5" />}
+                leftIcon={<Plus className="w-4 h-4 sm:w-5 sm:h-5" />}
                 onClick={() => setIsCreateModalOpen(true)}
-                className="shadow-lg shadow-primary-500/50 hover:shadow-xl hover:shadow-primary-500/60 transition-all"
+                className="shadow-lg shadow-primary-500/50 hover:shadow-xl hover:shadow-primary-500/60 transition-all text-sm sm:text-base min-h-11"
               >
-                Create Habit
+                <span className="hidden sm:inline">Create Habit</span>
+                <span className="sm:hidden">Create</span>
               </Button>
             </div>
           </div>
@@ -163,7 +166,6 @@ export function HabitsPage() {
           longestStreak={longestStreak}
         />
 
-        {/* Filters & View Controls */}
         {/* Premium Filters & View Controls */}
         <HabitsFilterBar
           searchQuery={searchQuery}
@@ -184,21 +186,23 @@ export function HabitsPage() {
         />
 
         {/* Results Count */}
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+        {/* RESPONSIVE: Stack on mobile if both messages show, smaller text */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
             Showing {filteredHabits.length} of {habits?.length || 0} habits
           </p>
 
           {filteredHabits.length === 0 && (
-            <p className="text-sm text-amber-600 dark:text-amber-400">
+            <p className="text-xs sm:text-sm text-amber-600 dark:text-amber-400">
               No habits match your filters
             </p>
           )}
         </div>
+        
         {/* Habits Grid */}
         {isLoading ? (
           // Loading Skeletons
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
             {[...Array(6)].map((_, i) => (
               <PremiumHabitCardSkeleton key={i} />
             ))}
@@ -208,8 +212,8 @@ export function HabitsPage() {
             {/* Cards Grid */}
             <div
               className={`
-              ${viewMode === "cards" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : ""}
-              ${viewMode === "list" ? "space-y-4" : ""}
+              ${viewMode === "cards" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6" : ""}
+              ${viewMode === "list" ? "space-y-3 sm:space-y-4" : ""}
               ${viewMode === "table" ? "overflow-x-auto" : ""}
             `}
             >
@@ -230,22 +234,22 @@ export function HabitsPage() {
                 ))}
 
               {viewMode === "list" && (
-                <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-12 border border-gray-200 dark:border-gray-700 text-center">
-                  <p className="text-gray-500 dark:text-gray-400 text-lg">
+                <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 sm:p-8 lg:p-12 border border-gray-200 dark:border-gray-700 text-center">
+                  <p className="text-gray-500 dark:text-gray-400 text-base sm:text-lg">
                     📋 List view coming in a future update!
                   </p>
-                  <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">
+                  <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 mt-2">
                     For now, enjoy the beautiful card view ✨
                   </p>
                 </div>
               )}
 
               {viewMode === "table" && (
-                <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-12 border border-gray-200 dark:border-gray-700 text-center">
-                  <p className="text-gray-500 dark:text-gray-400 text-lg">
+                <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 sm:p-8 lg:p-12 border border-gray-200 dark:border-gray-700 text-center">
+                  <p className="text-gray-500 dark:text-gray-400 text-base sm:text-lg">
                     📊 Table view coming in a future update!
                   </p>
-                  <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">
+                  <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 mt-2">
                     For now, enjoy the beautiful card view ✨
                   </p>
                 </div>

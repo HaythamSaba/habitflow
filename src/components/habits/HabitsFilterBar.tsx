@@ -71,283 +71,295 @@ export function HabitsFilterBar({
     searchQuery || selectedCategory || statusFilter !== "active";
 
   return (
-    <div className="bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl rounded-2xl p-6 border border-white/20 dark:border-gray-700/50 shadow-xl relative ">
-      <div className="flex items-center gap-4 flex-wrap">
-        {/* Search */}
-        <div className="relative flex-1 min-w-70">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+    <div className="bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 border border-white/20 dark:border-gray-700/50 shadow-xl relative">
+      <div className="flex flex-col gap-3 sm:gap-4">
+        <div className="relative w-full sm:w-auto sm:flex-1 sm:min-w-70">
+          <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
           <input
             type="text"
             placeholder="Search habits..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+            // RESPONSIVE: min-h-11 for touch target, smaller padding on mobile
+            className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 min-h-11 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
           />
         </div>
 
-        {/* Filters */}
-        <div className="flex items-center gap-3 flex-wrap" ref={dropDownRef}>
-          {/* Status Filter */}
-          <div className="relative">
-            <button
-              onClick={() => {
-                setShowStatusDropdown(!showStatusDropdown);
-                setShowCategoryDropdown(false);
-                setShowSortDropdown(false);
-              }}
-              className="flex items-center gap-2 px-4 py-3 rounded-xl bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-all text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
-              <SlidersHorizontal className="w-4 h-4" />
-              <span>
-                {statusFilter === "all"
-                  ? "All Habits"
-                  : statusFilter === "active"
-                    ? "Active"
-                    : "Archived"}
-              </span>
-              <ChevronDown className="w-4 h-4" />
-            </button>
-
-            {showStatusDropdown && (
-              <div className="absolute top-full left-0 mt-2 w-48 z-40">
-                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl overflow-hidden">
-                  <button
-                    onClick={() => {
-                      onStatusFilterChange("active");
-                      setShowStatusDropdown(false);
-                    }}
-                    className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                      statusFilter === "active"
-                        ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
-                        : "text-gray-700 dark:text-gray-300"
-                    }`}
-                  >
-                    Active ({activeCount})
-                  </button>
-                  <button
-                    onClick={() => {
-                      onStatusFilterChange("archived");
-                      setShowStatusDropdown(false);
-                    }}
-                    className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                      statusFilter === "archived"
-                        ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
-                        : "text-gray-700 dark:text-gray-300"
-                    }`}
-                  >
-                    Archived ({archivedCount})
-                  </button>
-                  <button
-                    onClick={() => {
-                      onStatusFilterChange("all");
-                      setShowStatusDropdown(false);
-                    }}
-                    className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                      statusFilter === "all"
-                        ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
-                        : "text-gray-700 dark:text-gray-300"
-                    }`}
-                  >
-                    All ({totalCount})
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Category Filter */}
-          {categories.length > 0 && (
+        {/* RESPONSIVE: Filters row — horizontal scroll on mobile so buttons don't wrap awkwardly */}
+        <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto scrollbar-hide -mx-1 px-1">
+          {/* Filters */}
+          <div
+            className="flex items-center gap-2 sm:gap-3 shrink-0"
+            ref={dropDownRef}
+          >
+            {/* Status Filter */}
             <div className="relative">
               <button
                 onClick={() => {
-                  setShowCategoryDropdown(!showCategoryDropdown);
-                  setShowStatusDropdown(false);
+                  setShowStatusDropdown(!showStatusDropdown);
+                  setShowCategoryDropdown(false);
                   setShowSortDropdown(false);
                 }}
-                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-all text-sm font-medium text-gray-700 dark:text-gray-300"
+                // RESPONSIVE: min-h-11 for touch target, smaller padding/text on mobile
+                className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-3 min-h-11 rounded-xl bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-all text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap"
               >
+                <SlidersHorizontal className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                 <span>
-                  {selectedCategory
-                    ? categories.find((c) => c.id === selectedCategory)?.icon +
-                      " " +
-                      categories.find((c) => c.id === selectedCategory)?.name
-                    : "All Categories"}
+                  {statusFilter === "all"
+                    ? "All"
+                    : statusFilter === "active"
+                      ? "Active"
+                      : "Archived"}
                 </span>
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
               </button>
 
-              {showCategoryDropdown && (
-                <div className="absolute top-full left-0 mt-2 w-56 z-40">
-                  <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl overflow-hidden max-h-80 overflow-y-auto">
+              {showStatusDropdown && (
+                <div className="absolute top-full left-0 mt-2 w-44 sm:w-48 z-40">
+                  <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl overflow-hidden">
                     <button
                       onClick={() => {
-                        onCategoryChange(null);
-                        setShowCategoryDropdown(false);
+                        onStatusFilterChange("active");
+                        setShowStatusDropdown(false);
                       }}
-                      className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                        !selectedCategory
+                      className={`w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                        statusFilter === "active"
                           ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
                           : "text-gray-700 dark:text-gray-300"
                       }`}
                     >
-                      All Categories
+                      Active ({activeCount})
                     </button>
-                    {categories.map((category) => (
-                      <button
-                        key={category.id}
-                        onClick={() => {
-                          onCategoryChange(category.id);
-                          setShowCategoryDropdown(false);
-                        }}
-                        className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 ${
-                          selectedCategory === category.id
-                            ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
-                            : "text-gray-700 dark:text-gray-300"
-                        }`}
-                      >
-                        <span>{category.icon}</span>
-                        <span>{category.name}</span>
-                      </button>
-                    ))}
+                    <button
+                      onClick={() => {
+                        onStatusFilterChange("archived");
+                        setShowStatusDropdown(false);
+                      }}
+                      className={`w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                        statusFilter === "archived"
+                          ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
+                          : "text-gray-700 dark:text-gray-300"
+                      }`}
+                    >
+                      Archived ({archivedCount})
+                    </button>
+                    <button
+                      onClick={() => {
+                        onStatusFilterChange("all");
+                        setShowStatusDropdown(false);
+                      }}
+                      className={`w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                        statusFilter === "all"
+                          ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
+                          : "text-gray-700 dark:text-gray-300"
+                      }`}
+                    >
+                      All ({totalCount})
+                    </button>
                   </div>
                 </div>
               )}
             </div>
-          )}
 
-          {/* Sort Filter */}
-          <div className="relative">
-            <button
-              onClick={() => {
-                setShowSortDropdown(!showSortDropdown);
-                setShowStatusDropdown(false);
-                setShowCategoryDropdown(false);
-              }}
-              className="flex items-center gap-2 px-4 py-3 rounded-xl bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-all text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
-              <span>Sort: </span>
-              <span className="text-primary-600 dark:text-primary-400">
-                {sortBy === "name"
-                  ? "Name"
-                  : sortBy === "date"
-                    ? "Newest"
-                    : sortBy === "streak"
-                      ? "Streak"
-                      : "Rate"}
-              </span>
-              <ChevronDown className="w-4 h-4" />
-            </button>
+            {/* Category Filter */}
+            {categories.length > 0 && (
+              <div className="relative">
+                <button
+                  onClick={() => {
+                    setShowCategoryDropdown(!showCategoryDropdown);
+                    setShowStatusDropdown(false);
+                    setShowSortDropdown(false);
+                  }}
+                  className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-3 min-h-11 rounded-xl bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-all text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                >
+                  <span className="max-w-20 sm:max-w-none truncate">
+                    {selectedCategory
+                      ? categories.find((c) => c.id === selectedCategory)
+                          ?.icon +
+                        " " +
+                        categories.find((c) => c.id === selectedCategory)?.name
+                      : "Category"}
+                  </span>
+                  <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                </button>
 
-            {showSortDropdown && (
-              <div className="absolute top-full right-0 mt-2 w-48 z-40">
-                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl overflow-hidden">
-                  <button
-                    onClick={() => {
-                      onSortChange("name");
-                      setShowSortDropdown(false);
-                    }}
-                    className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                      sortBy === "name"
-                        ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
-                        : "text-gray-700 dark:text-gray-300"
-                    }`}
-                  >
-                    Name (A-Z)
-                  </button>
-                  <button
-                    onClick={() => {
-                      onSortChange("date");
-                      setShowSortDropdown(false);
-                    }}
-                    className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                      sortBy === "date"
-                        ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
-                        : "text-gray-700 dark:text-gray-300"
-                    }`}
-                  >
-                    Newest First
-                  </button>
-                  <button
-                    onClick={() => {
-                      onSortChange("streak");
-                      setShowSortDropdown(false);
-                    }}
-                    className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                      sortBy === "streak"
-                        ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
-                        : "text-gray-700 dark:text-gray-300"
-                    }`}
-                  >
-                    Best Streak
-                  </button>
-                  <button
-                    onClick={() => {
-                      onSortChange("rate");
-                      setShowSortDropdown(false);
-                    }}
-                    className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                      sortBy === "rate"
-                        ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
-                        : "text-gray-700 dark:text-gray-300"
-                    }`}
-                  >
-                    Completion Rate
-                  </button>
-                </div>
+                {showCategoryDropdown && (
+                  // RESPONSIVE: Position left-0 on mobile, constrain width
+                  <div className="absolute top-full left-0 sm:left-0 mt-2 w-48 sm:w-56 z-40">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl overflow-hidden max-h-64 sm:max-h-80 overflow-y-auto">
+                      <button
+                        onClick={() => {
+                          onCategoryChange(null);
+                          setShowCategoryDropdown(false);
+                        }}
+                        className={`w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                          !selectedCategory
+                            ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
+                            : "text-gray-700 dark:text-gray-300"
+                        }`}
+                      >
+                        All Categories
+                      </button>
+                      {categories.map((category) => (
+                        <button
+                          key={category.id}
+                          onClick={() => {
+                            onCategoryChange(category.id);
+                            setShowCategoryDropdown(false);
+                          }}
+                          className={`w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 ${
+                            selectedCategory === category.id
+                              ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
+                              : "text-gray-700 dark:text-gray-300"
+                          }`}
+                        >
+                          <span>{category.icon}</span>
+                          <span className="truncate">{category.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
-          </div>
-        </div>
 
-        {/* View Mode Toggles */}
-        <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-900 rounded-xl p-1 ml-auto">
-          <button
-            onClick={() => onViewModeChange("cards")}
-            className={`p-2 rounded-lg transition-all ${
-              viewMode === "cards"
-                ? "bg-white dark:bg-gray-800 shadow-md"
-                : "hover:bg-gray-200 dark:hover:bg-gray-600"
-            }`}
-          >
-            <LayoutGrid className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-          </button>
-          <button
-            onClick={() => onViewModeChange("list")}
-            className={`p-2 rounded-lg transition-all ${
-              viewMode === "list"
-                ? "bg-white dark:bg-gray-800 shadow-md"
-                : "hover:bg-gray-200 dark:hover:bg-gray-600"
-            }`}
-          >
-            <List className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-          </button>
-          <button
-            onClick={() => onViewModeChange("table")}
-            className={`p-2 rounded-lg transition-all ${
-              viewMode === "table"
-                ? "bg-white dark:bg-gray-800 shadow-md"
-                : "hover:bg-gray-200 dark:hover:bg-gray-600"
-            }`}
-          >
-            <Table className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-          </button>
+            {/* Sort Filter */}
+            <div className="relative">
+              <button
+                onClick={() => {
+                  setShowSortDropdown(!showSortDropdown);
+                  setShowStatusDropdown(false);
+                  setShowCategoryDropdown(false);
+                }}
+                className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-3 min-h-11 rounded-xl bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-all text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap"
+              >
+                {/* RESPONSIVE: Hide "Sort:" prefix on mobile to save space */}
+                <span className="hidden sm:inline">Sort: </span>
+                <span className="text-primary-600 dark:text-primary-400">
+                  {sortBy === "name"
+                    ? "Name"
+                    : sortBy === "date"
+                      ? "Newest"
+                      : sortBy === "streak"
+                        ? "Streak"
+                        : "Rate"}
+                </span>
+                <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+              </button>
+
+              {showSortDropdown && (
+                // RESPONSIVE: right-0 to prevent off-screen on mobile
+                <div className="absolute top-full right-0 mt-2 w-44 sm:w-48 z-40">
+                  <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl overflow-hidden">
+                    <button
+                      onClick={() => {
+                        onSortChange("name");
+                        setShowSortDropdown(false);
+                      }}
+                      className={`w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                        sortBy === "name"
+                          ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
+                          : "text-gray-700 dark:text-gray-300"
+                      }`}
+                    >
+                      Name (A-Z)
+                    </button>
+                    <button
+                      onClick={() => {
+                        onSortChange("date");
+                        setShowSortDropdown(false);
+                      }}
+                      className={`w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                        sortBy === "date"
+                          ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
+                          : "text-gray-700 dark:text-gray-300"
+                      }`}
+                    >
+                      Newest First
+                    </button>
+                    <button
+                      onClick={() => {
+                        onSortChange("streak");
+                        setShowSortDropdown(false);
+                      }}
+                      className={`w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                        sortBy === "streak"
+                          ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
+                          : "text-gray-700 dark:text-gray-300"
+                      }`}
+                    >
+                      Best Streak
+                    </button>
+                    <button
+                      onClick={() => {
+                        onSortChange("rate");
+                        setShowSortDropdown(false);
+                      }}
+                      className={`w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                        sortBy === "rate"
+                          ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
+                          : "text-gray-700 dark:text-gray-300"
+                      }`}
+                    >
+                      Completion Rate
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* View Mode Toggles */}
+          {/* RESPONSIVE: min-h-11 per button for touch targets */}
+          <div className="flex items-center gap-1 sm:gap-2 bg-gray-100 dark:bg-gray-900 rounded-xl p-1 ml-auto shrink-0">
+            <button
+              onClick={() => onViewModeChange("cards")}
+              className={`p-2 min-h-11 min-w-11 flex items-center justify-center rounded-lg transition-all ${
+                viewMode === "cards"
+                  ? "bg-white dark:bg-gray-800 shadow-md"
+                  : "hover:bg-gray-200 dark:hover:bg-gray-600"
+              }`}
+            >
+              <LayoutGrid className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 dark:text-gray-300" />
+            </button>
+            <button
+              onClick={() => onViewModeChange("list")}
+              className={`p-2 min-h-11 min-w-11 flex items-center justify-center rounded-lg transition-all ${
+                viewMode === "list"
+                  ? "bg-white dark:bg-gray-800 shadow-md"
+                  : "hover:bg-gray-200 dark:hover:bg-gray-600"
+              }`}
+            >
+              <List className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 dark:text-gray-300" />
+            </button>
+            <button
+              onClick={() => onViewModeChange("table")}
+              className={`p-2 min-h-11 min-w-11 flex items-center justify-center rounded-lg transition-all ${
+                viewMode === "table"
+                  ? "bg-white dark:bg-gray-800 shadow-md"
+                  : "hover:bg-gray-200 dark:hover:bg-gray-600"
+              }`}
+            >
+              <Table className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 dark:text-gray-300" />
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Active Filters */}
       {hasActiveFilters && (
-        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm text-gray-600 dark:text-gray-400">
-              Active filters:
+        <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+            <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+              Filters:
             </span>
 
             {statusFilter !== "active" && (
-              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 text-sm">
-                {statusFilter === "all" ? "All Habits" : "Archived"}
+              <span className="inline-flex items-center gap-1 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 text-xs sm:text-sm">
+                {statusFilter === "all" ? "All" : "Archived"}
                 <button
                   onClick={() => onStatusFilterChange("active")}
-                  className="ml-1 hover:bg-primary-200 dark:hover:bg-primary-800 rounded-full p-0.5"
+                  className="ml-0.5 sm:ml-1 hover:bg-primary-200 dark:hover:bg-primary-800 rounded-full p-0.5 min-w-5 min-h-5 flex items-center justify-center"
                 >
                   ×
                 </button>
@@ -355,12 +367,14 @@ export function HabitsFilterBar({
             )}
 
             {selectedCategory && (
-              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 text-sm">
-                {categories.find((c) => c.id === selectedCategory)?.icon}{" "}
-                {categories.find((c) => c.id === selectedCategory)?.name}
+              <span className="inline-flex items-center gap-1 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 text-xs sm:text-sm max-w-37.5 sm:max-w-none">
+                <span className="truncate">
+                  {categories.find((c) => c.id === selectedCategory)?.icon}{" "}
+                  {categories.find((c) => c.id === selectedCategory)?.name}
+                </span>
                 <button
                   onClick={() => onCategoryChange(null)}
-                  className="ml-1 hover:bg-primary-200 dark:hover:bg-primary-800 rounded-full p-0.5"
+                  className="ml-0.5 sm:ml-1 hover:bg-primary-200 dark:hover:bg-primary-800 rounded-full p-0.5 shrink-0 min-w-5 min-h-5 flex items-center justify-center"
                 >
                   ×
                 </button>
@@ -368,11 +382,11 @@ export function HabitsFilterBar({
             )}
 
             {searchQuery && (
-              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 text-sm">
-                Search: "{searchQuery}"
+              <span className="inline-flex items-center gap-1 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 text-xs sm:text-sm max-w-45 sm:max-w-none">
+                <span className="truncate">"{searchQuery}"</span>
                 <button
                   onClick={() => onSearchChange("")}
-                  className="ml-1 hover:bg-primary-200 dark:hover:bg-primary-800 rounded-full p-0.5"
+                  className="ml-0.5 sm:ml-1 hover:bg-primary-200 dark:hover:bg-primary-800 rounded-full p-0.5 shrink-0 min-w-5 min-h-5 flex items-center justify-center"
                 >
                   ×
                 </button>
@@ -381,7 +395,7 @@ export function HabitsFilterBar({
 
             <button
               onClick={onClearAllFilters}
-              className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
+              className="text-xs sm:text-sm text-primary-600 dark:text-primary-400 hover:underline min-h-7 flex items-center"
             >
               Clear all
             </button>

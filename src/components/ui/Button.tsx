@@ -24,10 +24,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       onClick,
       ...props
     },
-    ref
+    ref,
   ) => {
     const baseStyles =
-      "btn inline-flex items-center justify-center cursor-pointer font-medium rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-0 focus:ring-offset-0  dark:hover:bg-gray-700 dark:text-gray-100 dark:hover:text-white";
+      "btn inline-flex items-center justify-center cursor-pointer font-medium rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-0 focus:ring-offset-0 dark:hover:bg-gray-700 dark:text-gray-100 dark:hover:text-white";
 
     const variants = {
       primary:
@@ -43,9 +43,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     const sizes = {
-      sm: "btn-sm px-3 py-1.5 text-sm",
-      md: "btn-md px-4 py-2.5 text-base",
-      lg: "btn-lg px-6 py-3 text-lg",
+      sm: "btn-sm px-3 py-1.5 text-xs sm:text-sm min-h-9 sm:min-h-10",
+      md: "btn-md px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base min-h-10 sm:min-h-11",
+      lg: "btn-lg px-4 sm:px-6 py-2.5 sm:py-3 text-base sm:text-lg min-h-11 sm:min-h-12",
     };
 
     return (
@@ -63,14 +63,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           </>
         ) : (
           <>
-            {leftIcon && <span className="mr-2">{leftIcon}</span>}
+            {leftIcon && <span className="mr-1.5 sm:mr-2">{leftIcon}</span>}
             {children}
-            {rightIcon && <span className="ml-2">{rightIcon}</span>}
+            {rightIcon && <span className="ml-1.5 sm:ml-2">{rightIcon}</span>}
           </>
         )}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";

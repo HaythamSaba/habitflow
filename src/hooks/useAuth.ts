@@ -53,7 +53,6 @@ export function useAuth() {
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!mounted) return;
 
-      console.log("Auth event:", event);
       setUser(session?.user ?? null);
       setLoading(false);
 

@@ -21,29 +21,41 @@ export function AchievementToast({ achievement }: AchievementToastProps) {
     rarityColors.common;
 
   return (
-    <div className={`p-4 rounded-lg border-2 ${rarityColor}min-w-75`}>
-      <div className="flex items-start gap-3">
+    // RESPONSIVE: Reduced padding on mobile (p-3), constrained width so it doesn't overflow
+    // Fixed missing space before min-w-75 in original, and made width responsive
+    <div
+      className={`p-3 sm:p-4 rounded-lg border-2 ${rarityColor} w-[calc(100vw-2rem)] sm:w-auto sm:min-w-75 max-w-sm`}
+    >
+      <div className="flex items-start gap-2 sm:gap-3">
         {/* Emoji */}
-        <div className="text-4xl animate-bounce">{achievement.emoji}</div>
+        {/* RESPONSIVE: Smaller emoji on mobile */}
+        <div className="text-3xl sm:text-4xl animate-bounce shrink-0">
+          {achievement.emoji}
+        </div>
 
         {/* Content */}
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <h3 className="font-bold text-gray-900">
+            {/* RESPONSIVE: Smaller heading on mobile */}
+            <h3 className="font-bold text-gray-900 text-sm sm:text-base">
               🎉 Achievement Unlocked!
             </h3>
           </div>
-          <p className="font-semibold text-lg text-gray-800 mb-1">
+          {/* RESPONSIVE: Smaller name, truncate if needed */}
+          <p className="font-semibold text-base sm:text-lg text-gray-800 mb-1 truncate">
             {achievement.name}
           </p>
-          <p className="text-sm text-gray-600 mb-2">
+          {/* RESPONSIVE: line-clamp-2 prevents long descriptions from blowing out toast */}
+          <p className="text-xs sm:text-sm text-gray-600 mb-2 line-clamp-2">
             {achievement.description}
           </p>
-          <div className="flex-items-center gap-2">
-            <span className="text-sm font-semibold px-2 py-1 rounded-full bg-yellow-100 text-yellow-700">
-              +{achievement.points_reward} Points
+          {/* RESPONSIVE: Fixed missing space in original (flex-items → flex items),
+              wrap badges on small screens */}
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+            <span className="text-xs sm:text-sm font-semibold px-2 py-0.5 sm:py-1 rounded-full bg-yellow-100 text-yellow-700">
+              +{achievement.points_reward} pts
             </span>
-            <span className="text-xs font-semibold px-2 py-1 rounded-full bg-white text-gray-700 border">
+            <span className="text-xs font-semibold px-2 py-0.5 sm:py-1 rounded-full bg-white text-gray-700 border">
               {achievement.rarity}
             </span>
           </div>

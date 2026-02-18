@@ -38,16 +38,21 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-primary-200 flex items-center justify-center p-6 bg-[#fafafa]">
+    <div className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-primary-200 flex items-center justify-center p-4 sm:p-6 bg-[#fafafa]">
       <div className="w-full max-w-md">
         {/* Card */}
-        <div className="rounded-xl border p-8 shadow-primary-200 shadow-xl bg-white">
-          <h1 className="text-3xl font-bold text-center mb-2">Welcome back</h1>
-          <p className="text-center text-gray-400 mb-6">
+        <div className="rounded-xl border p-5 sm:p-6 lg:p-8 shadow-primary-200 shadow-xl bg-white">
+          <h1 className="text-2xl sm:text-3xl font-bold text-center mb-1.5 sm:mb-2">
+            Welcome back
+          </h1>
+          <p className="text-center text-gray-400 text-sm sm:text-base mb-4 sm:mb-6">
             Continue your journey towards consistency.
           </p>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-3 sm:space-y-4"
+          >
             <Input
               label="Email Address"
               type="email"
@@ -67,10 +72,10 @@ export function LoginPage() {
               disabled={isLoading}
             />
 
-            <div className="flex items-center ">
+            <div className="flex items-center">
               <button
                 type="button"
-                className="text-sm text-primary-500 hover:underline"
+                className="text-sm text-primary-500 hover:underline min-h-11 flex items-center"
               >
                 Forgot password?
               </button>
@@ -79,21 +84,18 @@ export function LoginPage() {
               type="submit"
               variant="primary"
               size="lg"
-              className="w-full"
+              className="w-full min-h-11"
               isLoading={isLoading}
-              rightIcon={<ArrowRight className="w-5 h-5" />}
+              rightIcon={<ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />}
             >
               Log In
             </Button>
           </form>
 
-          <div className="mt-6 text-center">
+          <div className="mt-4 sm:mt-6 text-center">
             <p className="text-sm text-muted-foreground">
               Don't have an account?{" "}
-              <Link
-                to="/signup"
-                className="text-primary-500 hover:underline"
-              >
+              <Link to="/signup" className="text-primary-500 hover:underline">
                 Sign Up
               </Link>
             </p>

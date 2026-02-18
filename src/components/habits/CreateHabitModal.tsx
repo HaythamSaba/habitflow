@@ -155,11 +155,12 @@ export function CreateHabitModal({
       title="Create New Habit"
       size="lg"
       footer={
-        <>
+        <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto sm:justify-end">
           <Button
             variant="ghost"
             onClick={handleClose}
             disabled={createHabit.isPending}
+            className="min-h-11 w-full sm:w-auto"
           >
             Cancel
           </Button>
@@ -167,13 +168,14 @@ export function CreateHabitModal({
             variant="primary"
             onClick={handleSubmit(handleFormSubmit)}
             isLoading={createHabit.isPending}
+            className="min-h-11 w-full sm:w-auto"
           >
             Create Habit
           </Button>
-        </>
+        </div>
       }
     >
-      <form className="space-y-6">
+      <form className="space-y-4 sm:space-y-5 lg:space-y-6">
         {/* Habit Name */}
         <Input
           label="Habit Name"
@@ -185,17 +187,17 @@ export function CreateHabitModal({
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-100 mb-1.5">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-100 mb-1 sm:mb-1.5">
             Description (Optional)
           </label>
           <textarea
             placeholder="What is this habit about?"
-            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
-            rows={3}
+            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none text-sm sm:text-base"
+            rows={2}
             {...register("description")}
           />
           {errors.description && (
-            <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">
+            <p className="mt-1 sm:mt-1.5 text-xs sm:text-sm text-red-600 dark:text-red-400">
               {errors.description.message}
             </p>
           )}
@@ -203,28 +205,28 @@ export function CreateHabitModal({
 
         {/* Icon Picker */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 sm:mb-3">
             Choose an Icon
           </label>
-          <div className="grid grid-cols-6 gap-2">
+          <div className="grid grid-cols-4 sm:grid-cols-6 gap-1.5 sm:gap-2">
             {HABIT_ICONS.map(({ name, icon: Icon, label }) => (
               <button
                 key={name}
                 type="button"
                 onClick={() => handleIconSelect(name)}
-                className={`flex flex-col items-center justify-center p-3 rounded-lg border-2 transition-all hover:border-primary hover:bg-emerald-50 dark:hover:bg-emerald-900/20 ${
+                className={`flex flex-col items-center justify-center p-2 sm:p-3 min-h-11 rounded-lg border-2 transition-all hover:border-primary hover:bg-emerald-50 dark:hover:bg-emerald-900/20 ${
                   selectedIcon === name
-                    ? "border-primary bg-emerald-50 dark:bg-emerald-900/20 ring-2 ring-primary ring-offset-2 dark:ring-offset-gray-800"
+                    ? "border-primary bg-emerald-50 dark:bg-emerald-900/20 ring-2 ring-primary ring-offset-1 sm:ring-offset-2 dark:ring-offset-gray-800"
                     : "border-gray-200 dark:border-gray-700"
                 }`}
                 title={label}
               >
-                <Icon className="w-6 h-6 text-gray-700 dark:text-gray-300" />
+                <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 dark:text-gray-300" />
               </button>
             ))}
           </div>
           {errors.icon && (
-            <p className="mt-2 text-sm text-red-600 dark:text-red-400">
+            <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-red-600 dark:text-red-400">
               {errors.icon.message}
             </p>
           )}
@@ -232,16 +234,16 @@ export function CreateHabitModal({
 
         {/* Color Picker */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 sm:mb-3">
             Choose a Color
           </label>
-          <div className="flex gap-3 flex-wrap">
+          <div className="flex gap-2 sm:gap-3 flex-wrap">
             {HABIT_COLORS.map((color) => (
               <button
                 key={color}
                 type="button"
                 onClick={() => handleColorSelect(color)}
-                className={`w-10 h-10 rounded-full transition-all hover:scale-110 ${
+                className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full transition-all hover:scale-110 ${
                   selectedColor === color
                     ? "ring-4 ring-offset-2 dark:ring-offset-gray-800"
                     : "hover:ring-2 ring-offset-1 dark:ring-offset-gray-800"
@@ -255,7 +257,7 @@ export function CreateHabitModal({
             ))}
           </div>
           {errors.color && (
-            <p className="mt-2 text-sm text-red-600 dark:text-red-400">
+            <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-red-600 dark:text-red-400">
               {errors.color.message}
             </p>
           )}
@@ -263,44 +265,44 @@ export function CreateHabitModal({
 
         {/* Frequency */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 sm:mb-3">
             Frequency
           </label>
-          <div className="grid grid-cols-3 gap-3">
-            <label className="relative flex items-center justify-center px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-primary transition-colors">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            <label className="relative flex items-center justify-center px-2 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-primary transition-colors min-h-11">
               <input
                 type="radio"
                 value="daily"
                 {...register("frequency")}
                 className="sr-only peer"
               />
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 peer-checked:text-primary">
+              <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 peer-checked:text-primary">
                 Daily
               </span>
               <div className="absolute inset-0 border-2 border-primary rounded-lg opacity-0 peer-checked:opacity-100 pointer-events-none" />
             </label>
 
-            <label className="relative flex items-center justify-center px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-primary transition-colors">
+            <label className="relative flex items-center justify-center px-2 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-primary transition-colors min-h-11">
               <input
                 type="radio"
                 value="weekly"
                 {...register("frequency")}
                 className="sr-only peer"
               />
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 peer-checked:text-primary">
+              <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 peer-checked:text-primary">
                 Weekly
               </span>
               <div className="absolute inset-0 border-2 border-primary rounded-lg opacity-0 peer-checked:opacity-100 pointer-events-none" />
             </label>
 
-            <label className="relative flex items-center justify-center px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-primary transition-colors">
+            <label className="relative flex items-center justify-center px-2 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-primary transition-colors min-h-11">
               <input
                 type="radio"
                 value="custom"
                 {...register("frequency")}
                 className="sr-only peer"
               />
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 peer-checked:text-primary">
+              <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 peer-checked:text-primary">
                 Custom
               </span>
               <div className="absolute inset-0 border-2 border-primary rounded-lg opacity-0 peer-checked:opacity-100 pointer-events-none" />
@@ -310,10 +312,10 @@ export function CreateHabitModal({
 
         {/* Target Count */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-1.5">
             Daily Target
           </label>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             <input
               type="range"
               min="1"
@@ -322,23 +324,26 @@ export function CreateHabitModal({
                 valueAsNumber: true,
                 onChange: (e) => setTargetCount(Number(e.target.value)),
               })}
-              className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary"
+              // RESPONSIVE: min-h-[44px] so the range slider has a comfortable touch target
+              className="flex-1 h-2 min-h-11 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary"
             />
-            <span className="text-lg font-bold text-gray-900 dark:text-gray-100 w-12 text-center">
+            <span className="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100 w-10 sm:w-12 text-center shrink-0">
               {targetCount}x
             </span>
           </div>
-          <p className="mt-1.5 text-sm text-gray-500 dark:text-gray-400">
-            How many times per day do you want to complete this habit?
+          <p className="mt-1 sm:mt-1.5 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+            How many times per day?
           </p>
         </div>
+
+        {/* Category */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-1.5">
             Category (Optional)
           </label>
           <select
             {...register("category_id")}
-            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 min-h-11 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm sm:text-base"
           >
             <option value="">No Category</option>
             {categories.map((category) => (
@@ -347,8 +352,8 @@ export function CreateHabitModal({
               </option>
             ))}
           </select>
-          <p className="mb-1.5 text-sm text-gray-500 dark:text-gray-400">
-            Organizer your habits into a category
+          <p className="mt-1 sm:mt-1.5 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+            Organize your habits into a category
           </p>
         </div>
       </form>

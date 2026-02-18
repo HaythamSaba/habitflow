@@ -8,6 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useState, useEffect } from "react";
 
 interface CompletionTrendChartProps {
   data: Array<{
@@ -16,7 +17,7 @@ interface CompletionTrendChartProps {
   }>;
 }
 
-// ⭐ Custom tooltip with proper typing
+// Custom tooltip with proper typing
 interface CustomTooltipProps {
   active?: boolean;
   payload?: Array<{
@@ -37,16 +38,16 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
   if (active && payload && payload.length) {
     return (
       <div
-        className="px-3 py-2 rounded-lg shadow-lg border"
+        className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg shadow-lg border max-w-45"
         style={{
           backgroundColor: tooltipBg,
           borderColor: tooltipBorder,
         }}
       >
-        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+        <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-gray-100">
           {payload[0].payload.date}
         </p>
-        <p className="text-sm text-primary-500 font-bold">
+        <p className="text-xs sm:text-sm text-primary-500 font-bold">
           {payload[0].value} completions
         </p>
       </div>
@@ -54,9 +55,37 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
   }
   return null;
 }
+function useChartDimensions() {
+  const [width, setWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1024,
+  );
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const isMobile = width < 640;
+  const isTablet = width >= 640 && width < 1024;
+
+  return {
+    height: isMobile ? 220 : isTablet ? 260 : 300,
+    fontSize: isMobile ? 10 : 12,
+    margin: isMobile
+      ? { top: 5, right: 5, left: -25, bottom: 5 }
+      : { top: 5, right: 10, left: -20, bottom: 5 },
+    minTickGap: isMobile ? 50 : 30,
+    dotRadius: isMobile ? 2 : 4,
+    activeDotRadius: isMobile ? 4 : 6,
+    strokeWidth: isMobile ? 1.5 : 2,
+    yAxisWidth: isMobile ? 25 : 35,
+  };
+}
 
 export function CompletionTrendChart({ data }: CompletionTrendChartProps) {
   const { theme } = useTheme();
+  const chart = useChartDimensions();
 
   // Dark mode colors
   const isDark = theme === "dark";
@@ -64,36 +93,36 @@ export function CompletionTrendChart({ data }: CompletionTrendChartProps) {
   const gridColor = isDark ? "#374151" : "#e5e7eb";
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <LineChart
-        data={data}
-        margin={{ top: 5, right: 10, left: -20, bottom: 5 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-        <XAxis
-          dataKey="date"
-          stroke={textColor}
-          fontSize={12}
-          tickLine={false}
-          interval="preserveStartEnd"
-          minTickGap={30}
-        />
-        <YAxis
-          stroke={textColor}
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-        />
-        <Tooltip content={<CustomTooltip />} />
-        <Line
-          type="monotone"
-          dataKey="completions"
-          stroke="#10b981"
-          strokeWidth={2}
-          dot={{ fill: "#10b981", r: 4 }}
-          activeDot={{ r: 6 }}
-        />
-      </LineChart>
-    </ResponsiveContainer>
+    <div className="w-full min-w-0">
+      <ResponsiveContainer width="100%" height={chart.height}>
+        <LineChart data={data} margin={chart.margin}>
+          <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+          <XAxis
+            dataKey="date"
+            stroke={textColor}
+            fontSize={chart.fontSize}
+            tickLine={false}
+            interval="preserveStartEnd"
+            minTickGap={chart.minTickGap}
+          />
+          <YAxis
+            stroke={textColor}
+            fontSize={chart.fontSize}
+            tickLine={false}
+            axisLine={false}
+            width={chart.yAxisWidth}
+          />
+          <Tooltip content={<CustomTooltip />} />
+          <Line
+            type="monotone"
+            dataKey="completions"
+            stroke="#10b981"
+            strokeWidth={chart.strokeWidth}
+            dot={{ fill: "#10b981", r: chart.dotRadius }}
+            activeDot={{ r: chart.activeDotRadius }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
   );
 }
