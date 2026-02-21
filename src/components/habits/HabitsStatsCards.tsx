@@ -6,6 +6,7 @@ interface HabitStatsCardsProps {
   archivedHabits: number;
   avgCompletionRate: number;
   longestStreak: number;
+  isLoading?: boolean;
 }
 
 export default function HabitsStatsCards({
@@ -14,7 +15,26 @@ export default function HabitsStatsCards({
   archivedHabits,
   avgCompletionRate,
   longestStreak,
+  isLoading = false,
 }: HabitStatsCardsProps) {
+  // If loading, show placeholder
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[...Array(4)].map((_, i) => (
+          <div
+            key={i}
+            className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl p-6 border border-white/20 dark:border-gray-700/50 shadow-xl animate-pulse"
+          >
+            <div className="h-12 w-12 bg-gray-200 dark:bg-gray-700 rounded-xl mb-4" />
+            <div className="h-8 w-16 bg-gray-200 dark:bg-gray-700 rounded mb-2" />
+            <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+  
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6">
       {/* Total Habits */}

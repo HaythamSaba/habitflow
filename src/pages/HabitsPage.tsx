@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useDeleteHabit } from "@/hooks/useDeleteHabit";
 import { useCategories } from "@/hooks/useCategories";
 import { useHabits } from "@/hooks/useHabits";
+import { useCompletions } from "@/hooks/useCompletions";
+import { useHabitsStats } from "@/hooks/useHabitStats";
 
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/Button";
@@ -22,6 +24,7 @@ import EmptyState from "@/components/habits/EmptyState";
 
 export function HabitsPage() {
   const { habits, isLoading } = useHabits();
+  const { completions } = useCompletions();
   const { categories } = useCategories();
   const deleteHabit = useDeleteHabit();
   const navigate = useNavigate();
@@ -42,9 +45,7 @@ export function HabitsPage() {
   const activeHabits = habits.filter((habit) => !habit.archived);
   const archivedHabits = habits.filter((habit) => habit.archived);
 
-  const totalHabits = activeHabits.length;
-  const avgCompletionRate = 85; // initial value
-  const longestStreak = 12; // initial value
+  const stats = useHabitsStats(habits, completions || []);
 
   const getFilterAndSortedHabits = () => {
     let filtered = activeHabits;
@@ -159,11 +160,12 @@ export function HabitsPage() {
 
         {/* Premium Stats Cards */}
         <HabitsStatsCards
-          totalHabits={totalHabits}
-          activeHabits={activeHabits.length}
-          archivedHabits={archivedHabits.length}
-          avgCompletionRate={avgCompletionRate}
-          longestStreak={longestStreak}
+          totalHabits={stats.totalHabits}
+          activeHabits={stats.activeHabits}
+          archivedHabits={stats.archivedHabits}
+          avgCompletionRate={stats.avgCompletionRate}
+          longestStreak={stats.longestStreak}
+          isLoading={isLoading}
         />
 
         {/* Premium Filters & View Controls */}
@@ -198,7 +200,7 @@ export function HabitsPage() {
             </p>
           )}
         </div>
-        
+
         {/* Habits Grid */}
         {isLoading ? (
           // Loading Skeletons
