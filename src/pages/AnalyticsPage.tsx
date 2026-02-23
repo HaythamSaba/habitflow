@@ -4,6 +4,7 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 import { BarChart3, TrendingUp, Target, Flame } from "lucide-react";
 import { CompletionTrendChart } from "@/components/analytics/CompletionTrendChart";
 import { HabitPerformanceChart } from "@/components/analytics/HabitPerformanceChart";
+import { ActivityHeatmap } from "@/components/analytics/ActivityHeatmap";
 
 export function AnalyticsPage() {
   const { habits } = useHabits();
@@ -33,7 +34,7 @@ export function AnalyticsPage() {
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6">
           {/* Total Habits */}
-          <div className="card bg-white dark:bg-gray-900 rounded-xl p-2.5 sm:p-4 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-md shadow-primary-100 dark:shadow-gray-900">
+          <div className="card bg-white dark:bg-gray-950 rounded-xl p-2.5 sm:p-4 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-md shadow-primary-100 dark:shadow-gray-900">
             <div className="flex items-center justify-between mb-2 lg:mb-4">
               <div className="w-9 h-9 lg:w-12 lg:h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
                 <BarChart3 className="w-4 h-4 lg:w-6 lg:h-6 text-blue-600 dark:text-blue-400" />
@@ -51,7 +52,7 @@ export function AnalyticsPage() {
           </div>
 
           {/* Total Completions */}
-          <div className="card bg-white dark:bg-gray-900 rounded-xl p-2.5 sm:p-4 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-md shadow-primary-100 dark:shadow-gray-900">
+          <div className="card bg-white dark:bg-gray-950 rounded-xl p-2.5 sm:p-4 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-md shadow-primary-100 dark:shadow-gray-900">
             <div className="flex items-center justify-between mb-2 lg:mb-4">
               <div className="w-9 h-9 lg:w-12 lg:h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
                 <TrendingUp className="w-4 h-4 lg:w-6 lg:h-6 text-green-600 dark:text-green-400" />
@@ -69,7 +70,7 @@ export function AnalyticsPage() {
           </div>
 
           {/* Avg Rate */}
-          <div className="card bg-white dark:bg-gray-900 rounded-xl p-2.5 sm:p-4 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-md shadow-primary-100 dark:shadow-gray-900">
+          <div className="card bg-white dark:bg-gray-950 rounded-xl p-2.5 sm:p-4 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-md shadow-primary-100 dark:shadow-gray-900">
             <div className="flex items-center justify-between mb-2 lg:mb-4">
               <div className="w-9 h-9 lg:w-12 lg:h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
                 <Target className="w-4 h-4 lg:w-6 lg:h-6 text-purple-600 dark:text-purple-400" />
@@ -87,7 +88,7 @@ export function AnalyticsPage() {
           </div>
 
           {/* Best Streak */}
-          <div className="card bg-white dark:bg-gray-900 rounded-xl p-2.5 sm:p-4 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-md shadow-primary-100 dark:shadow-gray-900">
+          <div className="card bg-white dark:bg-gray-950 rounded-xl p-2.5 sm:p-4 lg:p-6 border border-gray-200 dark:border-gray-700 shadow-md shadow-primary-100 dark:shadow-gray-900">
             <div className="flex items-center justify-between mb-2 lg:mb-4">
               <div className="w-9 h-9 lg:w-12 lg:h-12 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
                 <Flame className="w-4 h-4 lg:w-6 lg:h-6 text-orange-600 dark:text-orange-400" />
@@ -105,8 +106,10 @@ export function AnalyticsPage() {
           </div>
         </div>
 
+        <ActivityHeatmap />
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-6">
-          <div className="card bg-white dark:bg-gray-900 rounded-xl p-3 sm:p-4 lg:p-6 border border-gray-200 dark:border-gray-700 min-w-0">
+          <div className="card bg-white dark:bg-gray-950 rounded-xl p-3 sm:p-4 lg:p-6 border border-gray-200 dark:border-gray-700 min-w-0">
             <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100 mb-2 md:mb-4">
               Completion Trend
             </h3>
@@ -118,7 +121,7 @@ export function AnalyticsPage() {
             </div>
           </div>
 
-          <div className="card bg-white dark:bg-gray-900 rounded-xl p-3 sm:p-4 lg:p-6 border border-gray-200 dark:border-gray-700 min-w-0">
+          <div className="card bg-white dark:bg-gray-950 rounded-xl p-3 sm:p-4 lg:p-6 border border-gray-200 dark:border-gray-700 min-w-0">
             <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100 mb-2 md:mb-4">
               Habit Performance
             </h3>
