@@ -54,7 +54,7 @@ export default function SideBar({
               onClick={onNavigate}
               className={`flex flex-row items-center gap-2
                 p-3 min-h-11
-                rounded-2xl font-light text-md cursor-pointer transition duration-300 ease-in-out ${
+                rounded-2xl font-semibold text-md cursor-pointer transition duration-300 ease-in-out ${
                   isActive(path)
                     ? "bg-primary-500 text-white shadow-sm"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
