@@ -88,7 +88,7 @@ export function DashboardPage() {
               Welcome back,{" "}
               <span className="text-primary-500">{displayName}</span>! 👋
             </h2>
-            <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">
+            <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-2">
               Ready to continue your habit journey? Let's make today count!
             </p>
             <Button
@@ -100,7 +100,7 @@ export function DashboardPage() {
               Browse Templates
             </Button>
           </div>
-          <div className="w-full md:w-auto">
+          <div className="w-full flex-1 md:w-auto">
             <LevelProgress />
           </div>
         </div>
@@ -131,7 +131,7 @@ export function DashboardPage() {
           </div>
 
           {/* Current Streak Card */}
-          <div className="bg-white dark:bg-gray-950 flex-1 rounded-xl p-2.5 sm:p-4 lg:p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-500">
+          <div className="bg-white dark:bg-gray-950 flex-1 rounded-xl p-2.5 sm:p-4 lg:p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl border-gray-200 dark:border-primary-700 hover:shadow-xl transition-shadow duration-500">
             <div className="flex items-center justify-between mb-2 lg:mb-4">
               <div className="w-9 h-9 lg:w-12 lg:h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
                 <TrendingUp className="w-4 h-4 lg:w-6 lg:h-6 text-secondary" />
@@ -157,7 +157,7 @@ export function DashboardPage() {
           </div>
 
           {/* Completion Rate Card */}
-          <div className="bg-white dark:bg-gray-950 flex-1 rounded-xl p-2.5 sm:p-4 lg:p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-500">
+          <div className="bg-white dark:bg-gray-950 flex-1 rounded-xl p-2.5 sm:p-4 lg:p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl border-gray-200 dark:border-primary-700 hover:shadow-xl transition-shadow duration-500">
             <div className="flex items-center justify-between mb-2 lg:mb-4">
               <div className="w-9 h-9 lg:w-12 lg:h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
                 <Target className="w-4 h-4 lg:w-6 lg:h-6 text-blue-600 dark:text-blue-400" />
@@ -182,7 +182,7 @@ export function DashboardPage() {
           </div>
 
           {/* Points Card */}
-          <div className="bg-white dark:bg-gray-950 flex-1 rounded-xl p-2.5 sm:p-4 lg:p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-500">
+          <div className="bg-white dark:bg-gray-950 flex-1 rounded-xl p-2.5 sm:p-4 lg:p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl border-gray-200 dark:border-primary-700 hover:shadow-xl transition-shadow duration-500">
             <div className="flex items-center justify-between mb-2 lg:mb-4">
               <div className="w-9 h-9 lg:w-12 lg:h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
                 <Award className="w-4 h-4 lg:w-6 lg:h-6 text-purple-600 dark:text-purple-400" />

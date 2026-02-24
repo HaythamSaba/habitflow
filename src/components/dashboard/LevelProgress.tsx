@@ -9,7 +9,7 @@ export default function LevelProgress() {
   const isMaxLevel = pointsToNext === 0;
 
   return (
-    <div className="bg-primary-500 rounded-xl p-3 sm:p-4 lg:p-6 shadow-sm border- border-gray-200 flex-1">
+    <div className="bg-primary-500 rounded-xl p-3 sm:p-4 lg:p-6 shadow-sm shadow-primary-100 dark:shadow-primary-800 hover:shadow-xl transition-shadow duration-500">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 sm:mb-3 gap-2">
         <div className="flex items-center gap-2 min-w-0">
           <span className="text-xl sm:text-2xl shrink-0">
