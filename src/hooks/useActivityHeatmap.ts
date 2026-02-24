@@ -5,7 +5,6 @@ import {
   eachDayOfInterval,
   subDays,
   format,
-  parseISO,
   addDays,
   getDay,
 } from "date-fns";
@@ -43,10 +42,10 @@ export function useActivityHeatmap(
     // Count completions per day
     const activityMap = new Map<string, number>();
     completions.forEach((completion) => {
-      const date = startOfDay(parseISO(completion.completed_at));
-      const dateKey = format(date, "yyyy-MM-dd");
+      const completionDate = new Date(completion.completed_at);
+      const dateKey = format(startOfDay(completionDate), "yyyy-MM-dd");
       activityMap.set(dateKey, (activityMap.get(dateKey) || 0) + 1);
-    });
+    }); 
 
     // Find max count for scaling
     const maxCount = Math.max(...Array.from(activityMap.values()), 1);
