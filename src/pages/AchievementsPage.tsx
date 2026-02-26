@@ -7,6 +7,7 @@ import { useCompletions } from "@/hooks/useCompletions";
 import { useUserStats } from "@/hooks/useUserStats";
 import { useDashboardStreak } from "@/hooks/useDashboardStreak";
 import { useMemo, useState } from "react";
+import PageHeader from "@/components/ui/PageHeader";
 
 export function AchievementsPage() {
   const { allAchievements, unlockedIds, isLoading } = useAchievements();
@@ -67,17 +68,14 @@ export function AchievementsPage() {
   return (
     <DashboardLayout>
       {/* RESPONSIVE: overflow-x-hidden prevents horizontal scroll on small screens */}
-      <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden">
+      <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6">
         {/* Header */}
-        <div>
-          {/* RESPONSIVE: Smaller heading on mobile */}
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1 md:mb-2">
-            🏆 Achievements
-          </h1>
-          <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">
-            Unlock achievements by completing challenges and milestones!
-          </p>
-        </div>
+        <PageHeader
+          title="Achievements"
+          emoji="🏆"
+          description="Unlock achievements by completing challenges and milestones!
+"
+        />
 
         {/* Stats Overview */}
         {/* RESPONSIVE: Reduced padding on mobile (p-3 sm:p-4) → desktop (lg:p-6) */}
@@ -154,7 +152,7 @@ export function AchievementsPage() {
 
         {/* Locked Achievements */}
         {lockedAchievements.length > 0 && (
-          <div>
+          <div className="mt-6">
             <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3 md:mb-4">
               🔒 Locked ({lockedAchievements.length})
             </h2>

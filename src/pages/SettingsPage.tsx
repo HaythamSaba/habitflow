@@ -2,6 +2,8 @@ import { CategoryManager } from "@/components/categories/CategoryManager";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import PageHeader from "@/components/ui/PageHeader";
+import SectionCard from "@/components/ui/SectionCard";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/hooks/useAuth";
@@ -48,9 +50,7 @@ export function SettingsPage() {
   useEffect(() => {
     if (user?.user_metadata?.display_name) {
       const name = user.user_metadata.display_name;
-      reset({
-        name,
-      });
+      reset({ name });
       setUserName(name);
     }
   }, [user, reset]);
@@ -66,9 +66,7 @@ export function SettingsPage() {
   };
 
   const handleCancel = () => {
-    reset({
-      name: originalName,
-    });
+    reset({ name: originalName });
   };
 
   const isNameValid = currentName?.trim() !== "";
@@ -77,25 +75,21 @@ export function SettingsPage() {
 
   return (
     <DashboardLayout>
-      <div className="mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100">
-          Settings
-        </h1>
-        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1 sm:mt-2">
-          Manage your account settings and preferences
-        </p>
-      </div>
-      <div>
+      <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6">
+        <div className="mb-4 sm:mb-6">
+          <PageHeader
+            title="Settings"
+            emoji="⚙️"
+            description="Manage your account settings and preferences"
+          />
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-          <div className="card bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 shadow-sm border border-gray-200 dark:border-gray-700 mb-0">
-            <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center shrink-0">
-                <User className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" />
-              </div>
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100">
-                Profile
-              </h2>
-            </div>
+          {/* ⭐ Profile Section - REFACTORED */}
+          <SectionCard
+            title="Profile"
+            icon={<User className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" />}
+          >
             <form
               onSubmit={handleSubmit(handleUpdateUserData)}
               className="space-y-3 sm:space-y-4"
@@ -148,22 +142,25 @@ export function SettingsPage() {
                 </Button>
               </div>
             </form>
-          </div>
+          </SectionCard>
 
-          <div className="card bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 border border-gray-200 dark:border-gray-700">
+          {/* ⭐ Categories Section - REFACTORED */}
+          <SectionCard
+            title="Categories"
+            icon={
+              <Settings2 className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" />
+            }
+          >
             <CategoryManager />
-          </div>
+          </SectionCard>
 
-          <div className="card bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-            <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center shrink-0">
-                <Settings2 className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" />
-              </div>
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100">
-                Preferences
-              </h2>
-            </div>
-
+          {/* ⭐ Preferences Section - REFACTORED */}
+          <SectionCard
+            title="Preferences"
+            icon={
+              <Settings2 className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" />
+            }
+          >
             <div className="space-y-3 sm:space-y-4">
               <div className="flex items-center justify-between gap-3 py-2 sm:py-3 border-b border-gray-200 dark:border-gray-700">
                 <div className="min-w-0">
@@ -192,17 +189,13 @@ export function SettingsPage() {
                 <div className="w-12 h-6 bg-gray-200 dark:bg-gray-700 rounded-full opacity-50 cursor-not-allowed shrink-0" />
               </div>
             </div>
-          </div>
+          </SectionCard>
 
-          <div className="card bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-            <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center shrink-0">
-                <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" />
-              </div>
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100">
-                Security
-              </h2>
-            </div>
+          {/* ⭐ Security Section - REFACTORED */}
+          <SectionCard
+            title="Security"
+            icon={<Shield className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" />}
+          >
             <div className="space-y-3 sm:space-y-4">
               <div className="flex items-center justify-between gap-3 py-2 sm:py-3 border-b border-gray-200 dark:border-gray-700">
                 <div className="min-w-0">
@@ -234,17 +227,15 @@ export function SettingsPage() {
                 <div className="w-12 h-6 bg-gray-200 dark:bg-gray-700 rounded-full opacity-50 cursor-not-allowed shrink-0" />
               </div>
             </div>
-          </div>
+          </SectionCard>
 
-          <div className="card bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 shadow-sm border border-gray-200 dark:border-gray-700 lg:col-span-2">
-            <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center shrink-0">
-                <Trash className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
-              </div>
-              <h2 className="text-lg sm:text-xl font-bold text-red-600 dark:text-red-400">
-                Danger Zone
-              </h2>
-            </div>
+          {/* ⭐ Danger Zone - REFACTORED */}
+          <SectionCard
+            title="Danger Zone"
+            icon={<Trash className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />}
+            variant="danger"
+            className="lg:col-span-2"
+          >
             <div className="space-y-3 sm:space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 py-2 sm:py-3 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
@@ -278,7 +269,7 @@ export function SettingsPage() {
                 </Button>
               </div>
             </div>
-          </div>
+          </SectionCard>
         </div>
       </div>
     </DashboardLayout>

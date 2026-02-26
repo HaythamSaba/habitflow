@@ -79,7 +79,7 @@ export function CategoryManager() {
             return (
               <div
                 key={category.id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 p-3 sm:p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-md transition-shadow"
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 p-3 sm:p-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-md transition-shadow"
               >
                 {/* Category Info */}
                 <div className="flex items-center gap-2 sm:gap-3 min-w-0">

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Sparkles } from "lucide-react";
+import { Search } from "lucide-react";
 import { TemplateCard } from "./TemplateCard";
 import { TemplateCardSkeleton } from "./TemplateCardSkeleton";
 import {
@@ -26,17 +26,7 @@ export function TemplateGallery({
 
   return (
     <div className="space-y-4 sm:space-y-6 lg:space-y-8">
-      <div className="text-center max-w-2xl mx-auto px-2">
-        <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-2 sm:mb-3">
-          <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-primary-500" />
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100">
-            Habit Templates
-          </h1>
-        </div>
-        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
-          Choose from popular habits or customize them to fit your needs
-        </p>
-      </div>
+      
 
       <div className="max-w-xl mx-auto">
         <div className="relative">

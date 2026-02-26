@@ -62,6 +62,11 @@ export interface Achievement {
   habit_id: string | null
   unlocked_at: string
   metadata: Record<string, unknown> | null
+  emoji: string
+  name: string
+  description: string
+  points_reward: number
+  rarity: string
 }
 
 export interface HabitReminder {

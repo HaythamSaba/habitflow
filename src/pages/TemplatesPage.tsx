@@ -6,6 +6,7 @@ import { CreateHabitModal } from "@/components/habits/CreateHabitModal";
 import { HabitTemplate } from "@/types";
 import { useCategories } from "@/hooks/useCategories";
 import toast from "react-hot-toast";
+import PageHeader from "@/components/ui/PageHeader";
 
 export function TemplatesPage() {
   const navigate = useNavigate();
@@ -54,18 +55,25 @@ export function TemplatesPage() {
 
   return (
     <DashboardLayout>
-      <TemplateGallery
-        onUseTemplate={handleUseTemplate}
-        isLoading={categoriesLoading}
-      />
+      <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6">
+        <PageHeader
+          title="Habit Templates"
+          description="Choose from popular habits or customize them to fit your needs"
+          emoji="✨"
+        />
+        <TemplateGallery
+          onUseTemplate={handleUseTemplate}
+          isLoading={categoriesLoading}
+        />
 
-      {/* Create Habit Modal with pre-filled template data */}
-      <CreateHabitModal
-        isOpen={isCreateModalOpen}
-        onClose={handleModalClose}
-        prefilledData={getPrefilledData()}
-        onSuccess={handleHabitCreated}
-      />
+        {/* Create Habit Modal with pre-filled template data */}
+        <CreateHabitModal
+          isOpen={isCreateModalOpen}
+          onClose={handleModalClose}
+          prefilledData={getPrefilledData()}
+          onSuccess={handleHabitCreated}
+        />
+      </div>
     </DashboardLayout>
   );
 }

@@ -1,5 +1,4 @@
 import { useHabits } from "./useHabits";
-import { useCompletions } from "./useCompletions";
 import {
   startOfDay,
   subDays,
@@ -8,10 +7,11 @@ import {
   format,
   differenceInCalendarDays,
 } from "date-fns";
+import { useAllCompletions } from "./useAllCompletions";
 
 export function useAnalytics() {
   const { habits } = useHabits();
-  const { completions } = useCompletions();
+  const { completions } = useAllCompletions();
 
   // ===== 1. Filter completions to last 30 days =====
   const today = startOfDay(new Date());
