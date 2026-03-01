@@ -124,7 +124,7 @@ src/
 1. **Clone the repository**
 
 ```bash
-   git clone YOUR-GITHUB-URL-HERE
+   git clone https://github.com/HaythamSaba
    cd habitflow
 ```
 
@@ -288,10 +288,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Haytham** - Frontend Developer
 
-- Portfolio: [YOUR-PORTFOLIO-URL](https://haytham-saba.vercel.app/)
-- LinkedIn: [YOUR-LINKEDIN-URL](https://www.linkedin.com/in/haytham-saba-401148278/)
+- Portfolio: [MY-PORTFOLIO-URL](https://haytham-saba.vercel.app/)
+- LinkedIn: [MY-LINKEDIN-URL](https://www.linkedin.com/in/haytham-saba-401148278/)
 - Email: haythamsaba@gmail.com
-- GitHub: [@YOUR-USERNAME](https://github.com/HaythamSaba)
+- GitHub: [@MY-USERNAME](https://github.com/HaythamSaba)
 
 **Live Demo:** [habitflow.vercel.app](https://habitflow-hs.vercel.app)  
 **GitHub Repo:** [View Source Code](https://github.com/HaythamSaba/habitflow)
