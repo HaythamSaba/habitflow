@@ -5,6 +5,7 @@ import {
   Sparkles,
   SquareCheckBig,
   Trophy,
+  User,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -20,6 +21,11 @@ const navItems = [
     icon: Sparkles,
     label: "Templates",
     badge: "30+",
+  },
+  {
+    path: "/about",
+    icon: User,
+    label: "About Me",
   },
 ];
 

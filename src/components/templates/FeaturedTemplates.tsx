@@ -33,7 +33,7 @@ export function FeaturedTemplates() {
           <button
             key={template.id}
             onClick={() => navigate("/templates")}
-            className="w-full flex items-center gap-2 sm:gap-3 p-2 sm:p-3 min-h-11rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-md hover:scale-[1.02] transition-all text-left"
+            className="w-full flex items-center gap-2 sm:gap-3 p-2 sm:p-3 min-h-11rounded-lg bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 hover:shadow-md hover:scale-[1.02] transition-all text-left cursor-pointer"
           >
             <div
               className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center text-lg sm:text-2xl shrink-0"

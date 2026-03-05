@@ -2,6 +2,7 @@ import { ReactNode, useState } from "react";
 import Navbar from "./Navbar";
 import { useAuth } from "@/hooks/useAuth";
 import SideBar from "./Sidebar";
+import { Footer } from "./Footer"; // ⭐ ADD THIS IMPORT
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -12,7 +13,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const displayName =
     user?.user_metadata?.display_name || user?.email?.split("@")[0] || "User";
 
-  // RESPONSIVE: State to control mobile sidebar visibility
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -51,7 +51,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             dark:bg-linear-to-r dark:from-gray-950 dark:to-primary-900
           "
         >
-          {children}
+          {/* ⭐ Page content (scrollable) */}
+          <div className="flex-1">{children}</div>
+
+          {/* ⭐ Footer (always at bottom) */}
+          <Footer />
         </main>
       </div>
     </div>

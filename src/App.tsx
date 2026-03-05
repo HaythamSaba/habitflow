@@ -15,6 +15,7 @@ import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
 import { AchievementsPage } from "./pages/AchievementsPage";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { TemplatesPage } from "./pages/TemplatesPage";
+import { AboutPage } from "./pages/AboutPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -111,6 +112,14 @@ function AppContent() {
           element={
             <ProtectedRoute>
               <TemplatesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <ProtectedRoute>
+              <AboutPage />
             </ProtectedRoute>
           }
         />

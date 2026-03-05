@@ -188,7 +188,7 @@ export function DashboardPage() {
 
         {/* Category Filter */}
         {categories.length > 0 && (
-          <div className="flex items-center gap-2 md:gap-4 overflow-x-auto min-w-0 w-full scrollbar-hide">
+          <div className="flex items-center gap-2 md:gap-4 min-w-0 w-full scrollbar-hide">
             <CategoryChips
               categories={categories}
               selectedCategoryId={selectedCategoryId}
