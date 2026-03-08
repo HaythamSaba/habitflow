@@ -42,12 +42,12 @@ export function ScrollToTop({ containerRef }: ScrollToTopProps) {
   return (
     <button
       onClick={scrollToTop}
-      className="fixed bottom-20 right-8 w-12 h-12 bg-primary-600 hover:bg-primary-700 text-white rounded-full shadow-lg transition-all hover:scale-110 z-50 flex items-center justify-center"
+      className="fixed bottom-8 right-8 w-12 h-12 bg-primary-600 hover:bg-primary-700 text-white rounded-full shadow-lg transition-all hover:scale-110 z-50 flex items-center justify-center"
       aria-label="Scroll to top"
     >
       {/* Progress ring */}
       <svg 
-        className="absolute inset-0 w-full h-full -rotate-90"
+        className="absolute w-13.5 h-13.5 -rotate-90"
         viewBox="0 0 48 48"
       >
         {/* Background circle */}
@@ -55,7 +55,7 @@ export function ScrollToTop({ containerRef }: ScrollToTopProps) {
           cx="24"
           cy="24"
           r={radius}
-          stroke="rgba(255,255,255,0.3)"
+          // stroke="rgba(255,255,255,0.3)"
           strokeWidth="2"
           fill="none"
         />

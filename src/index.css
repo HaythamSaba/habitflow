@@ -316,13 +316,13 @@
 }
 
 /* Glass-morphism card effect */
-.glass-card {
+.glass-card-no-border {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 
-.dark .glass-card {
+.dark .glass-card-no-border {
   background: rgba(31, 41, 55, 0.7);
 }
 

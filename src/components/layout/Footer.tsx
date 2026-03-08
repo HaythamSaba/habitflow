@@ -18,8 +18,8 @@ export function Footer() {
             </p>
             <p className="text-xs text-gray-600 dark:text-gray-400">
               Built with
-              <Heart className="w-3 h-3 inline text-red-500 mx-0.5" /> by
-              <span className="font-semibold text-gray-900 dark:text-gray-100">
+              <Heart className="w-3 h-3 inline text-red-500 mx-0.5 ml-1" /> by
+              <span className="font-semibold text-gray-900 dark:text-gray-100 ml-1 mr-1">
                 Haytham
               </span>
               • Frontend Developer

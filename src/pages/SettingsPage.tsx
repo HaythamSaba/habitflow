@@ -115,7 +115,7 @@ export function SettingsPage() {
                   type="email"
                   value={user?.email || ""}
                   disabled
-                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 min-h-11 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-sm sm:text-base cursor-not-allowed"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 min-h-11 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 text-sm sm:text-base cursor-not-allowed"
                 />
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   Email cannot be changed

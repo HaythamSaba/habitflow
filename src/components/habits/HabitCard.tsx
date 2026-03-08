@@ -90,13 +90,13 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
     if (!isFullyCompleted) return "transparent";
 
     return theme === "dark"
-      ? lightenColor(habit.color, 20)
+      ? lightenColor(habit.color, 15)
       : lightenColor(habit.color, 92);
   };
 
   return (
     <div
-      className="rounded-xl p-3 sm:p-4 border-l-4 shadow-sm hover:shadow-md transition-all duration-200 bg-white dark:bg-gray-800"
+      className="rounded-xl p-3 sm:p-4 border-l-4 shadow-sm hover:shadow-md transition-all duration-200"
       style={{
         borderLeftColor: habit.color,
         backgroundColor: getBackgroundColor(),

@@ -12,6 +12,7 @@ import { useRef, useState } from "react";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { LevelBadge } from "@/components/ui/LevelBadge";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar({
   displayName,
@@ -25,6 +26,7 @@ export default function Navbar({
   sidebarOpen?: boolean;
 }) {
   const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
   const [isShowDropdown, setIsShowDropdown] = useState(false);
   const dropdownWrapperRef = useRef<HTMLDivElement>(null);
 
@@ -121,12 +123,15 @@ export default function Navbar({
                   <Sun className="w-5 h-5 text-gray-600" />
                 )}
               </button>
-              <button className="hidden md:flex p-2 min-h-11 min-w-11 items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors cursor-pointer">
+              <button
+                className="hidden md:flex p-2 min-h-11 min-w-11 items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors cursor-pointer"
+                onClick={() => navigate("/settings")}
+              >
                 <Settings className="w-5 h-5 text-gray-600 dark:text-gray-400" />
               </button>
               <div ref={dropdownWrapperRef} className="relative">
                 <div
-                  className={`flex items-center justify-between gap-1 md:gap-4 cursor-pointer p-2 rounded-lg transition-colors ${
+                  className={`flex items-center justify-between gap-1 md:gap-4 cursor-pointer p-2 rounded-full transition-colors ${
                     isShowDropdown
                       ? "bg-gray-100 dark:bg-gray-700"
                       : "hover:bg-gray-50 dark:hover:bg-gray-700/50"
@@ -143,7 +148,7 @@ export default function Navbar({
                 </div>
 
                 {isShowDropdown && (
-                  <div className="flex flex-col items-start absolute right-0 top-14 mt-2 w-44 md:w-36 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-1 glass-card dark:bg-gray-800 dark:text-gray-100">
+                  <div className="flex flex-col items-start absolute right-0 top-14 mt-2 w-44 md:w-36 rounded-xl shadow-lg py-1 glass-card-no-border dark:bg-gray-800 dark:text-gray-100 p-1">
                     <Button variant="ghost" size="sm">
                       Profile
                     </Button>
