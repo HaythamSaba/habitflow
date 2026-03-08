@@ -5,6 +5,7 @@ import { Calendar } from "lucide-react";
 import { useAllCompletions } from "@/hooks/useAllCompletions";
 
 export function ActivityHeatmap() {
+  const today = new Date().toDateString();
   const { completions } = useAllCompletions();
   const { weeks, months, maxCount } = useActivityHeatmap(
     completions || [],
@@ -131,7 +132,7 @@ export function ActivityHeatmap() {
         </div>
 
         {/* ⭐ Scrollable container */}
-        <div className="overflow-x-auto overflow-y-hidden -mx-4 md:mx-0 px-4 md:px-0 pb-2"> 
+        <div className="overflow-x-auto overflow-y-hidden -mx-4 md:mx-0 px-4 md:px-0 pb-2">
           <div className="inline-block min-w-max">
             {/* Month labels - RESPONSIVE */}
             <div className="flex justify-between mb-2 ml-12">
@@ -249,11 +250,22 @@ export function ActivityHeatmap() {
                   {week.days.map((day, dayIndex) => (
                     <div
                       key={dayIndex}
-                      className="rounded-sm cursor-pointer transition-all hover:ring-2 hover:ring-primary-500 active:ring-2 active:ring-primary-600 duration-300 hover:ring-offset-1 dark:hover:ring-offset-gray-800"
+                      className={`
+                      rounded-sm cursor-pointer transition-all 
+                      hover:ring-2 hover:ring-primary-500 
+                      active:ring-2 active:ring-primary-600 
+                      duration-300 hover:ring-offset-0
+                      dark:hover:ring-offset-gray-800
+                        ${
+                          today === day.date.toDateString()
+                            ? "ring-2 ring-secondary-500 dark:ring-secondary-400 ring-offset-0 dark:ring-offset-gray-900"
+                            : ""
+                        }
+                      `}
                       style={{
                         width: cellSize,
                         height: cellSize,
-                        backgroundColor: getColor(day.level, isDark),
+                        backgroundColor: getColor(day.level, isDark), // ⭐ KEEP COMPLETION COLOR!
                         minWidth: cellSize < 10 ? "10px" : "auto",
                         minHeight: cellSize < 10 ? "10px" : "auto",
                       }}
@@ -261,14 +273,13 @@ export function ActivityHeatmap() {
                         setHoveredDay({ date: day.date, count: day.count })
                       }
                       onMouseLeave={() => setHoveredDay(null)}
-                      // ⭐ Touch events for mobile
                       onTouchStart={() =>
                         setHoveredDay({ date: day.date, count: day.count })
                       }
                       onTouchEnd={() => {
                         setTimeout(() => setHoveredDay(null), 2000);
                       }}
-                      title={`${format(day.date, "MMM d, yyyy")}: ${day.count} completions`}
+                      title={`${today === day.date.toDateString() ? "Today, " : ""}${format(day.date, "MMM d, yyyy")}: ${day.count} completions`}
                     />
                   ))}
                 </div>
@@ -281,15 +292,16 @@ export function ActivityHeatmap() {
       {/* ⭐ Hover/Touch Tooltip - BELOW CALENDAR */}
       {hoveredDay ? (
         <div className="mb-4 max-w-sm min-h-20 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-          <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-            {/* ⭐ Full date on desktop, short on mobile */}
-            <span className="hidden sm:inline">
+          <div className="flex items-center gap-2 mb-1">
+            {today === hoveredDay.date.toDateString() && (
+              <span className="px-2 py-0.5 bg-secondary-500 text-gray-800 text-xs font-medium rounded">
+                Today
+              </span>
+            )}
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
               {format(hoveredDay.date, "EEEE, MMMM d, yyyy")}
-            </span>
-            <span className="sm:hidden">
-              {format(hoveredDay.date, "MMM d, yyyy")}
-            </span>
-          </p>
+            </p>
+          </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">
             {hoveredDay.count}{" "}
             {hoveredDay.count === 1 ? "completion" : "completions"}
@@ -297,14 +309,16 @@ export function ActivityHeatmap() {
         </div>
       ) : (
         <div className="min-h-20 max-w-sm mb-4 max-h-20 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-          <p className="text-sm text-gray-600 dark:text-gray-400">Hover over a day</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Hover over a day
+          </p>
         </div>
       )}
 
       {/* ⭐ Stats - RESPONSIVE GRID (centered on mobile) */}
       <div className="pt-4 md:pt-6 border-t border-gray-200 dark:border-gray-700">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          <div className="text-center md:text-left">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-8">
+          <div className="text-center md:text-left bg-amber-100 p-6 rounded-2xl">
             <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
               Current Streak
             </p>
@@ -313,7 +327,7 @@ export function ActivityHeatmap() {
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">days</p>
           </div>
-          <div className="text-center md:text-left">
+          <div className="text-center md:text-left bg-green-100 p-6 rounded-2xl">
             <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
               Busiest Day
             </p>
@@ -324,7 +338,7 @@ export function ActivityHeatmap() {
               completions
             </p>
           </div>
-          <div className="text-center md:text-left">
+          <div className="text-center md:text-left bg-red-100 p-6 rounded-2xl">
             <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
               Total Days
             </p>
@@ -335,12 +349,23 @@ export function ActivityHeatmap() {
               with activity
             </p>
           </div>
-          <div className="text-center md:text-left">
+          <div className="text-center md:text-left bg-blue-100 p-6 rounded-2xl">
             <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
               Avg per Day
             </p>
             <p className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
               {calculateAvgPerDay(weeks)}
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              completions
+            </p>
+          </div>
+          <div className="text-center md:text-left bg-fuchsia-100 p-6 rounded-2xl">
+            <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+              Today
+            </p>
+            <p className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
+              {getTodayCount(weeks)}
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">
               completions
@@ -378,4 +403,10 @@ function calculateAvgPerDay(weeks: WeekActivity[]): number {
   return allDays.length > 0
     ? Math.round((total / allDays.length) * 10) / 10
     : 0;
+}
+function getTodayCount(weeks: WeekActivity[]): number {
+  const today = new Date().toDateString();
+  const allDays = weeks.flatMap((w) => w.days);
+  const todayData = allDays.find((d) => d.date.toDateString() === today);
+  return todayData?.count || 0;
 }

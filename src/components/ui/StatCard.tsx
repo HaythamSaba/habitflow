@@ -1,8 +1,10 @@
 import React from "react";
+import AnimatedNumber from "./AnimatedNumber";
 
 interface StatCardProps {
   // ⭐ Renamed
   value: number | string;
+  isPercentage?: boolean;
   title: string;
   description: string;
   icon: React.ReactNode;
@@ -12,8 +14,8 @@ interface StatCardProps {
 }
 
 export function StatCard({
-  // ⭐ Renamed (also changed to named export)
   value,
+  isPercentage = false,
   title,
   description,
   icon,
@@ -22,7 +24,7 @@ export function StatCard({
   emoji,
 }: StatCardProps) {
   return (
-    <div className="bg-white dark:bg-gray-950 flex-1 rounded-xl p-2.5 sm:p-4 lg:p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl border-gray-200 dark:border-primary-700 hover:shadow-xl transition-shadow duration-500">
+    <div className={`${iconBgColor} flex-1 rounded-xl p-2.5 sm:p-4 lg:p-6 shadow-sm shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl  dark:border-primary-700 hover:shadow-xl transition-shadow duration-500`}>
       <div className="flex items-center justify-between mb-2 lg:mb-4">
         <div
           className={`w-9 h-9 lg:w-12 lg:h-12 ${iconBgColor} rounded-lg flex items-center justify-center`}
@@ -31,11 +33,12 @@ export function StatCard({
         </div>
 
         <span
-          className="text-base sm:text-lg lg:text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-1 lg:gap-2"
+          className="text-base sm:text-lg lg:text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center "
           style={{ fontFamily: "Sora, sans-serif" }}
         >
           {showEmoji && emoji && <span>{emoji}</span>}
-          {value}
+          <AnimatedNumber value={value as number} />
+          {isPercentage && "%"}
         </span>
       </div>
 

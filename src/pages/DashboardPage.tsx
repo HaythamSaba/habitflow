@@ -113,7 +113,8 @@ export function DashboardPage() {
           />
 
           <StatCard
-            value={`${completionRate}%`}
+            value={completionRate}
+            isPercentage
             title="Completion Rate"
             description={
               completionRate === 0

@@ -54,13 +54,14 @@ export function AnalyticsPage() {
           />
 
           <StatCard
-            value={`${averageRate}%`}
+            value={averageRate}
+            isPercentage={true}
             title="Avg Rate"
             description="Completion rate"
             icon={
               <Target className="w-4 h-4 lg:w-6 lg:h-6 text-purple-600 dark:text-purple-400" />
             }
-            iconBgColor="bg-purple-100 dark:bg-purple-900/30"
+            iconBgColor="bg-purple-100 dark:bg-purple-900/50"
           />
 
           <StatCard
@@ -70,7 +71,7 @@ export function AnalyticsPage() {
             icon={
               <Flame className="w-4 h-4 lg:w-6 lg:h-6 text-orange-600 dark:text-orange-400" />
             }
-            iconBgColor="bg-orange-100 dark:bg-orange-900/30"
+            iconBgColor="bg-orange-100 dark:bg-orange-900/50"
           />
         </div>
 

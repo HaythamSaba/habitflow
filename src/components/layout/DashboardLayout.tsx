@@ -1,8 +1,9 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 import Navbar from "./Navbar";
 import { useAuth } from "@/hooks/useAuth";
 import SideBar from "./Sidebar";
-import { Footer } from "./Footer"; // ⭐ ADD THIS IMPORT
+import { Footer } from "./Footer";
+import { ScrollToTop } from "../ui/ScrollToTop";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -14,6 +15,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     user?.user_metadata?.display_name || user?.email?.split("@")[0] || "User";
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const mainRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className="h-screen w-full overflow-hidden flex flex-col">
@@ -43,6 +46,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
 
         <main
+          ref={mainRef}
           className="
             flex-1 flex flex-col
             overflow-y-auto
@@ -51,12 +55,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             dark:bg-linear-to-r dark:from-gray-950 dark:to-primary-900
           "
         >
-          {/* ⭐ Page content (scrollable) */}
           <div className="flex-1">{children}</div>
-
-          {/* ⭐ Footer (always at bottom) */}
           <Footer />
         </main>
+
+        <ScrollToTop containerRef={mainRef} />
       </div>
     </div>
   );

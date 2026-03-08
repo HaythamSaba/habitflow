@@ -1,6 +1,7 @@
 import { Habit } from "@/types";
 import { useState, useRef } from "react";
 import { useCategories } from "@/hooks/useCategories";
+import { useHabitStats } from "@/hooks/useHabitStats"; // ⭐ ADD THIS
 import { CategoryBadge } from "../categories/CategoryBadge";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import {
@@ -25,6 +26,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { format } from "date-fns";
+import { useAllCompletions } from "@/hooks/useAllCompletions";
 
 const HABIT_ICONS = [
   { name: "dumbbell", icon: Dumbbell, label: "Exercise" },
@@ -47,6 +49,7 @@ interface PremiumHabitCardProps {
   onDelete: (habitId: string) => void;
   onArchive?: (habitId: string) => void;
 }
+
 export function PremiumHabitCard({
   habit,
   onEdit,
@@ -54,6 +57,13 @@ export function PremiumHabitCard({
   onArchive,
 }: PremiumHabitCardProps) {
   const { categories } = useCategories();
+  const { completions } = useAllCompletions();
+
+  // ⭐⭐⭐ GET REAL STATS!
+  const { completionRate, currentStreak, last7Days } = useHabitStats(
+    habit,
+    completions || [],
+  );
 
   const [showMenu, setShowMenu] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -61,13 +71,7 @@ export function PremiumHabitCard({
 
   useClickOutside(menuRef, () => setShowMenu(false));
 
-  // Find category
   const category = categories.find((c) => c.id === habit.category_id);
-
-  // Mock data (we'll calculate real values later)
-  const completionRate = 85;
-  const currentStreak = 15;
-  const last7Days = [3, 5, 4, 6, 5, 7, 6]; // completions per day
 
   // Progress ring calculation
   const circumference = 2 * Math.PI * 45; // radius = 45
@@ -87,7 +91,6 @@ export function PremiumHabitCard({
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-3 lg:mb-4">
-          {/* Icon and Title */}
           <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
             <div
               className="w-9 h-9 sm:w-10 sm:h-10 lg:w-12 lg:h-12 flex items-center justify-center rounded-lg sm:rounded-xl text-xl shrink-0 shadow-lg"
@@ -104,7 +107,7 @@ export function PremiumHabitCard({
                     style={{ color: habit.color }}
                   />
                 ),
-              )}{" "}
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <h3
@@ -121,7 +124,6 @@ export function PremiumHabitCard({
             </div>
           </div>
 
-          {/* Actions */}
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             <button
               className="p-1.5 sm:p-2 min-h-11 min-w-11 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-500"
@@ -136,7 +138,6 @@ export function PremiumHabitCard({
               />
             </button>
 
-            {/* More Menu */}
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setShowMenu(!showMenu)}
@@ -144,7 +145,6 @@ export function PremiumHabitCard({
               >
                 <MoreVertical className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-400" />
               </button>
-              {/* Dropdown menu */}
               {showMenu && (
                 <div className="absolute top-full right-0 mt-2 w-44 sm:w-48 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 shadow-2xl overflow-hidden z-10">
                   <button
@@ -152,7 +152,7 @@ export function PremiumHabitCard({
                       onEdit(habit);
                       setShowMenu(false);
                     }}
-                    className="w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-gray-700 dark:text-gray-300"
+                    className="w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-gray-700 dark:text-gray-300 cursor-pointer"
                   >
                     <Edit2 className="w-4 h-4" />
                     Edit Habit
@@ -163,7 +163,7 @@ export function PremiumHabitCard({
                         onArchive(habit.id);
                         setShowMenu(false);
                       }}
-                      className="w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-gray-700 dark:text-gray-300"
+                      className="w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-gray-700 dark:text-gray-300 cursor-pointer"
                     >
                       <Archive className="w-4 h-4" />
                       Archive
@@ -174,7 +174,7 @@ export function PremiumHabitCard({
                       onDelete(habit.id);
                       setShowMenu(false);
                     }}
-                    className="w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-2 text-red-600 dark:text-red-400"
+                    className="w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-2 text-red-600 dark:text-red-400 cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4" />
                     Delete
@@ -187,10 +187,11 @@ export function PremiumHabitCard({
 
         {/* Progress Ring & Stats */}
         <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 mb-3 lg:mb-4">
-          {/* RESPONSIVE: Smaller progress ring on mobile (w-16 h-16) → desktop (w-24 h-24) */}
           <div className="relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 shrink-0">
-            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 96 96">
-              {/* Background circle */}
+            <svg
+              className="w-full h-full transform -rotate-90"
+              viewBox="0 0 96 96"
+            >
               <circle
                 cx="48"
                 cy="48"
@@ -200,7 +201,6 @@ export function PremiumHabitCard({
                 fill="none"
                 className="text-gray-200 dark:text-gray-700"
               />
-              {/* Progress circle */}
               <circle
                 cx="48"
                 cy="48"
@@ -221,7 +221,6 @@ export function PremiumHabitCard({
             </div>
           </div>
 
-          {/* Stats */}
           <div className="flex-1 grid grid-cols-2 gap-2 sm:gap-3">
             {/* Streak */}
             <div className="bg-linear-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-lg sm:rounded-xl p-2 sm:p-3 border border-orange-200 dark:border-orange-800">
@@ -270,8 +269,8 @@ export function PremiumHabitCard({
           {/* Sparkline bars */}
           <div className="flex items-end gap-0.5 sm:gap-1 h-8 sm:h-10 lg:h-12">
             {last7Days.map((count, index) => {
-              const maxCount = Math.max(...last7Days);
-              const height = (count / maxCount) * 100;
+              const maxCount = Math.max(...last7Days, 1); // ⭐ Avoid division by 0
+              const height = maxCount > 0 ? (count / maxCount) * 100 : 0;
               return (
                 <div
                   key={index}
@@ -279,7 +278,8 @@ export function PremiumHabitCard({
                   style={{
                     height: `${height}%`,
                     backgroundColor: habit.color,
-                    opacity: 0.3 + (height / 100) * 0.7,
+                    opacity: count === 0 ? 0.1 : 0.3 + (height / 100) * 0.7,
+                    minHeight: count === 0 ? "2px" : undefined, // ⭐ Show minimal bar for 0
                   }}
                   title={`${count} completions`}
                 />
@@ -290,7 +290,6 @@ export function PremiumHabitCard({
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-3 lg:pt-4 border-t border-gray-200 dark:border-gray-700">
-          {/* Category */}
           <div>
             {category ? (
               <CategoryBadge category={category} size="sm" />
@@ -300,8 +299,6 @@ export function PremiumHabitCard({
               </span>
             )}
           </div>
-
-          {/* Created date */}
           <span className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">
             Since {format(new Date(habit.created_at), "MMM yyyy")}
           </span>

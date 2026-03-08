@@ -7,7 +7,7 @@ import { useDeleteHabit } from "@/hooks/useDeleteHabit";
 import { useCategories } from "@/hooks/useCategories";
 import { useHabits } from "@/hooks/useHabits";
 import { useCompletions } from "@/hooks/useCompletions";
-import { useHabitsStats } from "@/hooks/useHabitStats";
+import { useHabitsStats } from "@/hooks/useHabitsStats";
 
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/Button";
@@ -121,7 +121,6 @@ export function HabitsPage() {
       <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6">
         {/* Hero Header */}
         <div className="relative">
-          <div className="absolute inset-0 bg-linear-to-r from-primary-500 via-secondary-500/10 to-purple-500/10 blur-3xl dark:from-primary-400/10 dark:via-secondary-400/10 dark:to-purple-400/10" />
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4 text-center md:text-left">
             <div className="flex flex-col gap-1 sm:gap-2 text-center md:text-left">
               <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2 mx-auto md:mx-0">
@@ -137,10 +136,9 @@ export function HabitsPage() {
             {/* Action Buttons */}
             <div className="flex items-center gap-2 sm:gap-3 shrink-0  mx-auto md:mx-0">
               <Button
-                variant="ghost"
+                variant="secondary"
                 onClick={() => navigate("/templates")}
                 leftIcon={<Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />}
-                className="border border-primary-200 dark:border-primary-800 hover:bg-primary-50 dark:hover:bg-primary-900/20 text-sm sm:text-base min-h-11"
               >
                 <span className="hidden sm:inline">Browse Templates</span>
                 <span className="sm:hidden">Templates</span>
@@ -149,7 +147,6 @@ export function HabitsPage() {
                 variant="primary"
                 leftIcon={<Plus className="w-4 h-4 sm:w-5 sm:h-5" />}
                 onClick={() => setIsCreateModalOpen(true)}
-                className="shadow-lg shadow-primary-500/50 hover:shadow-xl hover:shadow-primary-500/60 transition-all text-sm sm:text-base min-h-11"
               >
                 <span className="hidden sm:inline">Create Habit</span>
                 <span className="sm:hidden">Create</span>

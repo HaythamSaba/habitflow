@@ -14,7 +14,7 @@ export function CategoryChips({
   habitCounts = {},
 }: CategoryChipsProps) {
   return (
-    <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide -mx-1 px-1 pb-1">
+    <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide -mx-1 pr-4 py-1 overflow-hidden">
       <button
         onClick={() => onSelectCategory(null)}
         className={`inline-flex items-center gap-1 sm:gap-2 py-1.5 sm:py-2 px-3 sm:px-4 min-h-11 rounded-full font-medium text-xs sm:text-sm transition-all whitespace-nowrap shrink-0 ${
