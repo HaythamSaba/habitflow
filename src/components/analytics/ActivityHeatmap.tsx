@@ -290,36 +290,36 @@ export function ActivityHeatmap() {
       </div>
 
       {/* ⭐ Hover/Touch Tooltip - BELOW CALENDAR */}
-      {hoveredDay ? (
-        <div className="mb-4 max-w-sm min-h-20 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-          <div className="flex items-center gap-2 mb-1">
-            {today === hoveredDay.date.toDateString() && (
-              <span className="px-2 py-0.5 bg-secondary-500 text-gray-800 text-xs font-medium rounded">
-                Today
-              </span>
-            )}
-            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-              {format(hoveredDay.date, "EEEE, MMMM d, yyyy")}
+      <div className="min-h-20 max-w-sm mb-4 max-h-20 p-3 bg-gray-50 dark:bg-primary-700 rounded-lg border border-gray-200 dark:border-gray-600">
+        {hoveredDay ? (
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              {today === hoveredDay.date.toDateString() && (
+                <span className="px-2 py-0.5 bg-secondary-500 text-gray-800 text-xs font-medium rounded">
+                  Today
+                </span>
+              )}
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                {format(hoveredDay.date, "EEEE, MMMM d, yyyy")}
+              </p>
+            </div>
+            <p className="text-sm text-gray-600 dark:text-gray-200">
+              {hoveredDay.count}{" "}
+              {hoveredDay.count === 1 ? "completion" : "completions"}
             </p>
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            {hoveredDay.count}{" "}
-            {hoveredDay.count === 1 ? "completion" : "completions"}
-          </p>
-        </div>
-      ) : (
-        <div className="min-h-20 max-w-sm mb-4 max-h-20 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+        ) : (
+          <p className="text-sm text-gray-600 dark:text-gray-200">
             Hover over a day
           </p>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* ⭐ Stats - RESPONSIVE GRID (centered on mobile) */}
       <div className="pt-4 md:pt-6 border-t border-gray-200 dark:border-gray-700">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-8">
-          <div className="text-center md:text-left bg-amber-100 p-6 rounded-2xl">
-            <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+          <div className="text-center md:text-left bg-amber-100 dark:bg-amber-950 p-6 rounded-2xl">
+            <p className="text-xs text-gray-600 dark:text-gray-200 mb-1">
               Current Streak
             </p>
             <p className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -327,8 +327,8 @@ export function ActivityHeatmap() {
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">days</p>
           </div>
-          <div className="text-center md:text-left bg-green-100 p-6 rounded-2xl">
-            <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+          <div className="text-center md:text-left bg-green-100 dark:bg-green-950 p-6 rounded-2xl">
+            <p className="text-xs text-gray-600 dark:text-gray-200 mb-1">
               Busiest Day
             </p>
             <p className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -338,8 +338,8 @@ export function ActivityHeatmap() {
               completions
             </p>
           </div>
-          <div className="text-center md:text-left bg-red-100 p-6 rounded-2xl">
-            <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+          <div className="text-center md:text-left bg-red-100 dark:bg-red-950 p-6 rounded-2xl">
+            <p className="text-xs text-gray-600 dark:text-gray-200 mb-1">
               Total Days
             </p>
             <p className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -349,8 +349,8 @@ export function ActivityHeatmap() {
               with activity
             </p>
           </div>
-          <div className="text-center md:text-left bg-blue-100 p-6 rounded-2xl">
-            <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+          <div className="text-center md:text-left bg-blue-100 p-6 dark:bg-blue-950 rounded-2xl">
+            <p className="text-xs text-gray-600 dark:text-gray-200 mb-1">
               Avg per Day
             </p>
             <p className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -360,8 +360,8 @@ export function ActivityHeatmap() {
               completions
             </p>
           </div>
-          <div className="text-center md:text-left bg-fuchsia-100 p-6 rounded-2xl">
-            <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+          <div className="text-center md:text-left bg-fuchsia-100 dark:bg-fuchsia-950 p-6 rounded-2xl">
+            <p className="text-xs text-gray-600 dark:text-gray-200 mb-1">
               Today
             </p>
             <p className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">

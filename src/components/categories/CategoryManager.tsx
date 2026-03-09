@@ -79,7 +79,7 @@ export function CategoryManager() {
             return (
               <div
                 key={category.id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 p-3 sm:p-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-md transition-shadow"
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 p-3 sm:p-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:shadow-md transition-shadow"
               >
                 {/* Category Info */}
                 <div className="flex items-center gap-2 sm:gap-3 min-w-0">
@@ -121,7 +121,7 @@ export function CategoryManager() {
                     size="sm"
                     leftIcon={<Trash2 className="w-4 h-4" />}
                     onClick={() => handleDelete(category)}
-                    className="min-h-11 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    className="text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
                   >
                     Delete
                   </Button>

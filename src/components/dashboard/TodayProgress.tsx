@@ -24,7 +24,7 @@ export function TodayProgress() {
   if (totalHabits === 0) return null;
 
   return (
-    <div className="bg-white dark:bg-gray-950 flex-1 rounded-xl p-4 sm:p-5 lg:p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl border-gray-200 dark:border-primary-700 hover:shadow-xl transition-shadow duration-500">
+    <div className="bg-white dark:bg-gray-950 flex-1 rounded-xl p-4 sm:p-5 lg:p-6 shadow-sm border shadow-secondary-100 dark:shadow-secondary-700 hover:dark:shadow-xl border-secondary-300 dark:border-secondary-700 hover:shadow-xl transition-shadow duration-500">
       {/* Header */}
       <div className="flex items-center justify-between mb-3 lg:mb-4">
         <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100">
