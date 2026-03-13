@@ -4,16 +4,19 @@ interface CardProps {
   children: React.ReactNode;
   className?: string;
   variant?: "default" | "danger";
+  style?: React.CSSProperties;
 }
 
 export function Card({
   children,
   variant = "default",
   className = "",
+  style,
 }: CardProps) {
   return (
     <div
       className={`${variant === "danger" ? "bg-red-100 dark:bg-red-950" : "bg-white dark:bg-gray-950"} rounded-xl p-4 sm:p-6 shadow-md ${className}`}
+      style={style}
     >
       {children}
     </div>

@@ -18,12 +18,12 @@ export function AboutPage() {
       <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 p-4 sm:p-6">
         <div className="max-w-6xl mx-auto space-y-8">
           {/* Hero Section - Full Width */}
-          <div className="relative overflow-hidden rounded-[40px] bg-linear-to-br from-primary-200 to-primary-600 p-8 sm:p-12 text-black">
+          <div className="group relative overflow-hidden rounded-[40px] bg-linear-to-br from-primary-200 to-primary-600 p-8 sm:p-12 text-black">
             <div className="">
-              <div className="inline-block px-4 py-1 bg-white/20 rounded-full text-sm font-medium mb-4">
+              <div className="inline-block px-4 py-1 bg-white/20 rounded-full text-sm font-medium mb-4 shadow-primary-500 shadow-lg">
                 👋 Hello, I'm
               </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
+              <h1 className="text-4xl sm:text-5xl text-gray-900 lg:text-6xl font-bold mb-4">
                 Haytham
               </h1>
               <p className="text-xl sm:text-2xl text-primary-900 mb-6 max-w-125">
@@ -31,11 +31,11 @@ export function AboutPage() {
                 experiences
               </p>
               <div className="flex flex-wrap items-center gap-4 text-sm">
-                <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
+                <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full shadow-primary-500 shadow-lg">
                   <MapPin className="w-4 h-4" />
                   Ljubljana, Slovenia
                 </div>
-                <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
+                <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full shadow-primary-500 shadow-lg">
                   <Sparkles className="w-4 h-4" />
                   Available for opportunities
                 </div>
@@ -46,7 +46,7 @@ export function AboutPage() {
               <img
                 src="profile-picture-removebg-preview.png"
                 alt="Profile Picture"
-                className="absolute hidden w-100 md:w-125 md:block md:left-[23%] lg:left-1/2 bottom-14 transform translate-x-1/2 translate-y-1/2 grayscale-75 hover:grayscale-0 transition duration-300 ease-in-out drop-shadow-2xl drop-shadow-black/80 "
+                className="absolute hidden w-100 md:w-125 md:block md:left-[23%] lg:left-[45%] bottom-14 transform translate-x-1/2 translate-y-1/2 group-hover:translate-y-56 grayscale-75 group-hover:grayscale-0 transition duration-300 ease-in-out drop-shadow-2xl drop-shadow-black/80"
               />
             </div>
           </div>
@@ -181,8 +181,8 @@ export function AboutPage() {
             {/* Right Column - Contact & Tech */}
             <div className="space-y-6">
               {/* Contact Card */}
-              <Card className="p-6 top-6">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
+              <Card className="p-6 bg-secondary-500 dark:bg-secondary-500" style={{ backgroundColor: "#ffcf36 " }}>
+                <h3 className="text-lg font-bold text-gray-900 mb-4">
                   Let's Connect
                 </h3>
                 <div className="space-y-3">
@@ -214,7 +214,7 @@ export function AboutPage() {
                     href="https://github.com/HaythamSaba"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 border border-transparent transition-all group"
+                    className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-900/20 hover:border-gray-300 dark:hover:border-gray-600 border border-transparent transition-all group"
                   >
                     <Github className="w-5 h-5 text-gray-700 dark:text-gray-300 group-hover:scale-110 transition-transform" />
                     <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -224,13 +224,28 @@ export function AboutPage() {
                   </a>
                 </div>
 
-                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <div className="mt-6 pt-6 border-t border-gray-700">
                   <a
                     href="mailto:haythamsaba@gmail.com?subject=HabitFlow%20Feedback"
                     className="block w-full text-center px-4 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-medium transition-colors"
                   >
                     Send Feedback
                   </a>
+                </div>
+              </Card>
+
+              {/* Status Badge */}
+              <Card className="p-6 bg-linear-to-br from-green-50 to-green-100 dark:from-green-300/20 dark:to-green-800/20 border-green-200 dark:border-green-800">
+                <div className="flex items-start gap-3">
+                  <div className="w-5 h-5 bg-green-500 rounded-full animate-pulse shrink-0 mt-1" />
+                  <div>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                      Open to Work
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Seeking frontend/full-stack opportunities in Europe
+                    </p>
+                  </div>
                 </div>
               </Card>
 
@@ -255,21 +270,6 @@ export function AboutPage() {
                       {tech}
                     </span>
                   ))}
-                </div>
-              </Card>
-
-              {/* Status Badge */}
-              <Card className="p-6 bg-linear-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border-green-200 dark:border-green-800">
-                <div className="flex items-start gap-3">
-                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shrink-0 mt-1" />
-                  <div>
-                    <p className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
-                      Open to Work
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Seeking frontend/full-stack opportunities in Europe
-                    </p>
-                  </div>
                 </div>
               </Card>
             </div>
