@@ -160,27 +160,6 @@ export function PremiumHabitCard({
                     <Edit2 className="w-4 h-4" />
                     Edit Habit
                   </button>
-                  {/* {onArchive && (
-                    <button
-                      onClick={() => {
-                        onArchive(habit.id);
-                        setShowMenu(false);
-                      }}
-                      className="w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-gray-700 dark:text-gray-300 cursor-pointer"
-                    >
-                      {habit.archived ? (
-                        <>
-                          <RotateCcw className="w-4 h-4" />
-                          Restore
-                        </>
-                      ) : (
-                        <>
-                          <Archive className="w-4 h-4" />
-                          Archive
-                        </>
-                      )}
-                    </button>
-                  )} */}
                   {habit.archived
                     ? onRestore && (
                         <button
