@@ -8,6 +8,8 @@ import { useCategories } from "@/hooks/useCategories";
 import { useHabits } from "@/hooks/useHabits";
 import { useCompletions } from "@/hooks/useCompletions";
 import { useHabitsStats } from "@/hooks/useHabitsStats";
+import { useArchiveHabit } from "@/hooks/useArchiveHabit";
+import { useRestoreHabit } from "@/hooks/useRestoreHabit";
 
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/Button";
@@ -27,6 +29,8 @@ export function HabitsPage() {
   const { completions } = useCompletions();
   const { categories } = useCategories();
   const deleteHabit = useDeleteHabit();
+  const archiveHabit = useArchiveHabit();
+  const restoreHabit = useRestoreHabit();
   const navigate = useNavigate();
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -103,11 +107,11 @@ export function HabitsPage() {
   };
 
   const handleArchive = (habitId: string) => {
-    deleteHabit.mutate(habitId);
+    archiveHabit.mutate(habitId);
   };
 
   const handleRestore = (habitId: string) => {
-    alert("Restore functionality coming soon! Habit ID: " + habitId);
+    restoreHabit.mutate(habitId);
   };
 
   const handleClearAllFilters = () => {
@@ -166,23 +170,25 @@ export function HabitsPage() {
         />
 
         {/* Premium Filters & View Controls */}
-        <HabitsFilterBar
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          statusFilter={statusFilter}
-          onStatusFilterChange={setStatusFilter}
-          activeCount={activeHabits.length}
-          archivedCount={archivedHabits.length}
-          totalCount={habits.length}
-          categories={categories}
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-          sortBy={sortBy}
-          onSortChange={setSortBy}
-          viewMode={viewMode}
-          onViewModeChange={setViewMode}
-          onClearAllFilters={handleClearAllFilters}
-        />
+        <div className="relative z-20">
+          <HabitsFilterBar
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            statusFilter={statusFilter}
+            onStatusFilterChange={setStatusFilter}
+            activeCount={activeHabits.length}
+            archivedCount={archivedHabits.length}
+            totalCount={habits.length}
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+            sortBy={sortBy}
+            onSortChange={setSortBy}
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
+            onClearAllFilters={handleClearAllFilters}
+          />
+        </div>
 
         {/* Results Count */}
         {/* RESPONSIVE: Stack on mobile if both messages show, smaller text */}
@@ -228,6 +234,7 @@ export function HabitsPage() {
                       onEdit={handleEdit}
                       onDelete={handleDelete}
                       onArchive={handleArchive}
+                      onRestore={handleRestore}
                     />
                   </div>
                 ))}

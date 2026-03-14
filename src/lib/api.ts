@@ -15,7 +15,6 @@ export async function getHabits(userId: string | undefined) {
     .from("habits")
     .select("*")
     .eq("user_id", userId) // ✅ Filter by user
-    .eq("archived", false) // ✅ Don't show archived
     .order("position", { ascending: true });
 
   if (error) throw error;
@@ -422,4 +421,28 @@ export async function deleteCategory(categoryId: string): Promise<void> {
     .eq("id", categoryId);
 
   if (error) throw new Error(error.message);
+}
+
+// Archive habit
+export async function archiveHabit(habitId: string, userId: string) {
+  const { data, error } = await supabase
+    .from("habits")
+    .update({ archived: true })
+    .eq("id", habitId)
+    .eq("user_id", userId);
+
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+// Restore habit
+export async function restoreHabit(habitId: string, userId: string) {
+  const { data, error } = await supabase
+    .from("habits")
+    .update({ archived: false })
+    .eq("id", habitId)
+    .eq("user_id", userId);
+
+  if (error) throw new Error(error.message);
+  return data;
 }

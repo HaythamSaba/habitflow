@@ -24,6 +24,7 @@ import {
   Sun,
   Target,
   CheckCircle2,
+  RotateCcw,
 } from "lucide-react";
 import { format } from "date-fns";
 import { useAllCompletions } from "@/hooks/useAllCompletions";
@@ -48,6 +49,7 @@ interface PremiumHabitCardProps {
   onEdit: (habit: Habit) => void;
   onDelete: (habitId: string) => void;
   onArchive?: (habitId: string) => void;
+  onRestore?: (habitId: string) => void;
 }
 
 export function PremiumHabitCard({
@@ -55,6 +57,7 @@ export function PremiumHabitCard({
   onEdit,
   onDelete,
   onArchive,
+  onRestore,
 }: PremiumHabitCardProps) {
   const { categories } = useCategories();
   const { completions } = useAllCompletions();
@@ -86,7 +89,7 @@ export function PremiumHabitCard({
         }}
       />
       <div
-        className="relative bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 border-2 border-transparent hover:border-white/40 dark:hover:border-gray-700/40 shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]"
+        className="relative bg-white dark:bg-gray-900 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 border-2 border-transparent hover:border-white/40 dark:hover:border-gray-700/40 shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]"
         style={{ borderLeftColor: habit.color, borderLeftWidth: "6px" }}
       >
         {/* Header */}
@@ -157,7 +160,7 @@ export function PremiumHabitCard({
                     <Edit2 className="w-4 h-4" />
                     Edit Habit
                   </button>
-                  {onArchive && (
+                  {/* {onArchive && (
                     <button
                       onClick={() => {
                         onArchive(habit.id);
@@ -165,10 +168,44 @@ export function PremiumHabitCard({
                       }}
                       className="w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-gray-700 dark:text-gray-300 cursor-pointer"
                     >
-                      <Archive className="w-4 h-4" />
-                      Archive
+                      {habit.archived ? (
+                        <>
+                          <RotateCcw className="w-4 h-4" />
+                          Restore
+                        </>
+                      ) : (
+                        <>
+                          <Archive className="w-4 h-4" />
+                          Archive
+                        </>
+                      )}
                     </button>
-                  )}
+                  )} */}
+                  {habit.archived
+                    ? onRestore && (
+                        <button
+                          onClick={() => {
+                            onRestore(habit.id);
+                            setShowMenu(false);
+                          }}
+                          className="w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-gray-700 dark:text-gray-300 cursor-pointer"
+                        >
+                          <RotateCcw className="w-4 h-4" />
+                          Restore
+                        </button>
+                      )
+                    : onArchive && (
+                        <button
+                          onClick={() => {
+                            onArchive(habit.id);
+                            setShowMenu(false);
+                          }}
+                          className="w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-gray-700 dark:text-gray-300 cursor-pointer"
+                        >
+                          <Archive className="w-4 h-4" />
+                          Archive
+                        </button>
+                      )}
                   <button
                     onClick={() => {
                       onDelete(habit.id);

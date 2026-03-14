@@ -11,31 +11,20 @@ import { Category } from "@/types";
 import { useClickOutside } from "@/hooks/useClickOutside";
 
 interface HabitsFilterBarProps {
-  // Search
   searchQuery: string;
   onSearchChange: (query: string) => void;
-
-  // Status filter
   statusFilter: "all" | "active" | "archived";
   onStatusFilterChange: (status: "all" | "active" | "archived") => void;
   activeCount: number;
   archivedCount: number;
   totalCount: number;
-
-  // Category filter
   categories: Category[];
   selectedCategory: string | null;
   onCategoryChange: (categoryId: string | null) => void;
-
-  // Sort
   sortBy: "name" | "streak" | "rate" | "date";
   onSortChange: (sort: "name" | "streak" | "rate" | "date") => void;
-
-  // View mode
   viewMode: "cards" | "list" | "table";
   onViewModeChange: (mode: "cards" | "list" | "table") => void;
-
-  // Active filters
   onClearAllFilters: () => void;
 }
 
@@ -71,8 +60,9 @@ export function HabitsFilterBar({
     searchQuery || selectedCategory || statusFilter !== "active";
 
   return (
-    <div className="bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 border border-white/20 dark:border-gray-700/50 shadow-xl relative">
+    <div className="bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 border border-white/20 dark:border-gray-700/50 shadow-xl relative z-20">
       <div className="flex flex-col gap-3 sm:gap-4">
+        {/* Search */}
         <div className="relative w-full sm:w-auto sm:flex-1 sm:min-w-70">
           <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
           <input
@@ -80,19 +70,17 @@ export function HabitsFilterBar({
             placeholder="Search habits..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            // RESPONSIVE: min-h-11 for touch target, smaller padding on mobile
             className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 min-h-11 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
           />
         </div>
 
-        {/* RESPONSIVE: Filters row — horizontal scroll on mobile so buttons don't wrap awkwardly */}
-        <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto scrollbar-hide -mx-1 px-1">
-          {/* Filters */}
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          {/* Filters group */}
           <div
-            className="flex items-center gap-2 sm:gap-3 shrink-0"
+            className="flex items-center gap-2 sm:gap-3 flex-wrap shrink-0"
             ref={dropDownRef}
           >
-            {/* Status Filter */}
+            {/* Status Filter — FIX: added `relative` so dropdown anchors to this div */}
             <div className="relative">
               <button
                 onClick={() => {
@@ -100,7 +88,6 @@ export function HabitsFilterBar({
                   setShowCategoryDropdown(false);
                   setShowSortDropdown(false);
                 }}
-                // RESPONSIVE: min-h-11 for touch target, smaller padding/text on mobile
                 className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-3 min-h-11 rounded-xl bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-all text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap"
               >
                 <SlidersHorizontal className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
@@ -115,7 +102,7 @@ export function HabitsFilterBar({
               </button>
 
               {showStatusDropdown && (
-                <div className="absolute top-full left-0 mt-2 w-44 sm:w-48 z-40">
+                <div className="absolute top-full left-0 mt-2 w-44 sm:w-48 z-50">
                   <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl overflow-hidden">
                     <button
                       onClick={() => {
@@ -184,8 +171,7 @@ export function HabitsFilterBar({
                 </button>
 
                 {showCategoryDropdown && (
-                  // RESPONSIVE: Position left-0 on mobile, constrain width
-                  <div className="absolute top-full left-0 sm:left-0 mt-2 w-48 sm:w-56 z-40">
+                  <div className="absolute top-full left-0 mt-2 w-48 sm:w-56 z-40">
                     <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl overflow-hidden max-h-64 sm:max-h-80 overflow-y-auto">
                       <button
                         onClick={() => {
@@ -233,7 +219,6 @@ export function HabitsFilterBar({
                 }}
                 className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-3 min-h-11 rounded-xl bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-all text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap"
               >
-                {/* RESPONSIVE: Hide "Sort:" prefix on mobile to save space */}
                 <span className="hidden sm:inline">Sort: </span>
                 <span className="text-primary-600 dark:text-primary-400">
                   {sortBy === "name"
@@ -248,7 +233,6 @@ export function HabitsFilterBar({
               </button>
 
               {showSortDropdown && (
-                // RESPONSIVE: right-0 to prevent off-screen on mobile
                 <div className="absolute top-full right-0 mt-2 w-44 sm:w-48 z-40">
                   <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl overflow-hidden">
                     <button
@@ -310,7 +294,6 @@ export function HabitsFilterBar({
           </div>
 
           {/* View Mode Toggles */}
-          {/* RESPONSIVE: min-h-11 per button for touch targets */}
           <div className="flex items-center gap-1 sm:gap-2 bg-gray-100 dark:bg-gray-900 rounded-xl p-1 ml-auto shrink-0">
             <button
               onClick={() => onViewModeChange("cards")}
