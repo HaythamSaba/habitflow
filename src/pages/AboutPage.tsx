@@ -235,7 +235,7 @@ export function AboutPage() {
               </Card>
 
               {/* Status Badge */}
-              <Card className="p-6 bg-linear-to-br from-green-50 to-green-100 dark:from-green-300/20 dark:to-green-800/20 border-green-200 dark:border-green-800">
+              <Card className="p-6 bg-linear-to-br from-green-50 to-green-100 dark:from-green-300/20 dark:to-green-500/20 border-green-200 dark:border-green-800">
                 <div className="flex items-start gap-3">
                   <div className="w-5 h-5 bg-green-500 rounded-full animate-pulse shrink-0 mt-1" />
                   <div>
@@ -258,14 +258,18 @@ export function AboutPage() {
                   {[
                     "React",
                     "TypeScript",
+                    "Next.js",
+                    "JavaScript",
                     "Tailwind",
+                    "Bootstrap",
                     "Supabase",
                     "Vite",
                     "Vercel",
+                    "And More...",
                   ].map((tech) => (
                     <span
                       key={tech}
-                      className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-xs font-medium"
+                      className="px-3 py-1 bg-primary-100 dark:bg-primary-800 text-gray-700 dark:text-gray-300 rounded-full text-xs font-medium"
                     >
                       {tech}
                     </span>

@@ -88,7 +88,7 @@ export default function SideBar({
                 whileTap={{ scale: 0.98 }}
                 className={`flex flex-row items-center gap-3
                   p-3 min-h-12 md:min-h-11
-                  rounded-2xl font-semibold text-md cursor-pointer 
+                  rounded-3xl font-semibold text-md cursor-pointer 
                   transition-all duration-300 ease-in-out ${
                     active
                       ? "bg-primary-500 text-white shadow-lg shadow-primary-500/30"
