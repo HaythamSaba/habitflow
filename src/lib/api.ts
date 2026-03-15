@@ -60,7 +60,7 @@ export async function deleteHabit(habitId: string, userId: string) {
     .from("habits")
     .update({ archived: true })
     .eq("id", habitId)
-    .eq("user_id", userId) // ✅ Filter by user
+    .eq("user_id", userId)
     .select()
     .single();
 
@@ -197,13 +197,11 @@ export async function getHabitCompletions(habitId: string, userId: string) {
  * Get user stats (points, level, etc.)
  */
 export async function getUserStats(userId: string) {
-
   const { data, error } = await supabase
     .from("user_stats")
     .select("*")
     .eq("user_id", userId)
     .single();
-
 
   if (error) {
     console.error("❌ getUserStats error:", error);

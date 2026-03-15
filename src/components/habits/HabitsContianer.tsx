@@ -23,7 +23,9 @@ export default function HabitsContainer({
   const { isLoading, habits: allHabits, error } = useHabits();
   const deleteHabit = useDeleteHabit();
 
-  const habits = filteredHabits !== undefined ? filteredHabits : allHabits;
+  const activeHabits = allHabits.filter((habit) => !habit.archived);
+
+  const habits = filteredHabits !== undefined ? filteredHabits : activeHabits;
 
   const handleEdit = (habit: Habit) => {
     setEditingHabit(habit);

@@ -25,7 +25,7 @@ export function DashboardPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { categories } = useCategories();
-  const { habits } = useHabits();
+  const { habits: allHabits } = useHabits();
   const { completions } = useCompletions();
   const { maxStreak } = useDashboardStreak();
   const { totalPoints, levelData } = useUserStats();
@@ -35,6 +35,8 @@ export function DashboardPage() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
     null,
   );
+
+  const habits = allHabits?.filter((habit) => !habit.archived);
 
   // Computed values
   const filteredHabits = selectedCategoryId

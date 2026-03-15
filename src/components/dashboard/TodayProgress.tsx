@@ -14,7 +14,7 @@ export function TodayProgress() {
       return habitCompletions.length >= habit.target_count;
     }).length || 0;
 
-  const totalHabits = habits?.length || 0;
+  const totalHabits = habits.filter((habit) => !habit.archived).length || 0;
 
   // Calculate percentage
   const percentage =
@@ -55,7 +55,9 @@ export function TodayProgress() {
           </span>{" "}
           completed
         </span>
-        <span className="font-bold text-primary shrink-0 ml-2">{percentage}%</span>
+        <span className="font-bold text-primary shrink-0 ml-2">
+          {percentage}%
+        </span>
       </div>
 
       {/* Motivational Message */}
