@@ -8,17 +8,24 @@ import { useUserStats } from "@/hooks/useUserStats";
 import { useDashboardStreak } from "@/hooks/useDashboardStreak";
 import { useMemo, useState } from "react";
 import PageHeader from "@/components/ui/PageHeader";
+import { useCheckAchievements } from "@/hooks/useCheckAchievements"; // ⭐ ADD
 
 export function AchievementsPage() {
   const { allAchievements, unlockedIds, isLoading } = useAchievements();
-  const { habits } = useHabits();
+  const { habits: allHabits } = useHabits();
   const { completions } = useCompletions();
   const { totalPoints } = useUserStats();
   const { maxStreak } = useDashboardStreak();
 
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
-  // Calculate stats for progress
+  useCheckAchievements();
+
+  const habits = useMemo(
+    () => allHabits?.filter((h) => !h.archived) || [],
+    [allHabits],
+  );
+
   const stats = useMemo(
     () => ({
       totalCompletions: completions?.length || 0,
@@ -73,8 +80,7 @@ export function AchievementsPage() {
         <PageHeader
           title="Achievements"
           emoji="🏆"
-          description="Unlock achievements by completing challenges and milestones!
-"
+          description="Unlock achievements by completing challenges and milestones!"
         />
 
         {/* Stats Overview */}
@@ -108,8 +114,6 @@ export function AchievementsPage() {
         </div>
 
         {/* Category Filter */}
-        {/* RESPONSIVE: Horizontal scroll on mobile with scrollbar hidden,
-            min-h-[44px] on each button for touch targets */}
         <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1 -mb-1">
           {["all", "completion", "streak", "points", "habit", "special"].map(
             (category) => (
@@ -130,7 +134,7 @@ export function AchievementsPage() {
 
         {/* Unlocked Achievements */}
         {unlockedAchievements.length > 0 && (
-          <div>
+          <div className="mt-6">
             {/* RESPONSIVE: Smaller section heading on mobile */}
             <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3 md:mb-4">
               ✨ Unlocked ({unlockedAchievements.length})

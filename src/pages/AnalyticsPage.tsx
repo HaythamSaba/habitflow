@@ -19,7 +19,7 @@ export function AnalyticsPage() {
     barChartData,
   } = useAnalytics();
 
-  const totalHabits = habits?.length || 0;
+  const totalHabits = habits.filter((h) => !h.archived).length || 0;
 
   return (
     <DashboardLayout>
