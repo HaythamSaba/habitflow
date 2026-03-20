@@ -5,6 +5,7 @@ import { Link, Navigate } from "react-router-dom";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
+import { ArrowRight } from "lucide-react"; // ⭐ ADD
 
 const signupSchema = z
   .object({
@@ -54,25 +55,26 @@ export function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-primary-200 flex items-center justify-center p-4 sm:p-6">
+    <div className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-primary-100 dark:from-gray-950 dark:via-gray-900 dark:to-primary-950 flex items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-md">
-        <div className="text-center mb-5 sm:mb-8">
-          <h1
-            className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1.5 sm:mb-2"
-            style={{ fontFamily: "Sora, sans-serif" }}
-          >
-            Start Your Journey
+        {/* Header */}
+        <div className="text-center mb-6 sm:mb-8">
+
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+            Start Your Journey ✨
           </h1>
-          <p className="text-sm sm:text-base text-gray-600">
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
             Create an account and build better habits
           </p>
         </div>
 
-        <div className="card bg-white rounded-xl sm:rounded-2xl shadow-xl p-5 sm:p-6 lg:p-8 border border-gray-100">
+        {/* Card */}
+        <div className="rounded-3xl border border-gray-200 dark:border-gray-800 p-5 sm:p-6 lg:p-8 shadow-xl shadow-primary-200/50 dark:shadow-primary-950/50 bg-white dark:bg-gray-900 backdrop-blur-sm">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="space-y-3 sm:space-y-4 lg:space-y-5"
+            className="space-y-4 sm:space-y-5"
           >
+            {/* Full Name */}
             <Input
               label="Full Name"
               type="text"
@@ -82,6 +84,7 @@ export function SignupPage() {
               disabled={isLoading}
             />
 
+            {/* Email */}
             <Input
               label="Email Address"
               type="email"
@@ -91,6 +94,7 @@ export function SignupPage() {
               disabled={isLoading}
             />
 
+            {/* Password */}
             <Input
               label="Password"
               type="password"
@@ -101,6 +105,7 @@ export function SignupPage() {
               disabled={isLoading}
             />
 
+            {/* Confirm Password */}
             <Input
               label="Confirm Password"
               type="password"
@@ -110,42 +115,41 @@ export function SignupPage() {
               disabled={isLoading}
             />
 
+            {/* Submit Button */}
             <Button
               type="submit"
               variant="primary"
               size="lg"
-              className="w-full mt-4 sm:mt-6 min-h-11"
+              className="w-full mt-2 min-h-11 sm:min-h-12"
               isLoading={isLoading}
+              rightIcon={<ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />}
             >
               Create Account
             </Button>
           </form>
 
-          <div className="relative my-4 sm:my-6">
+          {/* Divider */}
+          <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200"></div>
+              <div className="w-full border-t border-gray-200 dark:border-gray-700"></div>
             </div>
-            <div className="relative flex justify-center text-xs sm:text-sm">
-              <span className="px-3 sm:px-4 bg-white text-gray-500">
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">
                 Already have an account?
               </span>
             </div>
           </div>
 
+          {/* Login Link */}
           <div className="text-center">
             <Link
               to="/login"
-              className="text-sm sm:text-base text-primary-500 hover:underline min-h-11 inline-flex items-center"
+              className="text-sm sm:text-base text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium hover:underline transition-colors"
             >
-              Log in instead
+              Log in instead →
             </Link>
           </div>
         </div>
-
-        <p className="text-center text-xs sm:text-sm text-gray-500 mt-5 sm:mt-8 px-4">
-          By creating an account, you agree to our Terms of Service and Privacy
-          Policy
-        </p>
       </div>
     </div>
   );

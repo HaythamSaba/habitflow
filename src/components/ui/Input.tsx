@@ -55,7 +55,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             aria-describedby={
               error
                 ? `${inputId}-error`
-                : helperText
+                : helperText  
                   ? `${inputId}-helper`
                   : undefined
             }
