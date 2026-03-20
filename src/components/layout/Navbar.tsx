@@ -73,7 +73,7 @@ export default function Navbar({
           )}
         </button>
 
-        <div className="hidden lg:flex items-center gap-3 border-r border-gray-300 dark:border-gray-700 pr-4 md:pr-8 p-4 h-22 w-76">
+        <div className="hidden lg:flex items-center gap-3 border-r border-gray-300 dark:border-gray-700 pr-4 md:pr-8 p-4 h-22 w-76 cursor-pointer" onClick={() => navigate("/dashboard")}>
           <div className="w-10 h-10 flex items-center justify-center">
             <img src="/logo.png" alt="HabitFlow" />
           </div>
@@ -133,8 +133,8 @@ export default function Navbar({
                 <div
                   className={`flex items-center justify-between gap-1 md:gap-4 cursor-pointer p-2 rounded-full transition-colors ${
                     isShowDropdown
-                      ? "bg-gray-100 dark:bg-gray-700"
-                      : "hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                      ? "bg-primary-100 dark:bg-gray-700"
+                      : "hover:bg-primary-100 dark:hover:bg-gray-700/50"
                   }`}
                   onClick={() => setIsShowDropdown((show) => !show)}
                 >
@@ -149,10 +149,10 @@ export default function Navbar({
 
                 {isShowDropdown && (
                   <div className="flex flex-col items-start absolute right-0 top-14 mt-2 w-44 md:w-36 rounded-xl shadow-lg py-1 glass-card-no-border dark:bg-gray-800 dark:text-gray-100 p-1">
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" onClick={() => navigate("/habits")}>
                       Profile
                     </Button>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" onClick={() => navigate("/settings")}>
                       Settings
                     </Button>
                     <div className="border-t border-gray-200 dark:border-gray-700 my-2 w-full" />
