@@ -16,6 +16,7 @@ import { AchievementsPage } from "./pages/AchievementsPage";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { TemplatesPage } from "./pages/TemplatesPage";
 import { AboutPage } from "./pages/AboutPage";
+import { NotFoundPage } from "./pages/NotFoundPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -127,7 +128,7 @@ function AppContent() {
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
         {/* Catch all - redirect to dashboard */}
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   );
