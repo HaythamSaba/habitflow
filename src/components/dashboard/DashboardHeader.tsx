@@ -13,7 +13,7 @@ export default function DashboardHeader({
   onBrowseTemplates,
 }: DashboardHeaderProps) {
   return (
-    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 md:gap-3">
+    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 md:gap-4">
       <PageHeader
         emoji="👋"
         title={`Welcome back,`}
@@ -30,7 +30,7 @@ export default function DashboardHeader({
           </Button>
         }
       />
-      <div className="w-full flex-1 md:w-auto">
+      <div className="w-full flex-1 md:w-1/2">
         <LevelProgress />
       </div>
     </div>

@@ -19,7 +19,7 @@ export function AchievementCountCard({
   };
 
   return (
-    <div className="bg-white dark:bg-gray-950 flex-1 rounded-xl p-4 sm:p-5 lg:p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-700 hover:dark:shadow-xl border-primary-300 dark:border-primary-700 hover:shadow-xl transition-shadow duration-500">
+    <div className="bg-white dark:bg-gray-950 flex-1 rounded-3xl p-4 sm:p-5 lg:p-6 shadow-sm border shadow-primary-100 dark:shadow-primary-700 hover:dark:shadow-xl border-primary-300 dark:border-primary-700 hover:shadow-xl transition-shadow duration-500">
       <div className="flex items-center justify-between mb-4">
         <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
           <Trophy className="w-6 h-6 text-orange-600 dark:text-orange-400" />

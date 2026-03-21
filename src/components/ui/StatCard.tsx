@@ -24,7 +24,7 @@ export function StatCard({
   emoji,
 }: StatCardProps) {
   return (
-    <div className={`${iconBgColor} flex-1 rounded-xl p-2.5 sm:p-4 lg:p-6 shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl dark:border-primary-700 hover:shadow-xl transition-shadow duration-500`}>
+    <div className={`${iconBgColor} flex-1 rounded-3xl p-2.5 sm:p-4 lg:p-6 shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl dark:border-primary-700 hover:shadow-xl transition-shadow duration-500`}>
       <div className="flex items-center justify-between mb-2 lg:mb-4">
         <div
           className={`w-9 h-9 lg:w-12 lg:h-12 rounded-lg flex items-center justify-center`}

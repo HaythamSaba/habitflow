@@ -67,6 +67,10 @@ export function DashboardPage() {
       ? Math.round(((completions?.length || 0) / totalTargets) * 100)
       : 0;
 
+  const lockedAchievements = allAchievements.filter(
+    (achievement) => !unlockedAchievements.includes(achievement.id),
+  );
+
   return (
     <DashboardLayout>
       <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6">
@@ -77,7 +81,7 @@ export function DashboardPage() {
         />
 
         {/* ⭐ Stats Grid - Already refactored with DashboardCard */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-8">
           <StatCard
             value={habits?.length || 0}
             title="Active Habits"
@@ -153,6 +157,7 @@ export function DashboardPage() {
         {/* Progress + Achievement Count */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-6">
           <TodayProgress />
+
           {/* ⭐ Achievement Card - Extracted */}
           <AchievementCountCard
             unlocked={unlockedAchievements.length}
@@ -167,28 +172,73 @@ export function DashboardPage() {
 
         {/* Next Achievement Preview */}
         {unlockedAchievements.length < allAchievements.length && (
-          <div className="bg-linear-to-r from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 rounded-xl p-3 sm:p-4 md:p-6 border border-primary-200 dark:border-primary-800">
-            <div className="flex items-center justify-between gap-3">
-              <div className="min-w-0">
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  🎯 Next Achievement
-                </p>
-                <p className="text-xs text-gray-600 dark:text-gray-400">
-                  Keep going to unlock more!
-                </p>
+          <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-primary-200 to-secondary-200 dark:bg-linear-to-br dark:from-primary-900 dark:to-secondary-900 p-4 sm:p-6 md:p-8 lg:p-6">
+            {/* Animated background glow */}
+            <div className="absolute top-0 right-0 w-40 h-40 bg-linear-to-br from-orange-400/20 to-yellow-400/20 rounded-full blur-3xl animate-pulse"></div>
+
+            <div className="relative">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">🔥</span>
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                    Keep Going!
+                  </h3>
+                </div>
+                <div className="px-3 py-1 rounded-full bg-secondary-500 dark:bg-secondary-900">
+                  <span className="text-xs font-bold text-orange-700 dark:text-orange-300">
+                    {Math.round(
+                      (unlockedAchievements.length / allAchievements.length) *
+                        100,
+                    )}
+                    % Complete
+                  </span>
+                </div>
               </div>
-              <div className="text-right shrink-0">
-                <p className="text-xl md:text-2xl font-bold text-primary">
+
+              <p className="text-sm text-gray-600 dark:text-gray-200 mb-4">
+                You've unlocked{" "}
+                <span className="font-bold text-orange-600 dark:text-orange-400">
+                  {unlockedAchievements.length}
+                </span>{" "}
+                out of{" "}
+                <span className="font-bold">{allAchievements.length}</span>{" "}
+                achievements. Only{" "}
+                <span className="font-bold text-orange-600 dark:text-orange-400">
                   {allAchievements.length - unlockedAchievements.length}
-                </p>
-                <p className="text-xs text-gray-600 dark:text-gray-400">
-                  remaining
-                </p>
+                </span>{" "}
+                more to go!
+              </p>
+
+              {/* Mini achievement icons preview */}
+              <div className="flex items-center gap-2">
+                <div className="flex -space-x-2">
+                  {lockedAchievements.slice(0, 5).map((achievement, i) => (
+                    <div
+                      key={achievement.id}
+                      className="w-10 h-10 rounded-full bg-white dark:bg-primary-900 border-2 border-primary-100 dark:border-primary-500 flex items-center justify-center"
+                      style={{ zIndex: 5 - i }}
+                    >
+                      <span className="text-lg filter  ">
+                        {achievement.emoji}
+                      </span>
+                    </div>
+                  ))}
+                  {lockedAchievements.length > 5 && (
+                    <div className="w-10 h-10 rounded-full bg-secondary-100 dark:bg-secondary-900 border-2 border-secondary-300 dark:border-secondary-700 flex items-center justify-center">
+                      <span className="text-xs font-bold text-secondary-700 dark:text-secondary-300">
+                        +{lockedAchievements.length - 5}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <span className="text-xs text-gray-500 dark:text-gray-200 ml-2">
+                  Waiting to be unlocked
+                </span>
               </div>
             </div>
           </div>
         )}
-
+        
         {/* Category Filter */}
         {categories.length > 0 && (
           <div className="flex items-center gap-2 md:gap-4 min-w-0 w-full scrollbar-hide">
