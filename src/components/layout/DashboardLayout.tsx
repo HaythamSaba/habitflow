@@ -19,7 +19,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const mainRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="h-screen w-full overflow-hidden flex flex-col">
+    <div className="h-screen w-full overflow-hidden flex flex-col bg-white dark:bg-gray-950">
       <Navbar
         displayName={displayName}
         signOut={signOut}
