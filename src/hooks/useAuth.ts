@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import toast from "react-hot-toast";
 import { useAuthStore } from "@/store/authstore";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function useAuth() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const {
     user,
     isLoading,
@@ -76,7 +78,7 @@ export function useAuth() {
   const signUp = async (
     email: string,
     password: string,
-    displayName: string
+    displayName: string,
   ) => {
     try {
       setLoading(true);
@@ -125,6 +127,7 @@ export function useAuth() {
 
       if (data.user) {
         navigate("/dashboard");
+        queryClient.setQueryData(["user_profiles"], data.user);
         return { success: true };
       }
 
@@ -149,7 +152,8 @@ export function useAuth() {
       if (error) throw error;
 
       reset();
-      navigate("/login");
+      queryClient.removeQueries();
+      navigate("/login", { replace: true });
       return { success: true };
     } catch (error) {
       console.error("Logout error:", error);
