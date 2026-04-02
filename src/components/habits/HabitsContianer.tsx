@@ -9,6 +9,9 @@ import { useDeleteHabit } from "@/hooks/useDeleteHabit";
 import { Habit } from "@/types";
 import { HabitCardSkeleton } from "./HabitCardSkeleton";
 import { useNavigate } from "react-router-dom";
+import { useToggleCompletion } from "@/hooks/useToggleCompletion";
+import { useCompletions } from "@/hooks/useCompletions"; // ⭐ CHANGE: Use TODAY's completions
+import { toast } from "react-hot-toast"; // ⭐ ADD
 
 interface HabitsContainerProps {
   filteredHabits?: Habit[];
@@ -26,9 +29,61 @@ export default function HabitsContainer({
   const activeHabits = allHabits.filter((habit) => !habit.archived);
 
   const habits = filteredHabits !== undefined ? filteredHabits : activeHabits;
+  const toggleCompletion = useToggleCompletion();
+  const isLoadingCompletion = toggleCompletion.isPending;
+
+  // ⭐ Use TODAY's completions to check what's already done
+  const { getHabitCompletionCount } = useCompletions();
 
   const handleEdit = (habit: Habit) => {
     setEditingHabit(habit);
+  };
+
+  // ⭐⭐⭐ FIXED "Complete All" Logic
+  const handleCompleteAllHabits = async () => {
+    if (isLoadingCompletion) return;
+
+    // Find incomplete habits (not fully completed today)
+    const incompleteHabits = habits.filter((habit) => {
+      const currentCount = getHabitCompletionCount(habit.id);
+      return currentCount < habit.target_count;
+    });
+
+    if (incompleteHabits.length === 0) {
+      toast.success("All habits already completed! 🎉");
+      return;
+    }
+
+    // Show loading toast
+    const loadingToast = toast.loading(
+      `Completing ${incompleteHabits.length} ${incompleteHabits.length === 1 ? "habit" : "habits"}...`,
+    );
+
+    try {
+      // Complete all incomplete habits
+      for (const habit of incompleteHabits) {
+        const currentCount = getHabitCompletionCount(habit.id);
+        const remaining = habit.target_count - currentCount;
+
+        // Complete remaining times
+        for (let i = 0; i < remaining; i++) {
+          await toggleCompletion.mutateAsync({
+            habitId: habit.id,
+            targetCount: habit.target_count,
+          });
+        }
+      }
+
+      toast.success(
+        `🎉 Completed ${incompleteHabits.length} ${incompleteHabits.length === 1 ? "habit" : "habits"}!`,
+        { id: loadingToast },
+      );
+    } catch (error) {
+      toast.error(
+        `Failed to complete habits: ${error instanceof Error ? error.message : "Unknown error"}`,
+        { id: loadingToast },
+      );
+    }
   };
 
   const handleDelete = (habitId: string) => {
@@ -40,6 +95,12 @@ export default function HabitsContainer({
       deleteHabit.mutate(habitId);
     }
   };
+
+  // ⭐ Calculate incomplete count for button
+  const incompleteCount = habits.filter((habit) => {
+    const currentCount = getHabitCompletionCount(habit.id);
+    return currentCount < habit.target_count;
+  }).length;
 
   if (isLoading) {
     return (
@@ -84,16 +145,35 @@ export default function HabitsContainer({
             <h3 className="text-lg sm:text-xl font-bold text-primary-500">
               Today's Habits
             </h3>
-            <Button
-              variant="primary"
-              size="md"
-              leftIcon={<Plus className="w-4 h-4 sm:w-5 sm:h-5" />}
-              onClick={() => setIsCreateModalOpen(true)}
-              className="hover:shadow-lg hover:shadow-primary/50 transition-all min-h-11 w-full sm:w-auto text-sm sm:text-base"
-            >
-              <span className="hidden sm:inline">Create New Habit</span>
-              <span className="sm:hidden">New Habit</span>
-            </Button>
+            <div className="flex gap-2 sm:gap-3">
+              {/* ⭐ Show button only if there are incomplete habits */}
+              {incompleteCount > 0 && (
+                <Button
+                  variant="secondary"
+                  size="md"
+                  leftIcon={<Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />}
+                  onClick={handleCompleteAllHabits}
+                  disabled={isLoadingCompletion}
+                  className="hover:shadow-lg hover:shadow-primary/50 transition-all sm:w-auto text-sm sm:text-base"
+                >
+                  <span className="hidden sm:inline">
+                    Complete All ({incompleteCount})
+                  </span>
+                  <span className="sm:hidden">All ({incompleteCount})</span>
+                </Button>
+              )}
+
+              <Button
+                variant="primary"
+                size="md"
+                leftIcon={<Plus className="w-4 h-4 sm:w-5 sm:h-5" />}
+                onClick={() => setIsCreateModalOpen(true)}
+                className="hover:shadow-lg hover:shadow-primary/50 transition-all sm:w-auto text-sm sm:text-base"
+              >
+                <span className="hidden sm:inline">Create New Habit</span>
+                <span className="sm:hidden">New Habit</span>
+              </Button>
+            </div>
           </div>
 
           <HabitList

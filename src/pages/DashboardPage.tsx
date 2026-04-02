@@ -253,7 +253,7 @@ export function DashboardPage() {
 
         {/* Habits + Chart */}
         <div className="flex flex-col xl:flex-row justify-between items-stretch gap-3 sm:gap-4 lg:gap-6">
-          <div className="card bg-white dark:bg-gray-950 rounded-2xl p-3 sm:p-4 lg:p-6 xl:p-10 shadow-lg shadow-primary-200 dark:shadow-gray-900 border border-gray-300 dark:border-gray-700 xl:flex-1">
+          <div className="card bg-white dark:bg-gray-950 rounded-2xl p-3 sm:p-4 lg:p-6 shadow-lg shadow-primary-200 dark:shadow-gray-900 border border-gray-300 dark:border-gray-700 xl:flex-1">
             <HabitsContainer filteredHabits={filteredHabits} />
           </div>
           <div className="w-full xl:w-1/2">
