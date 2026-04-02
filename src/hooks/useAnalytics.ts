@@ -13,6 +13,9 @@ export function useAnalytics() {
   const { habits } = useHabits();
   const { completions } = useAllCompletions();
 
+  // get the active habits and remove the archived ones
+  const activeHabits = habits?.filter((h) => !h.archived);
+
   // ===== 1. Filter completions to last 30 days =====
   const today = startOfDay(new Date());
   const thirtyDaysAgo = subDays(today, 30);
@@ -31,10 +34,10 @@ export function useAnalytics() {
 
   // ===== 3. Average completion rate =====
   const averageRate = (() => {
-    if (!habits || habits.length === 0) return 0;
+    if (!activeHabits || activeHabits.length === 0) return 0;
 
     // Expected completions = sum of (each habit's target * 30 days)
-    const expectedCompletions = habits.reduce((sum, habit) => {
+    const expectedCompletions = activeHabits.reduce((sum, habit) => {
       return sum + habit.target_count * 30;
     }, 0);
 
@@ -50,11 +53,11 @@ export function useAnalytics() {
 
   // ===== 4. Best streak across all habits =====
   const bestStreak = (() => {
-    if (!habits || !completions) return 0;
+    if (!activeHabits || !completions) return 0;
 
     let maxStreak = 0;
 
-    habits.forEach((habit) => {
+    activeHabits.forEach((habit) => {
       // Get all completions for this habit
       const habitCompletions = completions.filter(
         (c) => c.habit_id === habit.id,
@@ -131,9 +134,9 @@ export function useAnalytics() {
 
   // ===== 6. Bar chart data (per-habit performance) =====
   const barChartData = (() => {
-    if (!habits) return [];
+    if (!activeHabits) return [];
 
-    const data = habits.map((habit) => {
+    const data = activeHabits.map((habit) => {
       // Filter completions for this habit in last 30 days
       const habitCompletions = completionsLast30Days.filter(
         (c) => c.habit_id === habit.id,
