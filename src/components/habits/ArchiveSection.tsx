@@ -8,12 +8,14 @@ interface ArchiveSectionProps {
   onEdit: (habit: Habit) => void;
   onDelete: (habitId: string) => void;
   onRestore: (habitId: string) => void;
+  onArchive: (habitId: string) => void;
 }
 
 export function ArchiveSection({
   archivedHabits,
   onEdit,
   onDelete,
+  onArchive,
   onRestore,
 }: ArchiveSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -86,7 +88,8 @@ export function ArchiveSection({
                   habit={habit}
                   onEdit={onEdit}
                   onDelete={onDelete}
-                  onArchive={onRestore}
+                  onArchive={onArchive}
+                  onRestore={onRestore}
                 />
               </div>
             </div>

@@ -268,6 +268,7 @@ export function HabitsPage() {
                 archivedHabits={archivedHabits}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
+                onArchive={handleArchive}
                 onRestore={handleRestore}
               />
             )}
