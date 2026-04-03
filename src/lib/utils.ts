@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { Habit } from "@/types";
 
 /**
  * Merges Tailwind CSS classes intelligently
@@ -114,4 +115,20 @@ export function lightenColor(hex: string, targetLightness = 95): string {
       .padStart(2, "0");
 
   return `#${toHex(r1)}${toHex(g1)}${toHex(b1)}`;
+}
+
+export function filterHabits(habits: Habit[], searchQuery: string): Habit[] {
+  // Return all if no search query
+  if (!searchQuery.trim()) {
+    return habits;
+  }
+
+  const query = searchQuery.toLowerCase().trim();
+
+  return habits.filter((habit) => {
+    const nameMatch = habit.name.toLowerCase().includes(query);
+    const descriptionMatch = habit.description?.toLowerCase().includes(query);
+    
+    return nameMatch || descriptionMatch;
+  });
 }
