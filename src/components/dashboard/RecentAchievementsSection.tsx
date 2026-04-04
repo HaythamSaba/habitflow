@@ -11,7 +11,7 @@ export function RecentAchievementsSection({
   if (achievements.length === 0) return null;
 
   return (
-    <div className="card bg-white dark:bg-gray-950 rounded-3xl p-3 sm:p-4 md:p-6 shadow-lg shadow-primary-200 dark:shadow-gray-900 border border-gray-300 dark:border-gray-700">
+    <div className="card bg-white dark:bg-gray-950 rounded-3xl p-3 sm:p-4 shadow-lg shadow-primary-200 dark:shadow-gray-900 border border-gray-300 dark:border-gray-700">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 md:mb-6 gap-2">
         <div>
           <h2 className="text-lg md:text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
@@ -46,22 +46,22 @@ export function RecentAchievementsSection({
         {achievements.map((achievement) => (
           <div
             key={achievement.id}
-            className="p-3 md:p-4 rounded-lg border-2 border-primary bg-primary/5 dark:bg-primary/10 hover:bg-primary/10 dark:hover:bg-primary/20 transition-all"
+            className="p-3 md:p-4 rounded-2xl bg-primary-100/80 dark:bg-primary-500/60 hover:bg-primary/10 dark:hover:bg-primary/20 transition-all duration-300 hover:shadow-lg hover:shadow-gray-100 dark:hover:shadow-gray-700"
           >
             <div className="flex items-center gap-2 sm:gap-3 mb-2">
               <span className="text-2xl md:text-3xl shrink-0">
                 {achievement.emoji}
               </span>
               <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-sm md:text-base text-gray-900 dark:text-gray-100 truncate">
+                <h3 className="font-bold text-sm md:text-lg text-gray-900 dark:text-gray-100 truncate">
                   {achievement.name}
                 </h3>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-primary/20 dark:bg-primary/30 text-primary font-medium">
+                <span className="text-xs rounded-full bg-primary/20 dark:bg-primary/30 text-primary font-medium">
                   {achievement.rarity}
                 </span>
               </div>
             </div>
-            <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">
+            <p className="text-xs md:text-sm text-gray-600 dark:text-gray-200 mb-2 line-clamp-2">
               {achievement.description}
             </p>
             <div className="flex items-center gap-1 text-xs text-yellow-600 dark:text-yellow-500">
