@@ -3,6 +3,8 @@ import { HabitCard } from "./HabitCard";
 import { useState } from "react";
 import { Search, X } from "lucide-react";
 import { filterHabits } from "@/lib/utils";
+import { Button } from "../ui/Button";
+import { useCompletions } from "@/hooks/useCompletions";
 
 interface HabitListProps {
   habits: Habit[];
@@ -11,10 +13,33 @@ interface HabitListProps {
 }
 
 export function HabitList({ habits, onEdit, onDelete }: HabitListProps) {
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "completed" | "incomplete"
+  >("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredHabits = filterHabits(habits, searchQuery);
+  const { getHabitCompletionCount } = useCompletions();
+
+  // First filter: Search by name/description
+  const searchFilteredHabits = filterHabits(habits, searchQuery);
   const hasSearchQuery = searchQuery.trim().length > 0;
+
+  // Second filter: Filter by completion status
+  const currentHabits = searchFilteredHabits.filter((habit) => {
+    if (statusFilter === "all") {
+      return true;
+    }
+
+    const currentCount = getHabitCompletionCount(habit.id);
+    const isFullyCompleted = currentCount >= habit.target_count;
+
+    if (statusFilter === "completed") {
+      return isFullyCompleted;
+    } else {
+      // incomplete
+      return !isFullyCompleted;
+    }
+  });
 
   return (
     <div className="flex flex-col gap-4">
@@ -45,17 +70,60 @@ export function HabitList({ habits, onEdit, onDelete }: HabitListProps) {
           {/* Search results count */}
           {hasSearchQuery && (
             <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-2">
-              {filteredHabits.length > 0 &&
-                `${filteredHabits.length} ${filteredHabits.length === 1 ? "habit" : "habits"} found`}
+              {searchFilteredHabits.length === 0
+                ? "No habits found"
+                : `${searchFilteredHabits.length} ${searchFilteredHabits.length === 1 ? "habit" : "habits"} found`}
             </p>
           )}
         </div>
       )}
 
+      {/* Status Filters */}
+      {searchFilteredHabits.length > 0 && (
+        <div className="flex gap-2 justify-center flex-wrap">
+          <Button
+            variant={statusFilter === "all" ? "primary" : "outline"}
+            size="sm"
+            onClick={() => setStatusFilter("all")}
+            className="min-h-9 capitalize"
+          >
+            All ({searchFilteredHabits.length})
+          </Button>
+          <Button
+            variant={statusFilter === "completed" ? "primary" : "outline"}
+            size="sm"
+            onClick={() => setStatusFilter("completed")}
+            className="min-h-9 capitalize"
+          >
+            Completed (
+            {
+              searchFilteredHabits.filter(
+                (h) => getHabitCompletionCount(h.id) >= h.target_count,
+              ).length
+            }
+            )
+          </Button>
+          <Button
+            variant={statusFilter === "incomplete" ? "primary" : "outline"}
+            size="sm"
+            onClick={() => setStatusFilter("incomplete")}
+            className="min-h-9 capitalize"
+          >
+            Incomplete (
+            {
+              searchFilteredHabits.filter(
+                (h) => getHabitCompletionCount(h.id) < h.target_count,
+              ).length
+            }
+            )
+          </Button>
+        </div>
+      )}
+
       {/* Habit Cards */}
-      {filteredHabits.length > 0 ? (
+      {currentHabits.length > 0 ? (
         <div className="flex flex-col gap-3">
-          {filteredHabits.map((habit) => (
+          {currentHabits.map((habit) => (
             <HabitCard
               key={habit.id}
               habit={habit}
@@ -66,8 +134,8 @@ export function HabitList({ habits, onEdit, onDelete }: HabitListProps) {
         </div>
       ) : (
         <div className="text-center py-12">
-          {hasSearchQuery ? (
-            // No results for search
+          {hasSearchQuery || statusFilter !== "all" ? (
+            // No results for filters
             <>
               <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Search className="w-8 h-8 text-gray-400" />
@@ -75,15 +143,35 @@ export function HabitList({ habits, onEdit, onDelete }: HabitListProps) {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
                 No habits found
               </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                No habits match "{searchQuery}"
-              </p>
-              <button
-                onClick={() => setSearchQuery("")}
-                className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
-              >
-                Clear search
-              </button>
+              {hasSearchQuery && (
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                  No habits match "{searchQuery}"
+                  {statusFilter !== "all" && ` in ${statusFilter} filter`}
+                </p>
+              )}
+              {!hasSearchQuery && statusFilter !== "all" && (
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                  No {statusFilter} habits
+                </p>
+              )}
+              <div className="flex gap-2 justify-center">
+                {hasSearchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
+                  >
+                    Clear search
+                  </button>
+                )}
+                {statusFilter !== "all" && (
+                  <button
+                    onClick={() => setStatusFilter("all")}
+                    className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
+                  >
+                    Show all habits
+                  </button>
+                )}
+              </div>
             </>
           ) : (
             // No habits at all
