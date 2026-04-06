@@ -58,6 +58,10 @@ function AppContent() {
               secondary: "#fff",
             },
           },
+          custom: {
+            position: "top-center",
+            duration: 5000,
+          },
         }}
       />
 
