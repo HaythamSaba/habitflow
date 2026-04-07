@@ -1,4 +1,11 @@
-import { Github, Linkedin, Mail, Heart, ExternalLink } from "lucide-react";
+import {
+  Github,
+  Linkedin,
+  Mail,
+  Heart,
+  ExternalLink,
+  Contact,
+} from "lucide-react";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -19,9 +26,11 @@ export function Footer() {
             <p className="text-xs text-gray-600 dark:text-gray-400">
               Built with
               <Heart className="w-3 h-3 inline text-red-500 mx-0.5 ml-1" /> by
-              <span className="font-semibold text-gray-900 dark:text-gray-100 ml-1 mr-1">
-                Haytham
-              </span>
+              <a href="https://haytham-saba.vercel.app/">
+                <span className="font-semibold text-gray-900 dark:text-gray-100 ml-1 mr-1 hover:underline">
+                  Haytham
+                </span>
+              </a>
               • Frontend Developer
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
@@ -31,7 +40,7 @@ export function Footer() {
 
           {/* Right side - Social Links */}
           <div className="flex flex-col items-center gap-3">
-            <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">
+            <p className="text-xs ml-auto  text-gray-600 dark:text-gray-400 font-medium">
               Connect with me
             </p>
             <div className="flex items-center gap-3">
@@ -59,6 +68,15 @@ export function Footer() {
                 title="GitHub"
               >
                 <Github className="w-4 h-4" />
+              </a>
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://haytham-saba.vercel.app/"
+                className="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-primary-100 dark:hover:bg-primary-900/30 hover:text-primary-600 dark:hover:text-primary-400 transition-all hover:scale-110"
+                title="Contact"
+              >
+                <Contact className="w-4 h-4" />
               </a>
             </div>
           </div>
