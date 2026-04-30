@@ -82,7 +82,9 @@ export function AboutPage() {
               {/* Right side */}
               <div className="flex items-center bg-primary-500 w-full lg:w-3/5 p-8 rounded-br-[40px] rounded-bl-[40px] relative z-10">
                 <div>
-                  <Button variant="secondary">Let's Connect</Button>
+                  <Button variant="secondary">
+                    <a href="mailto:haythamsaba@gmail.com?subject=Let's Connect">Let's connect</a>
+                  </Button>
                 </div>
               </div>
             </div>
