@@ -1,16 +1,14 @@
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { HighlightStatCard } from "@/components/ui/HighlightStatCard";
+import LetsConnect from "@/components/ui/LetsConnect";
 import {
-  Github,
-  Linkedin,
-  Mail,
   MapPin,
   Sparkles,
   Code2,
   Zap,
   Target,
-  ArrowRight,
 } from "lucide-react";
 
 export function AboutPage() {
@@ -83,7 +81,9 @@ export function AboutPage() {
               <div className="flex items-center bg-primary-500 w-full lg:w-3/5 p-8 rounded-br-[40px] rounded-bl-[40px] relative z-10">
                 <div>
                   <Button variant="secondary">
-                    <a href="mailto:haythamsaba@gmail.com?subject=Let's Connect">Let's connect</a>
+                    <a href="mailto:haythamsaba@gmail.com?subject=Let's Connect">
+                      Let's connect
+                    </a>
                   </Button>
                 </div>
               </div>
@@ -184,35 +184,14 @@ export function AboutPage() {
               </Card>
 
               {/* HabitFlow Highlights */}
-              <Card className="p-6 sm:p-8 bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900">
+              <Card className="p-6 sm:p-8">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
                   🎯 HabitFlow Highlights
                 </h2>
                 <div className="grid sm:grid-cols-3 gap-6">
-                  <div className="text-center bg-primary-200 dark:bg-gray-800 p-4 rounded-3xl">
-                    <div className="text-4xl font-bold text-primary-600 mb-2">
-                      40
-                    </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
-                      Days Built
-                    </div>
-                  </div>
-                  <div className="text-center bg-primary-200 dark:bg-gray-800 p-4 rounded-3xl">
-                    <div className="text-4xl font-bold text-primary-600 mb-2">
-                      7.5K+
-                    </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
-                      Lines of Code
-                    </div>
-                  </div>
-                  <div className="text-center bg-primary-200 dark:bg-gray-800 p-4 rounded-3xl">
-                    <div className="text-4xl font-bold text-primary-600 mb-2">
-                      85+
-                    </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
-                      Components
-                    </div>
-                  </div>
+                  <HighlightStatCard value="40" label="Days Built" />
+                  <HighlightStatCard value="7.5K+" label="Lines of Code" />
+                  <HighlightStatCard value="85+" label="Components" />
                 </div>
               </Card>
             </div>
@@ -224,56 +203,7 @@ export function AboutPage() {
                 className="p-6 bg-secondary-500 dark:bg-secondary-500"
                 style={{ backgroundColor: "#ffcf36 " }}
               >
-                <h3 className="text-lg font-bold text-gray-900 mb-4">
-                  Let's Connect
-                </h3>
-                <div className="space-y-3">
-                  <a
-                    href="mailto:haythamsaba@gmail.com"
-                    className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-2xl hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:border-primary-300 dark:hover:border-primary-700 border border-transparent transition-all group"
-                  >
-                    <Mail className="w-5 h-5 text-primary-600 group-hover:scale-110 transition-transform" />
-                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                      Email
-                    </span>
-                    <ArrowRight className="w-4 h-4 ml-auto text-gray-400 group-hover:text-primary-600 group-hover:translate-x-1 transition-all" />
-                  </a>
-
-                  <a
-                    href="https://www.linkedin.com/in/haytham-saba-401148278/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-2xl hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-300 dark:hover:border-blue-700 border border-transparent transition-all group"
-                  >
-                    <Linkedin className="w-5 h-5 text-blue-600 group-hover:scale-110 transition-transform" />
-                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                      LinkedIn
-                    </span>
-                    <ArrowRight className="w-4 h-4 ml-auto text-gray-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
-                  </a>
-
-                  <a
-                    href="https://github.com/HaythamSaba"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-900/20 hover:border-gray-300 dark:hover:border-gray-600 border border-transparent transition-all group"
-                  >
-                    <Github className="w-5 h-5 text-gray-700 dark:text-gray-300 group-hover:scale-110 transition-transform" />
-                    <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                      GitHub
-                    </span>
-                    <ArrowRight className="w-4 h-4 ml-auto text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300 group-hover:translate-x-1 transition-all" />
-                  </a>
-                </div>
-
-                <div className="mt-6 pt-6 border-t border-gray-700">
-                  <a
-                    href="mailto:haythamsaba@gmail.com?subject=HabitFlow%20Feedback"
-                    className="block w-full text-center px-4 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-medium transition-colors"
-                  >
-                    Send Feedback
-                  </a>
-                </div>
+                <LetsConnect />
               </Card>
 
               {/* Status Badge */}
