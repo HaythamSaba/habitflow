@@ -96,8 +96,14 @@ export function useAuth() {
       if (error) throw error;
 
       if (data.user) {
-        toast.success("Account created! Welcome to HabitFlow 🎉");
-        navigate("/dashboard");
+        // ⭐ Store email in session for confirmation page
+        sessionStorage.setItem("signup_email", email);
+
+        // ⭐ Show confirmation info (instead of success toast)
+        toast.success("Check your email to confirm your account! 📧");
+
+        // ⭐ Navigate to confirmation page (not dashboard!)
+        navigate(`/email-confirmation?email=${encodeURIComponent(email)}`);
         return { success: true };
       }
 

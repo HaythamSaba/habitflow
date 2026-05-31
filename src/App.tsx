@@ -17,6 +17,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { TemplatesPage } from "./pages/TemplatesPage";
 import { AboutPage } from "./pages/AboutPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
+import { EmailConfirmationPage } from "./pages/EmailConfirmationPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -70,6 +71,7 @@ function AppContent() {
         {/* Public Routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/email-confirmation" element={<EmailConfirmationPage />} />
 
         {/* Protected Routes */}
         <Route
