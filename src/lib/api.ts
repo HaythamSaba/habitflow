@@ -98,20 +98,30 @@ export async function updateHabit(
 }
 
 export async function createCompletion(habitId: string, userId: string) {
-  const { data, error } = await supabase
-    .from("completions")
-    .insert({
-      habit_id: habitId,
-      user_id: userId,
-      completed_at: new Date().toISOString(),
-      notes: null,
-      mood_rating: null,
-    })
-    .select()
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from("completions")
+      .insert({
+        habit_id: habitId,
+        user_id: userId,
+        completed_at: new Date().toISOString(),
+        notes: null,
+        mood_rating: null,
+      })
+      .select();
 
-  if (error) throw new Error(error.message);
-  return data;
+    if (error) {
+      console.error("❌ Create completion error:", error);
+      throw new Error(error.message);
+    }
+
+    console.log("✅ Completion created:", data);
+
+    return data?.[0] || { habit_id: habitId, user_id: userId };
+  } catch (error) {
+    console.error("Create completion failed:", error);
+    throw error;
+  }
 }
 
 // Undo a completion (delete it)

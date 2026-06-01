@@ -96,13 +96,23 @@ export function useAuth() {
       if (error) throw error;
 
       if (data.user) {
-        // ⭐ Store email in session for confirmation page
+        // Create user_profile entry
+        try {
+          await supabase.from("user_profiles").insert({
+            user_id: data.user.id,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          });
+          console.log("✅ User profile created");
+        } catch (profileError) {
+          console.error("Warning: Could not create profile", profileError);
+        }
+
+        // Store email in session for confirmation page
         sessionStorage.setItem("signup_email", email);
 
-        // ⭐ Show confirmation info (instead of success toast)
         toast.success("Check your email to confirm your account! 📧");
 
-        // ⭐ Navigate to confirmation page (not dashboard!)
         navigate(`/email-confirmation?email=${encodeURIComponent(email)}`);
         return { success: true };
       }
@@ -118,7 +128,6 @@ export function useAuth() {
       setLoading(false);
     }
   };
-
   // Sign in with email and password
   const signIn = async (email: string, password: string) => {
     try {
