@@ -18,6 +18,7 @@ import { TemplatesPage } from "./pages/TemplatesPage";
 import { AboutPage } from "./pages/AboutPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { EmailConfirmationPage } from "./pages/EmailConfirmationPage";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -142,14 +143,16 @@ function AppContent() {
 
 function App() {
   return (
-    <ThemeProvider>
-      <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={false} />
-        <BrowserRouter>
-          <AppContent />
-        </BrowserRouter>
-      </QueryClientProvider>
-    </ThemeProvider>
+    <ErrorBoundary fullScreen>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
+          <BrowserRouter>
+            <AppContent />
+          </BrowserRouter>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 

@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import SideBar from "./Sidebar";
 import { Footer } from "./Footer";
 import { ScrollToTop } from "../ui/ScrollToTop";
+import { ErrorBoundary } from "../ui/ErrorBoundary";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -55,7 +56,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             dark:bg-linear-to-r dark:from-gray-950 dark:to-primary-900
           "
         >
-          <div className="flex-1">{children}</div>
+          <div className="flex-1">
+            <ErrorBoundary>{children}</ErrorBoundary>
+          </div>
           <Footer />
         </main>
 
