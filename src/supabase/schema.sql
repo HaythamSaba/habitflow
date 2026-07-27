@@ -93,6 +93,9 @@ CREATE POLICY "Users can update own profile" ON user_profiles
 CREATE POLICY "Users can view own stats" ON user_stats
   FOR SELECT USING (auth.uid() = user_id);
 
+CREATE POLICY "Users can update own stats" ON user_stats
+  FOR UPDATE USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
 -- Habits Policies
 CREATE POLICY "Users can view own habits" ON habits
   FOR SELECT USING (auth.uid() = user_id);
