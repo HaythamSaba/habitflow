@@ -363,10 +363,11 @@ export async function updateUserProfile(displayName: string) {
 }
 
 // ==================== CATEGORIES ====================
-export async function fetchCategories(): Promise<Category[]> {
+export async function fetchCategories(userId: string): Promise<Category[]> {
   const { data, error } = await supabase
     .from("categories")
     .select("*")
+    .eq("user_id", userId)
     .order("created_at", { ascending: true });
 
   if (error) throw new Error(error.message);
@@ -404,6 +405,7 @@ export async function createCategory(categoryData: {
 // Update a category
 export async function updateCategory(
   categoryId: string,
+  userId: string,
   updates: {
     name?: string;
     color?: string;
@@ -414,6 +416,7 @@ export async function updateCategory(
     .from("categories")
     .update(updates)
     .eq("id", categoryId)
+    .eq("user_id", userId)
     .select()
     .single();
 
@@ -422,11 +425,15 @@ export async function updateCategory(
 }
 
 // Delete a category
-export async function deleteCategory(categoryId: string): Promise<void> {
+export async function deleteCategory(
+  categoryId: string,
+  userId: string,
+): Promise<void> {
   const { error } = await supabase
     .from("categories")
     .delete()
-    .eq("id", categoryId);
+    .eq("id", categoryId)
+    .eq("user_id", userId);
 
   if (error) throw new Error(error.message);
 }

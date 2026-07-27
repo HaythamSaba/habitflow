@@ -12,7 +12,7 @@ export function useCreateCategory() {
       toast.success("Category created successfully! 🎉");
     },
     onError: (error: Error) => {
-      toast.error(`Failed ot create category: ${error.message}`);
+      toast.error(`Failed to create category: ${error.message}`);
     },
   });
 }
