@@ -60,7 +60,7 @@ export function DashboardPage() {
     user?.user_metadata?.display_name || user?.email?.split("@")[0] || "User";
 
   const totalTargets =
-    filteredHabits?.reduce((sum, habit) => sum + habit.target, 0) || 0;
+    filteredHabits?.reduce((sum, habit) => sum + habit.target_count, 0) || 0;
 
   const completionRate =
     totalTargets > 0
@@ -238,7 +238,7 @@ export function DashboardPage() {
             </div>
           </div>
         )}
-        
+
         {/* Category Filter */}
         {categories.length > 0 && (
           <div className="flex items-center gap-2 md:gap-4 min-w-0 w-full scrollbar-hide">
