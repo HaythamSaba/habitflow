@@ -27,7 +27,7 @@ CREATE TABLE user_profiles (
 CREATE TABLE user_stats (
   user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   total_completions INTEGER DEFAULT 0,
-  current_points INTEGER DEFAULT 0,
+  total_points INTEGER DEFAULT 0,
   level INTEGER DEFAULT 1,
   longest_streak INTEGER DEFAULT 0,
   current_streak INTEGER DEFAULT 0,

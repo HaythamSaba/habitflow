@@ -33,7 +33,7 @@ export interface Completion {
 export interface UserStats {
   user_id: string
   total_completions: number
-  current_points: number
+  total_points: number
   level: number
   longest_streak: number
   current_streak: number
