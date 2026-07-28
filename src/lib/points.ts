@@ -7,7 +7,7 @@ export const LEVELS = [
     maxPoints: 99,
     label: "Beginner",
     emoji: "🌱",
-    color: "#10b981",
+    color: "#ebd11a",
   },
   {
     level: 2,
