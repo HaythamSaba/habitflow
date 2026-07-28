@@ -75,7 +75,7 @@ export default function SideBar({
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
         >
-          {navItems.map((item, index) => {
+          {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);
 
@@ -87,8 +87,7 @@ export default function SideBar({
                   initial={{ opacity: 0, y: 12, scale: 1.05 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{
-                    duration: 0.25,
-                    delay: index * 0.05,
+                    duration: 0.15,
                     ease: "easeOut",
                   }}
                   whileHover={{ scale: 1.03 }}
