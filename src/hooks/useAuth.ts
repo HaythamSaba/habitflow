@@ -96,17 +96,6 @@ export function useAuth() {
       if (error) throw error;
 
       if (data.user) {
-        // Create user_profile entry
-        try {
-          await supabase.from("user_profiles").insert({
-            user_id: data.user.id,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          });
-          console.log("✅ User profile created");
-        } catch (profileError) {
-          console.error("Warning: Could not create profile", profileError);
-        }
 
         // Store email in session for confirmation page
         sessionStorage.setItem("signup_email", email);
