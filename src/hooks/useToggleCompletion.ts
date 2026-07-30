@@ -51,6 +51,7 @@ export function useToggleCompletion() {
       // Invalidate all related queries
       queryClient.invalidateQueries({ queryKey: ["habits"] });
       queryClient.invalidateQueries({ queryKey: ["completions"] });
+      queryClient.invalidateQueries({ queryKey: ["all-completions"] });
       queryClient.invalidateQueries({ queryKey: ["user-stats"] });
     },
     // ⭐⭐⭐ ADD ERROR HANDLER
