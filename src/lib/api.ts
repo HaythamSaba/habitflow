@@ -223,22 +223,14 @@ export async function getUserStats(userId: string) {
 
 /**
  * Update user's total points
+ * Atomic increment via RPC — avoids the read-then-write race condition
+ * where two concurrent updates could clobber each other's total.
  */
 export async function updateUserPoints(userId: string, pointsToAdd: number) {
-  // First, get current points
-  const stats = await getUserStats(userId);
-  const newTotal = (stats.total_points || 0) + pointsToAdd;
-
-  // Update with new total
-  const { data, error } = await supabase
-    .from("user_stats")
-    .update({
-      total_points: newTotal,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("user_id", userId)
-    .select()
-    .single();
+  const { data, error } = await supabase.rpc("increment_user_points", {
+    p_user_id: userId,
+    p_points: pointsToAdd,
+  });
 
   if (error) throw new Error(error.message);
   return data;

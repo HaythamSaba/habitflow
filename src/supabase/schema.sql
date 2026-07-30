@@ -158,3 +158,35 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- ============================================
+-- RPC FUNCTIONS
+-- ============================================
+
+-- Atomically increment (or decrement) a user's total_points.
+-- Runs as SECURITY DEFINER to bypass RLS, so it must check auth.uid()
+-- itself instead of relying on the user_stats RLS policies.
+CREATE OR REPLACE FUNCTION public.increment_user_points(p_user_id UUID, p_points INTEGER)
+RETURNS user_stats
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  updated_row user_stats;
+BEGIN
+  IF auth.uid() IS DISTINCT FROM p_user_id THEN
+    RAISE EXCEPTION 'Not authorized to update points for this user';
+  END IF;
+
+  UPDATE user_stats
+  SET total_points = total_points + p_points,
+      updated_at = NOW()
+  WHERE user_id = p_user_id
+  RETURNING * INTO updated_row;
+
+  RETURN updated_row;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.increment_user_points(UUID, INTEGER) TO authenticated;
