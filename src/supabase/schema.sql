@@ -64,6 +64,46 @@ CREATE TABLE completions (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Categories
+CREATE TABLE categories (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  color TEXT NOT NULL,
+  icon TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Habits reference categories; added after the fact via ALTER so the
+-- original CREATE TABLE habits statement above doesn't need reordering.
+ALTER TABLE habits
+  ADD COLUMN category_id UUID REFERENCES categories(id) ON DELETE SET NULL;
+
+-- Achievements (master list, shared across all users)
+CREATE TABLE achievements (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  key TEXT UNIQUE NOT NULL,
+  name TEXT NOT NULL,
+  description TEXT NOT NULL,
+  emoji TEXT NOT NULL,
+  category TEXT NOT NULL,
+  condition_type TEXT NOT NULL,
+  condition_value INTEGER NOT NULL,
+  points_reward INTEGER DEFAULT 0,
+  rarity TEXT NOT NULL CHECK (rarity IN ('common', 'rare', 'epic', 'legendary')),
+  sort_order INTEGER DEFAULT 0
+);
+
+-- User Achievements (per-user unlock state + progress)
+CREATE TABLE user_achievements (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  achievement_id UUID NOT NULL REFERENCES achievements(id) ON DELETE CASCADE,
+  unlocked_at TIMESTAMPTZ DEFAULT NOW(),
+  progress INTEGER DEFAULT 0,
+  UNIQUE (user_id, achievement_id)
+);
+
 -- ============================================
 -- INDEXES
 -- ============================================
@@ -72,6 +112,9 @@ CREATE INDEX idx_habits_user_id ON habits(user_id);
 CREATE INDEX idx_completions_habit_id ON completions(habit_id);
 CREATE INDEX idx_completions_user_id ON completions(user_id);
 CREATE INDEX idx_completions_completed_at ON completions(completed_at);
+CREATE INDEX idx_categories_user_id ON categories(user_id);
+CREATE INDEX idx_user_achievements_user_id ON user_achievements(user_id);
+CREATE INDEX idx_user_achievements_achievement_id ON user_achievements(achievement_id);
 
 -- ============================================
 -- ROW LEVEL SECURITY (RLS)
@@ -81,6 +124,9 @@ ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_stats ENABLE ROW LEVEL SECURITY;
 ALTER TABLE habits ENABLE ROW LEVEL SECURITY;
 ALTER TABLE completions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE achievements ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_achievements ENABLE ROW LEVEL SECURITY;
 
 -- User Profiles Policies
 CREATE POLICY "Users can view own profile" ON user_profiles
@@ -118,6 +164,33 @@ CREATE POLICY "Users can create own completions" ON completions
 
 CREATE POLICY "Users can delete own completions" ON completions
   FOR DELETE USING (auth.uid() = user_id);
+
+-- Categories Policies
+CREATE POLICY "Users can view own categories" ON categories
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can create own categories" ON categories
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own categories" ON categories
+  FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own categories" ON categories
+  FOR DELETE USING (auth.uid() = user_id);
+
+-- Achievements Policies (master list — readable by any authenticated user)
+CREATE POLICY "Authenticated users can view achievements" ON achievements
+  FOR SELECT USING (auth.role() = 'authenticated');
+
+-- User Achievements Policies
+CREATE POLICY "Users can view own achievements" ON user_achievements
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can unlock own achievements" ON user_achievements
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own achievement progress" ON user_achievements
+  FOR UPDATE USING (auth.uid() = user_id);
 
 -- ============================================
 -- TRIGGERS
