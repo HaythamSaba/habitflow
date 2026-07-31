@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { useAuth } from "@/hooks/useAuth";
+import { useCheckAchievements } from "@/hooks/useCheckAchievements";
 import { Toaster } from "react-hot-toast";
 import { LoginPage } from "@/pages/LoginPage";
 import { SignupPage } from "@/pages/SignupPage";
@@ -31,6 +32,9 @@ const queryClient = new QueryClient({
 function AppContent() {
   // Initialize auth on app mount
   useAuth();
+
+  // Check for newly unlocked achievements on every page, not just /achievements
+  useCheckAchievements();
 
   return (
     <>

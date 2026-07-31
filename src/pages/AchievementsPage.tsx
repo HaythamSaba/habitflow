@@ -8,7 +8,6 @@ import { useUserStats } from "@/hooks/useUserStats";
 import { useDashboardStreak } from "@/hooks/useDashboardStreak";
 import { useMemo, useState } from "react";
 import PageHeader from "@/components/ui/PageHeader";
-import { useCheckAchievements } from "@/hooks/useCheckAchievements"; // ⭐ ADD
 
 export function AchievementsPage() {
   const { allAchievements, unlockedIds, isLoading } = useAchievements();
@@ -18,8 +17,6 @@ export function AchievementsPage() {
   const { maxStreak } = useDashboardStreak();
 
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-
-  useCheckAchievements();
 
   const habits = useMemo(
     () => allHabits?.filter((h) => !h.archived) || [],
