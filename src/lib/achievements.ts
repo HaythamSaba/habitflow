@@ -1,4 +1,6 @@
-import { Completion } from "@/types";
+import { Completion, Habit } from "@/types";
+
+const SPEED_COMPLETION_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
 
 /**
  * ============================================
@@ -28,6 +30,7 @@ export function checkAchievementCondition(
     totalPoints: number;
     totalHabits: number;
     completions: Completion[];
+    habits: Habit[];
   },
 ): { unlocked: boolean; progress: number } {
   const { condition_type, condition_value } = achievement;
@@ -60,13 +63,15 @@ export function checkAchievementCondition(
       break;
 
     case "perfect_day":
-      // This needs to be calculated differently (all habits completed)
-      currentValue = 0; // TODO: Implement perfect day logic
+      currentValue = checkPerfectDay(stats.completions, stats.totalHabits)
+        ? 1
+        : 0;
       break;
 
     case "speed_completion":
-      // This needs timestamp analysis
-      currentValue = 0; // TODO: Implement speed completion logic
+      currentValue = checkSpeedCompletion(stats.completions, stats.habits)
+        ? 1
+        : 0;
       break;
 
     default:
@@ -106,6 +111,45 @@ function checkLateCompletion(completions: Completion[]): boolean {
 }
 
 /**
+ * Check if every active habit was completed at least once on the same day
+ */
+function checkPerfectDay(completions: Completion[], totalHabits: number): boolean {
+  if (totalHabits === 0) return false;
+
+  const habitIdsByDay = new Map<string, Set<string>>();
+  for (const completion of completions) {
+    const day = completion.completed_at.split("T")[0];
+    if (!habitIdsByDay.has(day)) {
+      habitIdsByDay.set(day, new Set());
+    }
+    habitIdsByDay.get(day)!.add(completion.habit_id);
+  }
+
+  return [...habitIdsByDay.values()].some((ids) => ids.size >= totalHabits);
+}
+
+/**
+ * Check if any habit was first completed within minutes of being created
+ */
+function checkSpeedCompletion(completions: Completion[], habits: Habit[]): boolean {
+  const firstCompletionAtByHabit = new Map<string, number>();
+  for (const completion of completions) {
+    const completedAt = new Date(completion.completed_at).getTime();
+    const existing = firstCompletionAtByHabit.get(completion.habit_id);
+    if (existing === undefined || completedAt < existing) {
+      firstCompletionAtByHabit.set(completion.habit_id, completedAt);
+    }
+  }
+
+  return habits.some((habit) => {
+    const firstCompletedAt = firstCompletionAtByHabit.get(habit.id);
+    if (firstCompletedAt === undefined) return false;
+    const createdAt = new Date(habit.created_at).getTime();
+    return firstCompletedAt - createdAt <= SPEED_COMPLETION_WINDOW_MS;
+  });
+}
+
+/**
  * Get all achievements that should be unlocked
  */
 export function getAchievementsToUnlock(
@@ -117,6 +161,7 @@ export function getAchievementsToUnlock(
     totalPoints: number;
     totalHabits: number;
     completions: Completion[];
+    habits: Habit[];
   },
 ): Achievement[] {
   const toUnlock: Achievement[] = [];
@@ -150,6 +195,7 @@ export function calculateAchievementProgress(
     totalPoints: number;
     totalHabits: number;
     completions: Completion[];
+    habits: Habit[];
   },
 ): Map<string, number> {
   const progressMap = new Map<string, number>();

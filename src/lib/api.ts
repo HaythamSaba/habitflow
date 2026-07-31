@@ -305,7 +305,13 @@ export async function unlockAchievement(userId: string, achievementId: string) {
     )
     .single();
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    // Unique violation: another concurrent check already unlocked it first
+    if (error.code === "23505") {
+      return { alreadyUnlocked: true, data: null };
+    }
+    throw new Error(error.message);
+  }
 
   // Award bonus points
   if (data.achievement) {

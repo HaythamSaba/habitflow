@@ -36,6 +36,7 @@ export function useCheckAchievements() {
       totalPoints: totalPoints,
       totalHabits: activeHabits.length, // ⭐ Use activeHabits
       completions: completions || [],
+      habits: activeHabits,
     }),
     [totalCompletions, maxStreak, totalPoints, activeHabits, completions],
   );
@@ -51,13 +52,18 @@ export function useCheckAchievements() {
         stats,
       );
 
-      // Unlock each achievement
+      // Unlock each achievement — isolate failures so one bad unlock
+      // doesn't stop the rest of the batch from being processed/invalidated
       const results = [];
       for (const achievement of toUnlock) {
-        const result = await unlockAchievement(user.id, achievement.id);
-        if (!result.alreadyUnlocked) {
-          results.push(result.data);
-          showAchievementToast(result.data.achievement || achievement);
+        try {
+          const result = await unlockAchievement(user.id, achievement.id);
+          if (!result.alreadyUnlocked) {
+            results.push(result.data);
+            showAchievementToast(result.data.achievement || achievement);
+          }
+        } catch (err) {
+          console.error(`Failed to unlock achievement ${achievement.id}:`, err);
         }
       }
 
@@ -73,6 +79,10 @@ export function useCheckAchievements() {
   // ⭐⭐⭐ AUTO-RUN WHEN STATS CHANGE
   useEffect(() => {
     if (!user || allAchievements.length === 0) return;
+    // Don't pile on another attempt while one is already in flight —
+    // a failed attempt (e.g. duplicate-unlock race) must not retrigger
+    // this effect via a `mutation` object identity change.
+    if (mutation.isPending) return;
 
     // Check if there are achievements ready to unlock
     const toUnlock = getAchievementsToUnlock(
@@ -88,6 +98,7 @@ export function useCheckAchievements() {
       );
       mutation.mutate();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     user,
     stats.totalCompletions, // ⭐ Triggers when completion added/removed
@@ -96,8 +107,6 @@ export function useCheckAchievements() {
     stats.totalHabits, // ⭐ Triggers when habits added/removed
     allAchievements,
     unlockedIds,
-    mutation,
-    stats,
   ]);
 
   return mutation;

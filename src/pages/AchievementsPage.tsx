@@ -30,6 +30,7 @@ export function AchievementsPage() {
       totalPoints: totalPoints,
       totalHabits: habits?.length || 0,
       completions: completions || [],
+      habits: habits || [],
     }),
     [completions, maxStreak, totalPoints, habits],
   );
