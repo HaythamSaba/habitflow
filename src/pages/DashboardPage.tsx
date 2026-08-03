@@ -260,6 +260,7 @@ export function DashboardPage() {
             {barChartData.length > 0 ? (
               <HabitPerformanceChart data={barChartData} />
             ) : (
+              // fix tomorrow: add a better empty state for the chart
               <div className="h-52 md:h-75 flex items-center justify-center text-gray-500 dark:text-gray-400">
                 <p>No habit data available</p>
               </div>
