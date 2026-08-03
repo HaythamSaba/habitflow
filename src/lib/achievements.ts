@@ -110,11 +110,16 @@ function checkLateCompletion(completions: Completion[]): boolean {
   });
 }
 
+// Below this many active habits, "complete all of them" is trivial and
+// shouldn't count as a perfect day.
+const MIN_HABITS_FOR_PERFECT_DAY = 5;
+
 /**
- * Check if every active habit was completed at least once on the same day
+ * Check if every active habit was completed at least once on the same day.
+ * Requires at least MIN_HABITS_FOR_PERFECT_DAY active habits to be earnable.
  */
 function checkPerfectDay(completions: Completion[], totalHabits: number): boolean {
-  if (totalHabits === 0) return false;
+  if (totalHabits < MIN_HABITS_FOR_PERFECT_DAY) return false;
 
   const habitIdsByDay = new Map<string, Set<string>>();
   for (const completion of completions) {
