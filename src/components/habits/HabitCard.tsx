@@ -87,7 +87,7 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
 
   // Smart background color based on theme
   const getBackgroundColor = () => {
-    if (!isFullyCompleted) return theme === "dark" ? "#161b23" : "#f6f6f6";
+    if (!isFullyCompleted) return theme === "dark" ? "#161b23" : "#fff";
 
     return theme === "dark"
       ? lightenColor(habit.color, 15)
@@ -96,9 +96,9 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
 
   return (
     <div
-      className="rounded-xl p-3 sm:p-4 border-l-4 hover:shadow-md transition-all duration-200"
+      className="rounded-xl p-3 sm:p-4 border-2 shadow-xl transition-all duration-200"
       style={{
-        borderLeftColor: habit.color,
+        borderColor: habit.color,
         backgroundColor: getBackgroundColor(),
       }}
     >
