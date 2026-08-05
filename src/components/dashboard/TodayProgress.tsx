@@ -8,15 +8,19 @@ export function TodayProgress() {
   const { habits } = useHabits();
   const { completions } = useCompletions();
 
-  // Count how many habits are completed today
-  const completedCount =
-    habits?.filter((habit) => {
-      const habitCompletions =
-        completions?.filter((c) => c.habit_id === habit.id) || [];
-      return habitCompletions.length >= habit.target_count;
-    }).length || 0;
+  // Archived habits must be excluded from both counts — otherwise a
+  // stale completion on an archived habit can inflate completedCount
+  // relative to totalHabits and cause a false percentage
+  const activeHabits = habits?.filter((habit) => !habit.archived) || [];
 
-  const totalHabits = habits.filter((habit) => !habit.archived).length || 0;
+  const totalHabits = activeHabits.length;
+
+  // Count how many active habits are completed today
+  const completedCount = activeHabits.filter((habit) => {
+    const habitCompletions =
+      completions?.filter((c) => c.habit_id === habit.id) || [];
+    return habitCompletions.length >= habit.target_count;
+  }).length;
 
   // Calculate percentage
   const percentage =
