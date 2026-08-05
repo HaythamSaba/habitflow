@@ -2,6 +2,7 @@ import { useHabits } from "@/hooks/useHabits";
 import { useCompletions } from "@/hooks/useCompletions";
 import { CheckCircle2 } from "lucide-react";
 import EmptyProgress from "./EmptyProgress";
+import ProgressCard from "./ProgressCard";
 
 export function TodayProgress() {
   const { habits } = useHabits();
@@ -21,11 +22,15 @@ export function TodayProgress() {
   const percentage =
     totalHabits > 0 ? Math.round((completedCount / totalHabits) * 100) : 0;
 
-  // Don't show if no habits
-  if (totalHabits === 0) return <EmptyProgress />;
-
+  if (totalHabits === 0) {
+    return (
+      <ProgressCard>
+        <EmptyProgress />
+      </ProgressCard>
+    );
+  }
   return (
-    <div className="bg-white dark:bg-gray-950 flex-1 rounded-3xl p-4 sm:p-5 lg:p-6 shadow-sm border shadow-secondary-100 dark:shadow-secondary-700 hover:dark:shadow-xl border-secondary-300 dark:border-secondary-700 hover:shadow-xl transition-shadow duration-500">
+    <ProgressCard>
       {/* Header */}
       <div className="flex items-center justify-between mb-3 lg:mb-4">
         <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100">
@@ -82,7 +87,7 @@ export function TodayProgress() {
           ⏰ Ready to start your day?
         </p>
       )}
-    </div>
+    </ProgressCard>
   );
 }
 
