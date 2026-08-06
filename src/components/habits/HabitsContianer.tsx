@@ -188,7 +188,7 @@ export default function HabitsContainer({
           />
         </div>
       ) : (
-        <div className="max-w-md mx-auto text-center px-4">
+        <div className="max-w-md mx-auto text-center ">
           <div className="w-14 h-14 sm:w-20 sm:h-20 bg-gray-100 dark:bg-gray-950 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
             <CheckCircle2 className="w-7 h-7 sm:w-10 sm:h-10 text-gray-400 dark:text-gray-500" />
           </div>
@@ -202,18 +202,18 @@ export default function HabitsContainer({
             <Button
               variant="primary"
               onClick={() => setIsCreateModalOpen(true)}
-              size="lg"
+              size="md"
               leftIcon={<Plus className="w-4 h-4 sm:w-5 sm:h-5" />}
-              className="min-h-11 w-full sm:w-auto text-sm sm:text-base"
+              className=""
             >
               Create Custom Habit
             </Button>
             <Button
               variant="secondary"
-              size="lg"
+              size="md"
               leftIcon={<Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />}
               onClick={() => navigate("/templates")}
-              className="min-h-11 w-full sm:w-auto text-sm sm:text-base"
+              className=""
             >
               Browse Templates
             </Button>
