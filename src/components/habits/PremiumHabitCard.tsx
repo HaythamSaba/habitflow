@@ -89,8 +89,8 @@ export function PremiumHabitCard({
         }}
       />
       <div
-        className="relative bg-white dark:bg-gray-900 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 border-2 border-transparent hover:border-white/40 dark:hover:border-gray-700/40 shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]"
-        style={{ borderLeftColor: habit.color, borderLeftWidth: "6px" }}
+        className="relative bg-white dark:bg-gray-900 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 border hover:border-white/40 dark:hover:border-gray-700/40 shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]"
+        style={{ borderColor: habit.color }}
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-3 lg:mb-4">
@@ -211,7 +211,7 @@ export function PremiumHabitCard({
               <circle
                 cx="48"
                 cy="48"
-                r="45"
+                r="43"
                 stroke="currentColor"
                 strokeWidth="8"
                 fill="none"
@@ -220,7 +220,7 @@ export function PremiumHabitCard({
               <circle
                 cx="48"
                 cy="48"
-                r="45"
+                r="43"
                 stroke={habit.color}
                 strokeWidth="8"
                 fill="none"
