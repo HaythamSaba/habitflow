@@ -33,7 +33,7 @@ export function useHabitsStats(
     const longestStreak = calculateLongestStreak(activeHabits, completions);
 
     return {
-      totalHabits: activeHabits.length,
+      totalHabits: habits.length,
       activeHabits: activeHabits.length,
       archivedHabits: archivedHabits.length,
       avgCompletionRate,
