@@ -21,7 +21,7 @@ Mark items as they are fixed so work can resume in a new session.
 | H5 | Analytics numbers misleading or wrong | M | Open |
 | H6 | Unfinished features visible in the UI | S each | Open |
 | H7 | "Complete All" undermines motivation | S | Open |
-| H8 | Enter on "Cancel" in delete confirmation deletes | S–M | Open |
+| H8 | Enter on "Cancel" in delete confirmation deletes | S–M | Done (undo toast / archive wording deferred, needs decision) |
 | H9 | Dark mode unfinished | S–M | Open |
 | M1 | No reduced-motion support | S | Open |
 | M2 | Global 300 ms color transition on every element | S | Open |

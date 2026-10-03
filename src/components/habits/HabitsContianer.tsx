@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { useToggleCompletion } from "@/hooks/useToggleCompletion";
 import { useCompletions } from "@/hooks/useCompletions"; // ⭐ CHANGE: Use TODAY's completions
 import { toast } from "react-hot-toast"; // ⭐ ADD
-import { confirmToast } from "../../lib/confirmToast";
+import { confirmDialog } from "@/lib/confirmDialog";
 
 interface HabitsContainerProps {
   filteredHabits?: Habit[];
@@ -88,7 +88,7 @@ export default function HabitsContainer({
   };
 
   const handleDelete = async (habitId: string) => {
-    const confirmed = await confirmToast({
+    const confirmed = await confirmDialog({
       title: "Delete Habit",
       message: "Are you sure you want to delete this habit?",
       confirmText: "Delete",

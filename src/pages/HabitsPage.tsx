@@ -10,6 +10,7 @@ import { useCompletions } from "@/hooks/useCompletions";
 import { useHabitsStats } from "@/hooks/useHabitsStats";
 import { useArchiveHabit } from "@/hooks/useArchiveHabit";
 import { useRestoreHabit } from "@/hooks/useRestoreHabit";
+import { confirmDialog } from "@/lib/confirmDialog";
 
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/Button";
@@ -100,8 +101,16 @@ export function HabitsPage() {
     setEditingHabit(habit);
   };
 
-  const handleDelete = (habitId: string) => {
-    if (window.confirm("Are you sure you want to delete this habit?")) {
+  const handleDelete = async (habitId: string) => {
+    const confirmed = await confirmDialog({
+      title: "Delete Habit",
+      message: "Are you sure you want to delete this habit?",
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      variant: "danger",
+    });
+
+    if (confirmed) {
       deleteHabit.mutate(habitId);
     }
   };

@@ -7,6 +7,7 @@ import { useHabits } from "@/hooks/useHabits";
 import { CreateCategoryModal } from "./CreateCategoryModal";
 import { EditCategoryModal } from "./EditCategoryModal";
 import { Category } from "@/types";
+import { confirmDialog } from "@/lib/confirmDialog";
 
 export function CategoryManager() {
   const { categories, isLoading } = useCategories();
@@ -23,7 +24,7 @@ export function CategoryManager() {
     );
   };
 
-  const handleDelete = (category: Category) => {
+  const handleDelete = async (category: Category) => {
     const habitCount = getHabitCount(category.id);
 
     const message =
@@ -31,7 +32,13 @@ export function CategoryManager() {
         ? `Delete "${category.name}"? ${habitCount} habit${habitCount > 1 ? "s" : ""} will become uncategorized.`
         : `Delete "${category.name}"?`;
 
-    const confirmed = window.confirm(message);
+    const confirmed = await confirmDialog({
+      title: "Delete Category",
+      message,
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      variant: "danger",
+    });
 
     if (confirmed) {
       deleteCategory.mutate(category.id);

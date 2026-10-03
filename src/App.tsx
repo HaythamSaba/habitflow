@@ -20,6 +20,7 @@ import { AboutPage } from "./pages/AboutPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { EmailConfirmationPage } from "./pages/EmailConfirmationPage";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
+import { ConfirmDialogHost } from "@/components/ui/ConfirmDialogHost";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -69,6 +70,9 @@ function AppContent() {
           },
         }}
       />
+
+      {/* App-wide confirmation dialog, opened via confirmDialog() */}
+      <ConfirmDialogHost />
 
       {/* Routes */}
       <Routes>
