@@ -102,9 +102,10 @@ export function HabitsPage() {
   };
 
   const handleDelete = async (habitId: string) => {
+    const habitName = habits.find((h) => h.id === habitId)?.name ?? "this habit";
     const confirmed = await confirmDialog({
       title: "Delete Habit",
-      message: "Are you sure you want to delete this habit?",
+      message: `Permanently delete "${habitName}" and all of its check-in history? This can't be undone. To keep the history, archive it instead.`,
       confirmText: "Delete",
       cancelText: "Cancel",
       variant: "danger",

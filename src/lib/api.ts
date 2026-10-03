@@ -55,17 +55,22 @@ export async function createHabit(
   return data;
 }
 
+// Permanently delete a habit. Its completions are removed by the
+// ON DELETE CASCADE on completions.habit_id. Use archiveHabit to hide it instead.
 export async function deleteHabit(habitId: string, userId: string) {
   const { data, error } = await supabase
     .from("habits")
-    .update({ archived: true })
+    .delete()
     .eq("id", habitId)
     .eq("user_id", userId)
-    .select()
-    .single();
+    .select("id");
 
   if (error) throw new Error(error.message);
-  return data;
+  // RLS filters rows instead of erroring, so an empty result means nothing was deleted
+  if (!data || data.length === 0) {
+    throw new Error("Habit not found or could not be deleted");
+  }
+  return data[0];
 }
 
 export async function updateHabit(
