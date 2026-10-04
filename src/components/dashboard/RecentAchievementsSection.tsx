@@ -56,7 +56,7 @@ export function RecentAchievementsSection({
                 <h3 className="font-bold text-sm md:text-lg text-gray-900 dark:text-gray-100 truncate">
                   {achievement.name}
                 </h3>
-                <span className="text-xs rounded-full bg-primary/20 dark:bg-primary/30 text-primary font-medium">
+                <span className="text-xs rounded-full bg-primary/20 dark:bg-primary/30 text-primary-700 dark:text-primary-100 font-medium">
                   {achievement.rarity}
                 </span>
               </div>

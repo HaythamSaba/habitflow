@@ -15,7 +15,7 @@ Mark items as they are fixed so work can resume in a new session.
 | C3 | No demo / guest path for recruiters | M | Open |
 | C4 | Check-off is slow and gives no reward | M | Open |
 | H1 | Habit list buried on dashboard | M | Open |
-| H2 | Bare `primary` color token missing | S | Open |
+| H2 | Bare `primary` color token missing | S | Done |
 | H3 | Keyboard and screen-reader access broken | M | Open |
 | H4 | Five inconsistent streak calculations | M | Open |
 | H5 | Analytics numbers misleading or wrong | M | Open |

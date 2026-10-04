@@ -17,6 +17,8 @@
   --color-primary-800: #065f46;
   --color-primary-900: #064e3b;
   --color-primary-950: #022c22;
+  /* Bare token so bg-primary, text-primary, ring-primary, etc. resolve */
+  --color-primary: #10b981;
 
   /* Secondary - Yellow */
   --color-secondary-50: #fefce8;
@@ -29,6 +31,8 @@
   --color-secondary-700: #ca8a04;
   --color-secondary-800: #a16207;
   --color-secondary-900: #854d0e;
+  /* Bare token so bg-secondary, ring-secondary, etc. resolve */
+  --color-secondary: #ffcf36;
 
   /* Success (same as primary green) */
   --color-success-50: #ecfdf5;

@@ -120,7 +120,7 @@ export function AchievementsPage() {
                 onClick={() => setSelectedCategory(category)}
                 className={`px-3 sm:px-4 py-2 min-h-11 rounded-lg font-medium transition-all text-sm sm:text-base whitespace-nowrap shrink-0 ${
                   selectedCategory === category
-                    ? "bg-primary text-primary-500 border border-primary-500 shadow-md dark:bg-primary-900 dark:text-primary-300 dark:border-primary-300"
+                    ? "bg-primary-500 text-white border border-primary-500 shadow-md dark:bg-primary-900 dark:text-primary-300 dark:border-primary-300"
                     : "bg-white text-gray-700 border border-gray-300 hover:border-primary dark:bg-gray-950 dark:text-gray-400 dark:border-gray-600 hover:dark:border-primary-500"
                 }`}
               >
