@@ -70,7 +70,9 @@ export function SignupPage() {
 
         {/* Card */}
         <div className="rounded-3xl border border-gray-200 dark:border-gray-800 p-5 sm:p-6 lg:p-8 shadow-xl shadow-primary-200/50 dark:shadow-primary-950/50 bg-white dark:bg-gray-900 backdrop-blur-sm">
+          {/* noValidate: zod shows the errors, not the browser's native bubbles */}
           <form
+            noValidate
             onSubmit={handleSubmit(onSubmit)}
             className="space-y-4 sm:space-y-5"
           >
@@ -78,6 +80,7 @@ export function SignupPage() {
             <Input
               label="Full Name"
               type="text"
+              autoComplete="name"
               placeholder="John Doe"
               error={errors.displayName?.message}
               {...register("displayName")}
@@ -88,6 +91,7 @@ export function SignupPage() {
             <Input
               label="Email Address"
               type="email"
+              autoComplete="email"
               placeholder="you@example.com"
               error={errors.email?.message}
               {...register("email")}
@@ -98,6 +102,7 @@ export function SignupPage() {
             <Input
               label="Password"
               type="password"
+              autoComplete="new-password"
               placeholder="••••••••"
               error={errors.password?.message}
               helperText="8+ chars, uppercase, lowercase, and number"
@@ -109,6 +114,7 @@ export function SignupPage() {
             <Input
               label="Confirm Password"
               type="password"
+              autoComplete="new-password"
               placeholder="••••••••"
               error={errors.confirmPassword?.message}
               {...register("confirmPassword")}

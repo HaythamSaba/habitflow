@@ -31,7 +31,7 @@ Mark items as they are fixed so work can resume in a new session.
 | M6 | Heatmap awkward on phones | S | Open |
 | M7 | Dashboard "today" numbers contradict each other | S | Open |
 | M8 | Inconsistent loading / error / success states | M | Open |
-| M9 | `Input` breaks email fields on mobile | S | Open |
+| M9 | `Input` breaks email fields on mobile | S | Done |
 | M10 | Contrast failures | S | Open |
 | M11 | Links that reload the whole app | S | Open |
 | M12 | Single 1.49 MB JS bundle | S–M | Open |

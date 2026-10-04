@@ -25,7 +25,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const inputId = id || label?.toLowerCase().replace(/\s+/g, "-");
 
     const isPassword = type === "password";
-    const [showPassword, setShowPassword] = useState(isPassword);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    // Only password fields toggle; every other type (email, text, …) is passed through
+    const inputType = isPassword && isPasswordVisible ? "text" : type;
 
     return (
       <div className="w-full">
@@ -39,7 +41,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
         <div className="relative">
           <input
-            type={!showPassword ? "text" : type}
+            type={inputType}
             id={inputId}
             ref={ref}
             placeholder={placeholder}
@@ -64,16 +66,16 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {isPassword && (
             <button
               type="button"
-              onClick={() => setShowPassword((v) => !v)}
+              onClick={() => setIsPasswordVisible((visible) => !visible)}
               className="absolute right-1 top-1/2 -translate-y-1/2 min-w-11 min-h-11 flex items-center justify-center text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none"
-              // showPassword === true means the field is currently masked
-              aria-label={showPassword ? "Show password" : "Hide password"}
+              aria-label={isPasswordVisible ? "Hide password" : "Show password"}
             >
+              {/* Icon shows the current state: open eye = visible, crossed eye = hidden */}
               <span>
-                {showPassword ? (
-                  <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" />
-                ) : (
+                {isPasswordVisible ? (
                   <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
+                ) : (
+                  <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" />
                 )}
               </span>
             </button>

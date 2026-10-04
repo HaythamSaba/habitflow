@@ -53,7 +53,9 @@ export function LoginPage() {
           </div>
 
           {/* Form */}
+          {/* noValidate: zod shows the errors, not the browser's native bubbles */}
           <form
+            noValidate
             onSubmit={handleSubmit(onSubmit)}
             className="space-y-4 sm:space-y-5"
           >
@@ -61,6 +63,7 @@ export function LoginPage() {
             <Input
               label="Email Address"
               type="email"
+              autoComplete="email"
               placeholder="you@example.com"
               error={errors.email?.message}
               {...register("email")}
@@ -71,6 +74,7 @@ export function LoginPage() {
             <Input
               label="Password"
               type="password"
+              autoComplete="current-password"
               placeholder="Enter your password"
               error={errors.password?.message}
               {...register("password")}
