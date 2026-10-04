@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@variant dark (&:where(.dark, .dark *)); /* ⭐ ADD THIS LINE */
+@custom-variant dark (&:where(.dark, .dark *)); /* class-based dark mode, toggled on <html> */
 /* Import the fonts from Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;500;600;700&display=swap");
 
