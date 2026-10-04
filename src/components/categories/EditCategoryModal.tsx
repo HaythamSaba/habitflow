@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useUpdateCategory } from "@/hooks/useUpdateCategory";
 import { CATEGORY_COLORS, CATEGORY_ICONS } from "@/lib/categoryConstants";
+import { getColorName } from "@/lib/utils";
 import { Category } from "@/types";
 
 // Validation schema
@@ -151,6 +152,7 @@ export function EditCategoryModal({
                     : "border-gray-200 dark:border-gray-700 hover:border-primary"
                 }`}
                 title={icon}
+                aria-pressed={selectedIcon === icon}
               >
                 <span className="text-lg sm:text-2xl">{icon}</span>
               </button>
@@ -183,7 +185,9 @@ export function EditCategoryModal({
                   backgroundColor: color,
                   borderColor: color,
                 }}
-                title={color}
+                title={getColorName(color)}
+                aria-label={getColorName(color)}
+                aria-pressed={selectedColor === color}
               />
             ))}
           </div>

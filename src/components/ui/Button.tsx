@@ -27,19 +27,19 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const baseStyles =
-      "btn inline-flex items-center justify-center cursor-pointer font-medium rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-0 focus:ring-offset-0";
+      "btn inline-flex items-center justify-center cursor-pointer font-medium rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-950";
 
+    // Focus ring uses primary-600 (≥3:1 against white and dark backgrounds);
+    // danger overrides it with red so the ring matches the button
     const variants = {
-      primary:
-        "btn-primary bg-primary text-white hover:bg-emerald-600 focus:ring-primary",
+      primary: "btn-primary bg-primary text-white hover:bg-emerald-600",
       secondary:
-        "btn-secondary bg-secondary text-gray-900 hover:bg-yellow-400 focus:ring-secondary",
-      ghost:
-        "btn-ghost bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-gray-400",
+        "btn-secondary bg-secondary text-gray-900 hover:bg-yellow-400",
+      ghost: "btn-ghost bg-transparent text-gray-700 hover:bg-gray-100",
       danger:
-        "btn-danger bg-red-600 text-white hover:bg-red-700 focus:ring-red-600",
+        "btn-danger bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600",
       outline:
-        "bg-transparent border-2 border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-400",
+        "bg-transparent border-2 border-gray-300 text-gray-700 hover:bg-gray-50",
     };
 
     const sizes = {

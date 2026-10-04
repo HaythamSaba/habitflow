@@ -68,7 +68,7 @@ export default function SideBar({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <nav className="p-4">
+      <nav className="p-4" aria-label="Main navigation">
         <motion.div
           className={`flex flex-col gap-1 ${isHovered ? "" : "items-center"}`}
           initial={{ opacity: 0 }}
@@ -84,6 +84,9 @@ export default function SideBar({
                 <MotionLink
                   to={item.path}
                   onClick={onNavigate}
+                  // The visible label is hidden when the sidebar is collapsed
+                  aria-label={item.label}
+                  aria-current={active ? "page" : undefined}
                   initial={{ opacity: 0, y: 12, scale: 1.05 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{
@@ -154,8 +157,9 @@ export default function SideBar({
                   <div
                     className="absolute left-full ml-3 top-1/2 -translate-y-1/2 
                     px-3 py-1.5 bg-gray-900 dark:bg-gray-700 text-white text-xs 
-                    rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none 
+                    rounded-lg opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 pointer-events-none
                     transition-opacity duration-200 whitespace-nowrap z-50 shadow-lg"
+                    aria-hidden="true"
                   >
                     {item.label}
                     {item.badge && (

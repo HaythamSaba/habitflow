@@ -68,6 +68,7 @@ export function HabitsFilterBar({
           <input
             type="text"
             placeholder="Search habits..."
+            aria-label="Search habits"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 min-h-11 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
@@ -83,6 +84,8 @@ export function HabitsFilterBar({
             {/* Status Filter — FIX: added `relative` so dropdown anchors to this div */}
             <div className="relative">
               <button
+                type="button"
+                aria-expanded={showStatusDropdown}
                 onClick={() => {
                   setShowStatusDropdown(!showStatusDropdown);
                   setShowCategoryDropdown(false);
@@ -152,6 +155,8 @@ export function HabitsFilterBar({
             {categories.length > 0 && (
               <div className="relative">
                 <button
+                  type="button"
+                  aria-expanded={showCategoryDropdown}
                   onClick={() => {
                     setShowCategoryDropdown(!showCategoryDropdown);
                     setShowStatusDropdown(false);
@@ -212,6 +217,8 @@ export function HabitsFilterBar({
             {/* Sort Filter */}
             <div className="relative">
               <button
+                type="button"
+                aria-expanded={showSortDropdown}
                 onClick={() => {
                   setShowSortDropdown(!showSortDropdown);
                   setShowStatusDropdown(false);
@@ -296,6 +303,9 @@ export function HabitsFilterBar({
           {/* View Mode Toggles */}
           <div className="flex items-center gap-1 sm:gap-2 bg-gray-100 dark:bg-gray-900 rounded-xl p-1 ml-auto shrink-0">
             <button
+              type="button"
+              aria-label="Card view"
+              aria-pressed={viewMode === "cards"}
               onClick={() => onViewModeChange("cards")}
               className={`p-2 min-h-11 min-w-11 flex items-center justify-center rounded-lg transition-all ${
                 viewMode === "cards"
@@ -306,6 +316,9 @@ export function HabitsFilterBar({
               <LayoutGrid className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 dark:text-gray-300" />
             </button>
             <button
+              type="button"
+              aria-label="List view"
+              aria-pressed={viewMode === "list"}
               onClick={() => onViewModeChange("list")}
               className={`p-2 min-h-11 min-w-11 flex items-center justify-center rounded-lg transition-all ${
                 viewMode === "list"
@@ -316,6 +329,9 @@ export function HabitsFilterBar({
               <List className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 dark:text-gray-300" />
             </button>
             <button
+              type="button"
+              aria-label="Table view"
+              aria-pressed={viewMode === "table"}
               onClick={() => onViewModeChange("table")}
               className={`p-2 min-h-11 min-w-11 flex items-center justify-center rounded-lg transition-all ${
                 viewMode === "table"
@@ -341,6 +357,8 @@ export function HabitsFilterBar({
               <span className="inline-flex items-center gap-1 pl-2 sm:pl-3 pr-1 py-0.5 sm:py-1 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 text-xs sm:text-sm">
                 {statusFilter === "all" ? "All" : "Archived"}
                 <button
+                  type="button"
+                  aria-label="Remove status filter"
                   onClick={() => onStatusFilterChange("active")}
                   className="ml-0.5 sm:ml-1 hover:bg-primary-200 dark:hover:bg-primary-800 rounded-full min-w-5 min-h-5 "
                 >
@@ -356,6 +374,8 @@ export function HabitsFilterBar({
                   {categories.find((c) => c.id === selectedCategory)?.name}
                 </span>
                 <button
+                  type="button"
+                  aria-label="Remove category filter"
                   onClick={() => onCategoryChange(null)}
                   className="ml-0.5 sm:ml-1 hover:bg-primary-200 dark:hover:bg-primary-800 rounded-full p-0.5 shrink-0 min-w-5 min-h-5 flex items-center justify-center"
                 >
@@ -368,6 +388,8 @@ export function HabitsFilterBar({
               <span className="inline-flex items-center gap-1 pl-2 sm:pl-3 py-0.5 sm:py-1 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 text-xs sm:text-sm max-w-45 sm:max-w-none">
                 <span className="truncate">"{searchQuery}"</span>
                 <button
+                  type="button"
+                  aria-label="Clear search"
                   onClick={() => onSearchChange("")}
                   className="ml-0.5 sm:ml-1 hover:bg-primary-200 dark:hover:bg-primary-800 rounded-full p-0.5 shrink-0 min-w-5 min-h-5 flex items-center justify-center"
                 >

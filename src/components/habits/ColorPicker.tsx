@@ -1,4 +1,4 @@
-import { HABIT_COLORS } from "@/lib/utils";
+import { HABIT_COLORS, getColorName } from "@/lib/utils";
 
 interface ColorPickerProps {
   selectedColor: string;
@@ -27,7 +27,9 @@ export function ColorPicker({ selectedColor, onColorSelect, error }: ColorPicker
               backgroundColor: color,
               borderColor: color,
             }}
-            title={color}
+            title={getColorName(color)}
+            aria-label={getColorName(color)}
+            aria-pressed={selectedColor === color}
           />
         ))}
       </div>

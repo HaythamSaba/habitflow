@@ -1,10 +1,12 @@
-import { ReactNode, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import Navbar from "./Navbar";
 import { useAuth } from "@/hooks/useAuth";
 import SideBar from "./Sidebar";
 import { Footer } from "./Footer";
 import { ScrollToTop } from "../ui/ScrollToTop";
 import { ErrorBoundary } from "../ui/ErrorBoundary";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -18,6 +20,22 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const mainRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
+  // Below lg the sidebar is an off-canvas drawer: trap focus while it's open,
+  // and make it inert while closed so Tab doesn't walk through hidden links
+  const isMobile = useMediaQuery("(max-width: 1023px)");
+  const isDrawerOpen = isMobile && sidebarOpen;
+  useFocusTrap(sidebarRef, isDrawerOpen);
+
+  useEffect(() => {
+    if (!isDrawerOpen) return;
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSidebarOpen(false);
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isDrawerOpen]);
 
   return (
     <div className="h-screen w-full overflow-hidden flex flex-col bg-white dark:bg-gray-950">
@@ -36,7 +54,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           />
         )}
         <div
+          ref={sidebarRef}
+          id="app-sidebar"
+          tabIndex={-1}
+          inert={isMobile && !sidebarOpen}
           className={`
+            focus:outline-none focus-visible:ring-0
             fixed top-0 left-0 z-40 h-full
             transition-transform duration-300 ease-in-out
             lg:static lg:translate-x-0 lg:transition-none lg:shrink-0

@@ -7,6 +7,7 @@ import { Input } from "../ui/Input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CATEGORY_COLORS, CATEGORY_ICONS } from "@/lib/categoryConstants";
+import { getColorName } from "@/lib/utils";
 const categorySchema = z.object({
   name: z
     .string()
@@ -128,6 +129,7 @@ export function CreateCategoryModal({
                     : "border-gray-200 dark:border-gray-700 hover:border-primary"
                 }`}
                 title={icon}
+                aria-pressed={selectedIcon === icon}
               >
                 <span className="text-lg sm:text-xl">{icon}</span>
               </button>
@@ -161,7 +163,9 @@ export function CreateCategoryModal({
                   backgroundColor: color,
                   borderColor: color,
                 }}
-                title={color}
+                title={getColorName(color)}
+                aria-label={getColorName(color)}
+                aria-pressed={selectedColor === color}
               />
             ))}
           </div>

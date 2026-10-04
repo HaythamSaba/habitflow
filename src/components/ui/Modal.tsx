@@ -1,7 +1,8 @@
-import { ReactNode, useEffect } from 'react'
+import { ReactNode, RefObject, useEffect, useId, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 
 interface ModalProps {
   isOpen: boolean
@@ -11,6 +12,8 @@ interface ModalProps {
   footer?: ReactNode
   size?: 'sm' | 'md' | 'lg' | 'xl'
   showCloseButton?: boolean
+  /** Element to focus when the modal opens; defaults to the dialog itself */
+  initialFocusRef?: RefObject<HTMLElement | null>
 }
 
 export function Modal({
@@ -21,7 +24,13 @@ export function Modal({
   footer,
   size = 'md',
   showCloseButton = true,
+  initialFocusRef,
 }: ModalProps) {
+  const dialogRef = useRef<HTMLDivElement>(null)
+  const titleId = useId()
+
+  useFocusTrap(dialogRef, isOpen, initialFocusRef)
+
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -64,15 +73,17 @@ export function Modal({
           />
 
           <motion.div
+            ref={dialogRef}
+            tabIndex={-1}
             initial={{ opacity: 0, y: 100 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 100 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className={`relative w-full ${sizeClasses[size]} bg-white dark:bg-gray-950 rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[95vh] sm:max-h-[90vh] flex flex-col`}
+            className={`relative w-full ${sizeClasses[size]} bg-white dark:bg-gray-950 rounded-t-2xl sm:rounded-2xl shadow-2xl max-h-[95vh] sm:max-h-[90vh] flex flex-col focus:outline-none focus-visible:ring-0`}
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
-            aria-labelledby={title ? 'modal-title' : undefined}
+            aria-labelledby={title ? titleId : undefined}
           >
             <div className="w-12 h-1 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mt-2 sm:hidden" />
 
@@ -80,7 +91,7 @@ export function Modal({
               <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
                 {title && (
                   <h2
-                    id="modal-title"
+                    id={titleId}
                     className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100"
                     style={{ fontFamily: 'Sora, sans-serif' }}
                   >
@@ -89,6 +100,7 @@ export function Modal({
                 )}
                 {showCloseButton && (
                   <button
+                    type="button"
                     onClick={onClose}
                     className="ml-auto p-1 min-w-11 min-h-11 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-200 rounded-lg transition-colors"
                     aria-label="Close modal"

@@ -105,8 +105,18 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
       <div className="flex items-start sm:items-center justify-between gap-2 sm:gap-4">
         {/* Checkbox */}
         <button
+          type="button"
           onClick={handleToggle}
           disabled={isLoading}
+          role="checkbox"
+          aria-checked={
+            isFullyCompleted ? true : isPartiallyCompleted ? "mixed" : false
+          }
+          aria-label={
+            habit.target_count > 1
+              ? `${habit.name}, ${completionCount} of ${habit.target_count} done today`
+              : habit.name
+          }
           className="shrink-0 min-w-11 min-h-11 flex items-center justify-center transition-transform hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed -ml-2 sm:ml-0"
         >
           {isCompleted ? (
@@ -222,6 +232,7 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
             onClick={() => onEdit(habit)}
             disabled={isLoading}
             className="min-h-11 min-w-11 flex items-center justify-center"
+            aria-label={`Edit ${habit.name}`}
           >
             <Pencil className="w-4 h-4" />
           </Button>
@@ -230,6 +241,7 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
             variant="ghost"
             onClick={() => onDelete(habit.id)}
             disabled={isLoading}
+            aria-label={`Delete ${habit.name}`}
             className="min-h-11 min-w-11 flex items-center justify-center text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
           >
             <Trash2 className="w-4 h-4" />

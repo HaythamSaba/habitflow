@@ -129,8 +129,11 @@ export function PremiumHabitCard({
 
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             <button
+              type="button"
               className="p-1.5 sm:p-2 min-h-11 min-w-11 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-500"
               onClick={() => setIsFavorite(!isFavorite)}
+              aria-label={`Favorite ${habit.name}`}
+              aria-pressed={isFavorite}
             >
               <Star
                 className={`w-4 h-4 sm:w-5 sm:h-5 ${
@@ -143,8 +146,11 @@ export function PremiumHabitCard({
 
             <div className="relative" ref={menuRef}>
               <button
+                type="button"
                 onClick={() => setShowMenu(!showMenu)}
                 className="p-1.5 sm:p-2 min-h-11 min-w-11 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                aria-label={`More actions for ${habit.name}`}
+                aria-expanded={showMenu}
               >
                 <MoreVertical className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-400" />
               </button>

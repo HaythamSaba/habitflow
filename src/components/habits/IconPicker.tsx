@@ -28,6 +28,8 @@ export function IconPicker({
                 : "border-gray-200 dark:border-gray-700"
             }`}
             title={label}
+            aria-label={label}
+            aria-pressed={selectedIcon === name}
           >
             <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 dark:text-gray-300" />
           </button>

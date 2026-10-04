@@ -59,6 +59,25 @@ export const HABIT_COLORS = [
   '#84CC16', // lime
 ] as const
 
+// Human-readable names for palette colors, used as accessible swatch labels
+const COLOR_NAMES: Record<string, string> = {
+  "#10b981": "Emerald",
+  "#3b82f6": "Blue",
+  "#8b5cf6": "Purple",
+  "#ec4899": "Pink",
+  "#f59e0b": "Amber",
+  "#ef4444": "Red",
+  "#06b6d4": "Cyan",
+  "#84cc16": "Lime",
+  "#14b8a6": "Teal",
+  "#f97316": "Orange",
+  "#6366f1": "Indigo",
+};
+
+export function getColorName(hex: string): string {
+  return COLOR_NAMES[hex.toLowerCase()] ?? hex;
+}
+
 export function getRandomColor(): string {
   return HABIT_COLORS[Math.floor(Math.random() * HABIT_COLORS.length)]
 }

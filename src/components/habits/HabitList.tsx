@@ -51,6 +51,7 @@ export function HabitList({ habits, onEdit, onDelete }: HabitListProps) {
             <input
               type="text"
               placeholder="Search habits by name or description..."
+              aria-label="Search habits"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-10 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"

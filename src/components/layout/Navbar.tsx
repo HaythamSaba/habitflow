@@ -12,7 +12,7 @@ import { useRef, useState } from "react";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { LevelBadge } from "@/components/ui/LevelBadge";
 import { useTheme } from "@/contexts/ThemeContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Navbar({
   displayName,
@@ -62,9 +62,12 @@ export default function Navbar({
     <header className="bg-white border-b border-gray-300 dark:border-gray-700 z-50 dark:bg-gray-950 shrink-0">
       <div className="flex items-center justify-between">
         <button
+          type="button"
           onClick={onMenuToggle}
           className="lg:hidden p-3 min-h-11 min-w-11 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors ml-2"
-          aria-label="Toggle sidebar"
+          aria-label="Navigation menu"
+          aria-expanded={!!sidebarOpen}
+          aria-controls="app-sidebar"
         >
           {sidebarOpen ? (
             <X className="w-6 h-6 text-gray-700 dark:text-gray-300" />
@@ -73,9 +76,13 @@ export default function Navbar({
           )}
         </button>
 
-        <div className="hidden lg:flex items-center gap-3 border-r border-gray-300 dark:border-gray-700 pr-4 md:pr-8 p-4 h-22 w-76 cursor-pointer" onClick={() => navigate("/dashboard")}>
+        <Link
+          to="/dashboard"
+          className="hidden lg:flex items-center gap-3 border-r border-gray-300 dark:border-gray-700 pr-4 md:pr-8 p-4 h-22 w-76 cursor-pointer"
+        >
           <div className="w-10 h-10 flex items-center justify-center">
-            <img src="/logo.png" alt="HabitFlow" />
+            {/* Decorative: the "HabitFlow" heading next to it names the link */}
+            <img src="/logo.png" alt="" />
           </div>
           <h1
             className="text-2xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ease-in-out"
@@ -83,7 +90,7 @@ export default function Navbar({
           >
             HabitFlow
           </h1>
-        </div>
+        </Link>
 
         <div className="flex lg:hidden items-center gap-2 p-2">
           <div className="w-8 h-8 flex items-center justify-center">
@@ -124,31 +131,46 @@ export default function Navbar({
                 )}
               </button>
               <button
+                type="button"
                 className="hidden md:flex p-2 min-h-11 min-w-11 items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors cursor-pointer"
                 onClick={() => navigate("/settings")}
+                aria-label="Settings"
               >
                 <Settings className="w-5 h-5 text-gray-600 dark:text-gray-400" />
               </button>
               <div ref={dropdownWrapperRef} className="relative">
-                <div
+                <button
+                  type="button"
                   className={`flex items-center justify-between gap-1 md:gap-4 cursor-pointer p-2 rounded-full transition-colors ${
                     isShowDropdown
                       ? "bg-primary-100 dark:bg-gray-700"
                       : "hover:bg-primary-100 dark:hover:bg-gray-700/50"
                   }`}
                   onClick={() => setIsShowDropdown((show) => !show)}
+                  aria-label={`Account menu for ${displayName}`}
+                  aria-expanded={isShowDropdown}
+                  aria-controls="account-menu"
                 >
-                  <span className="bg-primary-500 rounded-full text-white p-2 font-bold text-sm md:text-base">
+                  <span
+                    className="bg-primary-500 rounded-full text-white p-2 font-bold text-sm md:text-base"
+                    aria-hidden="true"
+                  >
                     {userInitials}
                   </span>
-                  <p className="hidden md:block text-gray-900 dark:text-gray-100">
+                  <span className="hidden md:block text-gray-900 dark:text-gray-100">
                     {displayName}
-                  </p>
-                  <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-gray-500 dark:text-gray-400" />
-                </div>
+                  </span>
+                  <ChevronDown
+                    className="w-4 h-4 md:w-5 md:h-5 text-gray-500 dark:text-gray-400"
+                    aria-hidden="true"
+                  />
+                </button>
 
                 {isShowDropdown && (
-                  <div className="flex flex-col items-start absolute right-0 top-14 mt-2 w-44 md:w-36 rounded-xl shadow-lg py-1 glass-card-no-border dark:bg-gray-800 dark:text-gray-100 p-1">
+                  <div
+                    id="account-menu"
+                    className="flex flex-col items-start absolute right-0 top-14 mt-2 w-44 md:w-36 rounded-xl shadow-lg py-1 glass-card-no-border dark:bg-gray-800 dark:text-gray-100 p-1"
+                  >
                     <Button variant="ghost" size="sm" onClick={() => navigate("/habits")}>
                       Profile
                     </Button>

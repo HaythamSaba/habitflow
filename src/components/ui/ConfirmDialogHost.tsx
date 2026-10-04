@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { AlertTriangle, Info, Trash2 } from "lucide-react";
 import { Modal } from "./Modal";
 import { Button } from "./Button";
@@ -47,6 +47,7 @@ const VARIANTS: Record<
 export function ConfirmDialogHost() {
   const options = useConfirmStore((state) => state.options);
   const handleCancel = useCallback(() => settleConfirmDialog(false), []);
+  const cancelRef = useRef<HTMLButtonElement>(null);
 
   if (!options) return null;
 
@@ -65,13 +66,14 @@ export function ConfirmDialogHost() {
       onClose={handleCancel}
       title={title}
       size="sm"
+      initialFocusRef={cancelRef}
       footer={
         <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto sm:justify-end">
           <Button
+            ref={cancelRef}
             variant="outline"
             onClick={handleCancel}
             className="min-h-11 w-full sm:w-auto"
-            autoFocus
           >
             {cancelText}
           </Button>

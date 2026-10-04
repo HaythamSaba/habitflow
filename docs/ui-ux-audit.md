@@ -16,7 +16,7 @@ Mark items as they are fixed so work can resume in a new session.
 | C4 | Check-off is slow and gives no reward | M | Open |
 | H1 | Habit list buried on dashboard | M | Open |
 | H2 | Bare `primary` color token missing | S | Done |
-| H3 | Keyboard and screen-reader access broken | M | Open |
+| H3 | Keyboard and screen-reader access broken | M | Done |
 | H4 | Five inconsistent streak calculations | M | Open |
 | H5 | Analytics numbers misleading or wrong | M | Open |
 | H6 | Unfinished features visible in the UI | S each | Open |
