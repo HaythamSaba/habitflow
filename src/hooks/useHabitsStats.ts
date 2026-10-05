@@ -1,11 +1,7 @@
 import { useMemo } from "react";
 import { Habit, Completion } from "@/types";
-import {
-  startOfDay,
-  differenceInDays,
-  subDays,
-  parseISO,
-} from "date-fns";
+import { subDays, parseISO } from "date-fns";
+import { getBestStreaks } from "@/lib/streaks";
 
 interface HabitsStats {
   totalHabits: number;
@@ -29,8 +25,8 @@ export function useHabitsStats(
       completions,
     );
 
-    // Calculate longest streak across all habits
-    const longestStreak = calculateLongestStreak(activeHabits, completions);
+    // Longest streak across active habits (shared rules, see lib/streaks.ts)
+    const longestStreak = getBestStreaks(activeHabits, completions).longest;
 
     return {
       totalHabits: habits.length,
@@ -80,47 +76,4 @@ function calculateAvgCompletionRate(
   const rate = (actualCompletions / expectedCompletions) * 100;
 
   return Math.min(Math.round(rate), 100); // Cap at 100%
-}
-
-// Calculate longest streak across all habits
-function calculateLongestStreak(
-  habits: Habit[],
-  completions: Completion[],
-): number {
-  if (habits.length === 0 || completions.length === 0) return 0;
-
-  let longestStreak = 0;
-
-  // Check each habit's streak
-  habits.forEach((habit) => {
-    const habitCompletions = completions
-      .filter((c) => c.habit_id === habit.id)
-      .map((c) => parseISO(c.completed_at))
-      .sort((a, b) => b.getTime() - a.getTime()); // Sort descending (newest first)
-
-    if (habitCompletions.length === 0) return;
-
-    // Find longest consecutive streak
-    let currentStreak = 1;
-    let maxStreak = 1;
-
-    for (let i = 0; i < habitCompletions.length - 1; i++) {
-      const currentDate = startOfDay(habitCompletions[i]);
-      const nextDate = startOfDay(habitCompletions[i + 1]);
-      const daysDiff = differenceInDays(currentDate, nextDate);
-
-      if (daysDiff === 1) {
-        // Consecutive days
-        currentStreak++;
-        maxStreak = Math.max(maxStreak, currentStreak);
-      } else {
-        // Streak broken
-        currentStreak = 1;
-      }
-    }
-
-    longestStreak = Math.max(longestStreak, maxStreak);
-  });
-
-  return longestStreak;
 }

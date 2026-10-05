@@ -1,111 +1,104 @@
-import { Completion } from "@/types";
+import { Completion, Habit } from "@/types";
 import { previousDayKey, toDayKey } from "./dates";
 
 /**
- * Calculate the current active streak for a habit
+ * The single source of truth for streaks. Every screen (dashboard, habit
+ * cards, habits page, analytics, achievements) must use these functions so
+ * the same habit always shows the same streak.
  *
- * A streak is "active" if the habit was completed today or yesterday.
- * We count consecutive days backwards from today/yesterday.
- *
- * @param completions - Array of completion records
- * @returns Number of consecutive days (0 if no active streak)
- *
- * Examples:
- * - Completions on Jan 23, 22, 21 (today is Jan 23) → streak = 3
- * - Completions on Jan 21, 20, 19 (today is Jan 23) → streak = 0 (cold)
- * - Completions on Jan 22, 21, 20 (today is Jan 23) → streak = 3 (started yesterday)
+ * Rules:
+ * - A day is the user's LOCAL calendar day (see lib/dates.ts).
+ * - A day counts only when the habit's daily target was met
+ *   (e.g. 3 check-ins for a "3x per day" habit). Partial days don't count.
+ * - The current streak is still alive if today isn't done yet: it counts
+ *   back from today when today is complete, otherwise from yesterday.
+ * - Every frequency currently uses these daily rules. Weekly and custom
+ *   schedules aren't defined yet; when they are, add their rules here.
  */
 
-export function calculateCurrentStreak(completions: Completion[]): number {
-  if (!completions || completions.length === 0) {
-    return 0;
+type StreakHabit = Pick<Habit, "id" | "target_count">;
+type StreakCompletion = Pick<Completion, "habit_id" | "completed_at">;
+
+export interface HabitStreaks {
+  current: number;
+  longest: number;
+}
+
+/** Local day keys on which this habit's daily target was met. */
+export function getCompletedDayKeys(
+  habit: StreakHabit,
+  completions: StreakCompletion[],
+): Set<string> {
+  const target = Math.max(1, habit.target_count || 1);
+  const countsByDay = new Map<string, number>();
+
+  for (const completion of completions) {
+    if (completion.habit_id !== habit.id) continue;
+    const day = toDayKey(completion.completed_at);
+    countsByDay.set(day, (countsByDay.get(day) ?? 0) + 1);
   }
 
-  const uniqueDates = Array.from(
-    new Set(
-      completions.map((c) => toDayKey(c.completed_at)),
-    ),
-  );
+  const completedDays = new Set<string>();
+  for (const [day, count] of countsByDay) {
+    if (count >= target) completedDays.add(day);
+  }
+  return completedDays;
+}
 
-  uniqueDates.sort((a, b) => b.localeCompare(a));
+/** Consecutive completed days ending today, or yesterday if today isn't done yet. */
+export function calculateCurrentStreak(
+  completedDays: Set<string>,
+  today: Date = new Date(),
+): number {
+  const todayKey = toDayKey(today);
+  let day = completedDays.has(todayKey) ? todayKey : previousDayKey(todayKey);
 
-  const today = toDayKey(new Date());
   let streak = 0;
-  let expectedDate = today;
-
-  for (let i = 0; i < uniqueDates.length; i++) {
-    const currentDate = uniqueDates[i];
-
-    if (currentDate === expectedDate) {
-      streak++;
-      expectedDate = previousDayKey(expectedDate);
-    } else {
-      if (i === 0) {
-        const yesterday = previousDayKey(today);
-        if (currentDate === yesterday) {
-          // Start from yesterday - continue counting!
-          streak = 1;
-          expectedDate = previousDayKey(yesterday);
-          // Don't break - keep counting!
-        } else {
-          // Too old - streak is dead
-          return 0;
-        }
-      } else {
-        // Found a gap - stop counting
-        break;
-      }
-    }
+  while (completedDays.has(day)) {
+    streak++;
+    day = previousDayKey(day);
   }
-
   return streak;
 }
 
-export function calculateLongestStreak(completions: Completion[]): number {
-  // STEP 1: Handle empty case
-  if (!completions || completions.length === 0) {
-    return 0;
+/** Longest run of consecutive completed days in the habit's history. */
+export function calculateLongestStreak(completedDays: Set<string>): number {
+  const days = [...completedDays].sort();
+  let longest = 0;
+  let run = 0;
+
+  for (let i = 0; i < days.length; i++) {
+    run = i > 0 && previousDayKey(days[i]) === days[i - 1] ? run + 1 : 1;
+    longest = Math.max(longest, run);
   }
+  return longest;
+}
 
-  // STEP 2: Get unique dates
-  const uniqueDates = Array.from(
-    new Set(
-      completions.map((c) => toDayKey(c.completed_at)),
-    ),
-  );
+/** Current and longest streak for one habit. `completions` may include other habits. */
+export function getHabitStreaks(
+  habit: StreakHabit,
+  completions: StreakCompletion[],
+  today: Date = new Date(),
+): HabitStreaks {
+  const completedDays = getCompletedDayKeys(habit, completions);
+  return {
+    current: calculateCurrentStreak(completedDays, today),
+    longest: calculateLongestStreak(completedDays),
+  };
+}
 
-  // STEP 3: Sort dates from newest to oldest
-  uniqueDates.sort((a, b) => b.localeCompare(a));
-
-  // Edge case: Only 1 unique date
-  if (uniqueDates.length === 1) {
-    return 1;
+/** Highest current streak and highest longest streak across several habits. */
+export function getBestStreaks(
+  habits: StreakHabit[],
+  completions: StreakCompletion[],
+  today: Date = new Date(),
+): HabitStreaks {
+  let current = 0;
+  let longest = 0;
+  for (const habit of habits) {
+    const streaks = getHabitStreaks(habit, completions, today);
+    current = Math.max(current, streaks.current);
+    longest = Math.max(longest, streaks.longest);
   }
-
-  // STEP 4: Find all streaks in history
-  const streaks: number[] = [];
-  let currentStreak = 1;
-
-  for (let i = 1; i < uniqueDates.length; i++) {
-    const previousDate = uniqueDates[i - 1]; // Newer date
-    const currentDate = uniqueDates[i]; // Older date
-
-    // Check if dates are consecutive (1 day apart)
-    const expectedDate = previousDayKey(previousDate);
-
-    if (currentDate === expectedDate) {
-      // ✅ Consecutive! Continue counting
-      currentStreak += 1;
-    } else {
-      // ❌ Gap found! Save this streak and start new one
-      streaks.push(currentStreak);
-      currentStreak = 1;
-    }
-  }
-
-  // ⭐ Don't forget the last streak!
-  streaks.push(currentStreak);
-
-  // STEP 5: Return the longest streak
-  return Math.max(...streaks);
+  return { current, longest };
 }

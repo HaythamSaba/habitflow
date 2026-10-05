@@ -17,7 +17,7 @@ Mark items as they are fixed so work can resume in a new session.
 | H1 | Habit list buried on dashboard | M | Open |
 | H2 | Bare `primary` color token missing | S | Done |
 | H3 | Keyboard and screen-reader access broken | M | Done |
-| H4 | Five inconsistent streak calculations | M | Open |
+| H4 | Five inconsistent streak calculations | M | Done (daily rules for all frequencies; weekly/custom rules pending H6) |
 | H5 | Analytics numbers misleading or wrong | M | Open |
 | H6 | Unfinished features visible in the UI | S each | Open |
 | H7 | "Complete All" undermines motivation | S | Done (removed; no demo account yet) |

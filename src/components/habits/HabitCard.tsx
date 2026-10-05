@@ -71,7 +71,7 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
     currentStreak,
     longestStreak,
     isLoading: isLoadingStreak,
-  } = useHabitStreak(habit.id);
+  } = useHabitStreak(habit);
 
   const getStreakColor = (streak: number) => {
     if (streak >= 30) {

@@ -1,14 +1,14 @@
 import { useMemo } from 'react';
 import { Habit, Completion } from '@/types';
-import { 
-  startOfDay, 
+import {
+  startOfDay,
   endOfDay,
   differenceInDays,
   subDays,
   parseISO,
-  isSameDay,
   isWithinInterval
 } from 'date-fns';
+import { getHabitStreaks } from '@/lib/streaks';
 
 // ────────────────────────────────────────────
 // INDIVIDUAL HABIT STATS
@@ -32,8 +32,8 @@ export function useHabitStats(habit: Habit, allCompletions: Completion[]) {
     // 1️⃣ COMPLETION RATE (since habit creation)
     const completionRate = calculateCompletionRate(habit, habitCompletions);
 
-    // 2️⃣ CURRENT STREAK (consecutive days from today backwards)
-    const currentStreak = calculateCurrentStreak(habitCompletions);
+    // 2️⃣ CURRENT STREAK (shared rules, see lib/streaks.ts)
+    const currentStreak = getHabitStreaks(habit, habitCompletions).current;
 
     // 3️⃣ LAST 7 DAYS (for sparkline chart)
     const last7Days = calculateLast7Days(habitCompletions);
@@ -62,34 +62,6 @@ function calculateCompletionRate(habit: Habit, completions: Completion[]): numbe
 
   const rate = (uniqueDays / daysSinceCreation) * 100;
   return Math.min(Math.round(rate), 100);
-}
-
-// ────────────────────────────────────────────
-// HELPER: Calculate current streak
-// ────────────────────────────────────────────
-function calculateCurrentStreak(completions: Completion[]): number {
-  let streak = 0;
-  let checkDate = new Date();
-
-  while (true) {
-    const hasCompletion = completions.some((c) =>
-      isSameDay(parseISO(c.completed_at), checkDate)
-    );
-
-    if (hasCompletion) {
-      streak++;
-      checkDate = subDays(checkDate, 1);
-    } else {
-      // Allow today to be incomplete (might complete later)
-      if (isSameDay(checkDate, new Date())) {
-        checkDate = subDays(checkDate, 1);
-        continue;
-      }
-      break;
-    }
-  }
-
-  return streak;
 }
 
 // ────────────────────────────────────────────

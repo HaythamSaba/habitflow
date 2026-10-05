@@ -3,10 +3,13 @@ import { useActivityHeatmap, WeekActivity } from "@/hooks/useActivityHeatmap";
 import { format } from "date-fns";
 import { Calendar } from "lucide-react";
 import { useAllCompletions } from "@/hooks/useAllCompletions";
+import { useDashboardStreak } from "@/hooks/useDashboardStreak";
 
 export function ActivityHeatmap() {
   const today = new Date().toDateString();
   const { completions } = useAllCompletions();
+  // Same "Current Streak" as the dashboard (shared rules in lib/streaks.ts)
+  const { maxStreak } = useDashboardStreak();
   const { weeks, months, maxCount } = useActivityHeatmap(
     completions || [],
     365,
@@ -323,7 +326,7 @@ export function ActivityHeatmap() {
               Current Streak
             </p>
             <p className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
-              {calculateCurrentStreak(weeks)}
+              {maxStreak}
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">days</p>
           </div>
@@ -378,21 +381,6 @@ export function ActivityHeatmap() {
 }
 
 // Helper functions
-function calculateCurrentStreak(weeks: WeekActivity[]): number {
-  let streak = 0;
-  const allDays = weeks.flatMap((w) => w.days).reverse();
-
-  for (const day of allDays) {
-    if (day.count > 0) {
-      streak++;
-    } else {
-      break;
-    }
-  }
-
-  return streak;
-}
-
 function calculateActiveDays(weeks: WeekActivity[]): number {
   return weeks.flatMap((w) => w.days).filter((d) => d.count > 0).length;
 }

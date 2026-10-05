@@ -5,9 +5,9 @@ import {
   isAfter,
   isSameDay,
   format,
-  differenceInCalendarDays,
 } from "date-fns";
 import { useAllCompletions } from "./useAllCompletions";
+import { getBestStreaks } from "@/lib/streaks";
 
 export function useAnalytics() {
   const { habits } = useHabits();
@@ -51,63 +51,9 @@ export function useAnalytics() {
     return Math.round(rate);
   })();
 
-  // ===== 4. Best streak across all habits =====
-  const bestStreak = (() => {
-    if (!activeHabits || !completions) return 0;
-
-    let maxStreak = 0;
-
-    activeHabits.forEach((habit) => {
-      // Get all completions for this habit
-      const habitCompletions = completions.filter(
-        (c) => c.habit_id === habit.id,
-      );
-
-      if (habitCompletions.length === 0) return;
-
-      // Extract unique dates and sort them
-      const uniqueDates = Array.from(
-        new Set(
-          habitCompletions.map((c) =>
-            format(new Date(c.completed_at), "yyyy-MM-dd"),
-          ),
-        ),
-      ).sort();
-
-      // Calculate streak
-      let currentStreak = 0;
-      let longestStreak = 0;
-      let previousDate: Date | null = null;
-
-      uniqueDates.forEach((dateStr) => {
-        const currentDate = new Date(dateStr);
-
-        if (previousDate === null) {
-          currentStreak = 1;
-        } else {
-          const daysDiff = differenceInCalendarDays(currentDate, previousDate);
-
-          if (daysDiff === 1) {
-            currentStreak += 1;
-          } else {
-            currentStreak = 1;
-          }
-        }
-
-        if (currentStreak > longestStreak) {
-          longestStreak = currentStreak;
-        }
-
-        previousDate = currentDate;
-      });
-
-      if (longestStreak > maxStreak) {
-        maxStreak = longestStreak;
-      }
-    });
-
-    return maxStreak;
-  })();
+  // ===== 4. Best (longest) streak across active habits =====
+  // Shared rules, see lib/streaks.ts — same value as the Habits page
+  const bestStreak = getBestStreaks(activeHabits, completions).longest;
 
   // ===== 5. Line chart data (daily completions for last 30 days) =====
   const lineChartData = (() => {
