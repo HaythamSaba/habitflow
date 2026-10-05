@@ -20,7 +20,7 @@ Mark items as they are fixed so work can resume in a new session.
 | H4 | Five inconsistent streak calculations | M | Open |
 | H5 | Analytics numbers misleading or wrong | M | Open |
 | H6 | Unfinished features visible in the UI | S each | Open |
-| H7 | "Complete All" undermines motivation | S | Open |
+| H7 | "Complete All" undermines motivation | S | Done (removed; no demo account yet) |
 | H8 | Enter on "Cancel" in delete confirmation deletes | S–M | Done (Delete now hard-deletes; Archive archives) |
 | H9 | Dark mode unfinished | S–M | Open |
 | M1 | No reduced-motion support | S | Open |
