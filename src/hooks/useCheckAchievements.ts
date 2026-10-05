@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "./useAuth";
 import { useHabits } from "./useHabits";
-import { useCompletions } from "./useCompletions";
+import { useAllCompletions } from "./useAllCompletions";
 import { useUserStats } from "./useUserStats";
 import { useDashboardStreak } from "./useDashboardStreak";
 import { useAchievements } from "./useAchievements";
@@ -14,7 +14,8 @@ export function useCheckAchievements() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const { habits } = useHabits();
-  const { completions } = useCompletions();
+  // All-time history: milestones like "100 completions" span many days
+  const { completions } = useAllCompletions();
   const { totalPoints } = useUserStats();
   const { maxStreak } = useDashboardStreak();
   const { allAchievements, unlockedIds } = useAchievements();

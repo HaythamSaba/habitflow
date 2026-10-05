@@ -3,7 +3,7 @@ import { useAchievements } from "@/hooks/useAchievements";
 import { AchievementCard } from "@/components/achievements/AchievementCard";
 import { calculateAchievementProgress } from "@/lib/achievements";
 import { useHabits } from "@/hooks/useHabits";
-import { useCompletions } from "@/hooks/useCompletions";
+import { useAllCompletions } from "@/hooks/useAllCompletions";
 import { useUserStats } from "@/hooks/useUserStats";
 import { useDashboardStreak } from "@/hooks/useDashboardStreak";
 import { useMemo, useState } from "react";
@@ -12,7 +12,8 @@ import PageHeader from "@/components/ui/PageHeader";
 export function AchievementsPage() {
   const { allAchievements, unlockedIds, isLoading } = useAchievements();
   const { habits: allHabits } = useHabits();
-  const { completions } = useCompletions();
+  // All-time history, same data useCheckAchievements unlocks from
+  const { completions } = useAllCompletions();
   const { totalPoints } = useUserStats();
   const { maxStreak } = useDashboardStreak();
 

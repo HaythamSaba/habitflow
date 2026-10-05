@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useDeleteHabit } from "@/hooks/useDeleteHabit";
 import { useCategories } from "@/hooks/useCategories";
 import { useHabits } from "@/hooks/useHabits";
-import { useCompletions } from "@/hooks/useCompletions";
+import { useAllCompletions } from "@/hooks/useAllCompletions";
 import { useHabitsStats } from "@/hooks/useHabitsStats";
 import { useArchiveHabit } from "@/hooks/useArchiveHabit";
 import { useRestoreHabit } from "@/hooks/useRestoreHabit";
@@ -27,7 +27,8 @@ import EmptyState from "@/components/habits/EmptyState";
 
 export function HabitsPage() {
   const { habits, isLoading } = useHabits();
-  const { completions } = useCompletions();
+  // All-time history: the stat cards cover the last 30 days and streaks
+  const { completions } = useAllCompletions();
   const { categories } = useCategories();
   const deleteHabit = useDeleteHabit();
   const archiveHabit = useArchiveHabit();

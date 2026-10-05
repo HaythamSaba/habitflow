@@ -64,7 +64,7 @@ export function checkAchievementCondition(
       break;
 
     case "perfect_day":
-      currentValue = checkPerfectDay(stats.completions, stats.totalHabits)
+      currentValue = checkPerfectDay(stats.completions, stats.habits)
         ? 1
         : 0;
       break;
@@ -118,12 +118,17 @@ const MIN_HABITS_FOR_PERFECT_DAY = 5;
 /**
  * Check if every active habit was completed at least once on the same day.
  * Requires at least MIN_HABITS_FOR_PERFECT_DAY active habits to be earnable.
+ * Completions of archived habits are ignored: with full history, a past day
+ * spent on since-archived habits must not count as completing today's set.
  */
-function checkPerfectDay(completions: Completion[], totalHabits: number): boolean {
+function checkPerfectDay(completions: Completion[], activeHabits: Habit[]): boolean {
+  const totalHabits = activeHabits.length;
   if (totalHabits < MIN_HABITS_FOR_PERFECT_DAY) return false;
 
+  const activeHabitIds = new Set(activeHabits.map((habit) => habit.id));
   const habitIdsByDay = new Map<string, Set<string>>();
   for (const completion of completions) {
+    if (!activeHabitIds.has(completion.habit_id)) continue;
     const day = toDayKey(completion.completed_at);
     if (!habitIdsByDay.has(day)) {
       habitIdsByDay.set(day, new Set());
