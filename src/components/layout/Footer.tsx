@@ -6,6 +6,7 @@ import {
   ExternalLink,
   Contact,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -91,13 +92,13 @@ export function Footer() {
             </p>
 
             <div className="flex items-center gap-4 text-xs">
-              <a
-                href="/about"
+              <Link
+                to="/about"
                 className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors flex items-center gap-1"
               >
                 About
                 <ExternalLink className="w-3 h-3" />
-              </a>
+              </Link>
               <a
                 href="mailto:haythamsaba@gmail.com?subject=HabitFlow%20Feedback"
                 className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors flex items-center gap-1"

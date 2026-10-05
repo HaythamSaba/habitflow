@@ -1,5 +1,6 @@
 // Move Achievement type to types.ts first, then:
 import { Achievement } from "@/types";
+import { Link } from "react-router-dom";
 
 interface RecentAchievementsSectionProps {
   achievements: Achievement[];
@@ -21,8 +22,8 @@ export function RecentAchievementsSection({
             Your latest unlocked achievements
           </p>
         </div>
-        <a
-          href="/achievements"
+        <Link
+          to="/achievements"
           className="text-sm font-medium text-primary hover:underline flex items-center gap-1 min-h-11 shrink-0"
         >
           View All
@@ -39,7 +40,7 @@ export function RecentAchievementsSection({
               d="M9 5l7 7-7 7"
             />
           </svg>
-        </a>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">

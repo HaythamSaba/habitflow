@@ -33,7 +33,7 @@ Mark items as they are fixed so work can resume in a new session.
 | M8 | Inconsistent loading / error / success states | M | Open |
 | M9 | `Input` breaks email fields on mobile | S | Done |
 | M10 | Contrast failures | S | Open |
-| M11 | Links that reload the whole app | S | Open |
+| M11 | Links that reload the whole app | S | Done |
 | M12 | Single 1.49 MB JS bundle | S–M | Open |
 | L1 | Code polish a reviewer will notice | S | Open |
 | L2 | Font setup | S | Open |

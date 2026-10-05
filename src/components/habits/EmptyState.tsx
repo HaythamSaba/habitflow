@@ -1,4 +1,5 @@
 import { Search } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface EmptyStateProps {
   searchQuery: string;
@@ -59,12 +60,12 @@ export default function EmptyState({
           >
             Create Habit
           </button>
-          <button
-            onClick={() => (window.location.href = "/templates")}
-            className="w-full sm:w-auto px-5 sm:px-6 py-2.5 sm:py-3 min-h-11 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl font-semibold text-sm sm:text-base border-2 border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 transition-all"
+          <Link
+            to="/templates"
+            className="inline-flex items-center justify-center w-full sm:w-auto px-5 sm:px-6 py-2.5 sm:py-3 min-h-11 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-xl font-semibold text-sm sm:text-base border-2 border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 transition-all"
           >
             Browse Templates
-          </button>
+          </Link>
         </div>
       )}
     </div>

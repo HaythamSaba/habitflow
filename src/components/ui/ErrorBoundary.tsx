@@ -1,8 +1,45 @@
 import { Component, ReactNode } from "react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
+import { useInRouterContext, useNavigate } from "react-router-dom";
 import { AlertTriangle } from "lucide-react";
 import { Card } from "./Card";
 import { Button } from "./Button";
+
+function RouterBackToDashboardButton({ onRetry }: { onRetry: () => void }) {
+  const navigate = useNavigate();
+  return (
+    <Button
+      variant="outline"
+      onClick={() => {
+        // Reset too, so the button still works when the error is on /dashboard
+        onRetry();
+        navigate("/dashboard");
+      }}
+    >
+      Back to Dashboard
+    </Button>
+  );
+}
+
+/**
+ * Client-side navigation when inside the router (page-level boundaries).
+ * The root boundary in App wraps BrowserRouter, so there a full page load
+ * is the only option — and after an app-level crash, a clean reload is wanted.
+ */
+function BackToDashboardButton({ onRetry }: { onRetry: () => void }) {
+  const inRouter = useInRouterContext();
+  if (inRouter) {
+    return <RouterBackToDashboardButton onRetry={onRetry} />;
+  }
+  return (
+    <Button
+      variant="outline"
+      onClick={() => window.location.assign("/dashboard")}
+    >
+      Back to Dashboard
+    </Button>
+  );
+}
 
 interface FallbackProps {
   error: Error | null;
@@ -32,12 +69,7 @@ function DefaultFallback({ error, fullScreen, onRetry }: FallbackProps) {
           </pre>
         )}
         <div className="flex flex-wrap gap-3 justify-center">
-          <Button
-            variant="outline"
-            onClick={() => (window.location.href = "/dashboard")}
-          >
-            Back to Dashboard
-          </Button>
+          <BackToDashboardButton onRetry={onRetry} />
           <Button onClick={onRetry}>Try Again</Button>
         </div>
       </Card>
