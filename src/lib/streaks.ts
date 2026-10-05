@@ -1,4 +1,5 @@
 import { Completion } from "@/types";
+import { previousDayKey, toDayKey } from "./dates";
 
 /**
  * Calculate the current active streak for a habit
@@ -22,15 +23,13 @@ export function calculateCurrentStreak(completions: Completion[]): number {
 
   const uniqueDates = Array.from(
     new Set(
-      completions.map(
-        (c) => new Date(c.completed_at).toISOString().split("T")[0],
-      ),
+      completions.map((c) => toDayKey(c.completed_at)),
     ),
   );
 
   uniqueDates.sort((a, b) => b.localeCompare(a));
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = toDayKey(new Date());
   let streak = 0;
   let expectedDate = today;
 
@@ -39,14 +38,14 @@ export function calculateCurrentStreak(completions: Completion[]): number {
 
     if (currentDate === expectedDate) {
       streak++;
-      expectedDate = subtractOneDay(expectedDate);
+      expectedDate = previousDayKey(expectedDate);
     } else {
       if (i === 0) {
-        const yesterday = subtractOneDay(today);
+        const yesterday = previousDayKey(today);
         if (currentDate === yesterday) {
           // Start from yesterday - continue counting!
           streak = 1;
-          expectedDate = subtractOneDay(yesterday);
+          expectedDate = previousDayKey(yesterday);
           // Don't break - keep counting!
         } else {
           // Too old - streak is dead
@@ -62,12 +61,6 @@ export function calculateCurrentStreak(completions: Completion[]): number {
   return streak;
 }
 
-function subtractOneDay(dateStr: string): string {
-  const date = new Date(dateStr);
-  date.setDate(date.getDate() - 1);
-  return date.toISOString().split("T")[0];
-}
-
 export function calculateLongestStreak(completions: Completion[]): number {
   // STEP 1: Handle empty case
   if (!completions || completions.length === 0) {
@@ -77,9 +70,7 @@ export function calculateLongestStreak(completions: Completion[]): number {
   // STEP 2: Get unique dates
   const uniqueDates = Array.from(
     new Set(
-      completions.map(
-        (c) => new Date(c.completed_at).toISOString().split("T")[0],
-      ),
+      completions.map((c) => toDayKey(c.completed_at)),
     ),
   );
 
@@ -100,7 +91,7 @@ export function calculateLongestStreak(completions: Completion[]): number {
     const currentDate = uniqueDates[i]; // Older date
 
     // Check if dates are consecutive (1 day apart)
-    const expectedDate = subtractOneDay(previousDate);
+    const expectedDate = previousDayKey(previousDate);
 
     if (currentDate === expectedDate) {
       // ✅ Consecutive! Continue counting

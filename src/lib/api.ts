@@ -1,5 +1,6 @@
 import { Category } from "@/types";
 import { supabase } from "./supabase";
+import { getLocalDayRange } from "./dates";
 export async function getAchievements() {
   const { data: achievements, error } = await supabase
     .from("achievements")
@@ -141,14 +142,15 @@ export async function deleteCompletion(completionId: string, userId: string) {
 }
 
 export async function getTodayCompletions(userId: string) {
-  const today = new Date().toISOString().split("T")[0];
+  // Bounds of the user's local "today", not the UTC date
+  const { start, end } = getLocalDayRange();
 
   const { data, error } = await supabase
     .from("completions")
     .select("*")
     .eq("user_id", userId)
-    .gte("completed_at", `${today}T00:00:00`) // Greater than or equal to start of today
-    .lte("completed_at", `${today}T23:59:59`) // Less than or equal to end of today
+    .gte("completed_at", start)
+    .lte("completed_at", end)
     .order("completed_at", { ascending: false });
 
   if (error) throw new Error(error.message);
@@ -178,15 +180,15 @@ export async function getHabitCompletionCountToday(
   habitId: string,
   userId: string,
 ) {
-  const today = new Date().toISOString().split("T")[0];
+  const { start, end } = getLocalDayRange();
 
   const { count, error } = await supabase
     .from("completions")
     .select("*", { count: "exact", head: true }) // Only count, don't return data
     .eq("habit_id", habitId)
     .eq("user_id", userId)
-    .gte("completed_at", `${today}T00:00:00`)
-    .lte("completed_at", `${today}T23:59:59`);
+    .gte("completed_at", start)
+    .lte("completed_at", end);
 
   if (error) throw new Error(error.message);
   return count || 0;

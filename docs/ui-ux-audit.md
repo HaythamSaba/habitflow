@@ -10,7 +10,7 @@ Mark items as they are fixed so work can resume in a new session.
 
 | ID | Title | Effort | Status |
 |----|-------|--------|--------|
-| C1 | "Today" is a UTC date | S | Open |
+| C1 | "Today" is a UTC date | S | Done |
 | C2 | Achievements and Habits-page stats only see today's completions | S | Open |
 | C3 | No demo / guest path for recruiters | M | Open |
 | C4 | Check-off is slow and gives no reward | M | Open |

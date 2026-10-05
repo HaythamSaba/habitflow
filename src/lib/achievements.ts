@@ -1,4 +1,5 @@
 import { Completion, Habit } from "@/types";
+import { toDayKey } from "./dates";
 
 const SPEED_COMPLETION_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
 
@@ -123,7 +124,7 @@ function checkPerfectDay(completions: Completion[], totalHabits: number): boolea
 
   const habitIdsByDay = new Map<string, Set<string>>();
   for (const completion of completions) {
-    const day = completion.completed_at.split("T")[0];
+    const day = toDayKey(completion.completed_at);
     if (!habitIdsByDay.has(day)) {
       habitIdsByDay.set(day, new Set());
     }
