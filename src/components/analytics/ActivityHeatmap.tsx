@@ -8,7 +8,7 @@ import { useDashboardStreak } from "@/hooks/useDashboardStreak";
 export function ActivityHeatmap() {
   const today = new Date().toDateString();
   const { completions } = useAllCompletions();
-  // Same "Current Streak" as the dashboard (shared rules in lib/streaks.ts)
+  // Same "Best Active Streak" as the dashboard (shared rules in lib/streaks.ts)
   const { maxStreak } = useDashboardStreak();
   const { weeks, months } = useActivityHeatmap(
     completions || [],
@@ -259,7 +259,7 @@ export function ActivityHeatmap() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-8">
           <div className="text-center md:text-left bg-amber-100 dark:bg-amber-950 p-6 rounded-2xl">
             <p className="text-xs text-gray-600 dark:text-gray-200 mb-1">
-              Current Streak
+              Best Active Streak
             </p>
             <p className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
               {maxStreak}

@@ -1,6 +1,7 @@
 import { useHabits } from "@/hooks/useHabits";
 import { useCompletions } from "@/hooks/useCompletions";
 import { CheckCircle2 } from "lucide-react";
+import { getTodayProgress } from "@/lib/analytics";
 import EmptyProgress from "./EmptyProgress";
 import ProgressCard from "./ProgressCard";
 
@@ -8,23 +9,13 @@ export function TodayProgress() {
   const { habits } = useHabits();
   const { completions } = useCompletions();
 
-  // Archived habits must be excluded from both counts — otherwise a
-  // stale completion on an archived habit can inflate completedCount
-  // relative to totalHabits and cause a false percentage
+  // Active habits only; same calculation as the dashboard "Today" stat card
   const activeHabits = habits?.filter((habit) => !habit.archived) || [];
-
-  const totalHabits = activeHabits.length;
-
-  // Count how many active habits are completed today
-  const completedCount = activeHabits.filter((habit) => {
-    const habitCompletions =
-      completions?.filter((c) => c.habit_id === habit.id) || [];
-    return habitCompletions.length >= habit.target_count;
-  }).length;
-
-  // Calculate percentage
-  const percentage =
-    totalHabits > 0 ? Math.round((completedCount / totalHabits) * 100) : 0;
+  const {
+    completed: completedCount,
+    total: totalHabits,
+    percentage,
+  } = getTodayProgress(activeHabits, completions || []);
 
   if (totalHabits === 0) {
     return (

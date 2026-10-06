@@ -4,6 +4,7 @@ import {
   getAverageRate,
   getDailyTargetTrend,
   getHabitRate,
+  getTodayProgress,
 } from "./analytics";
 
 // Dates are built in LOCAL time, so these tests hold in any time zone
@@ -93,6 +94,44 @@ describe("getDailyTargetTrend", () => {
     expect(byDay["2026-10-28"]).toMatchObject({ rate: 100, done: 1, expected: 1 });
     expect(byDay["2026-10-29"]).toMatchObject({ rate: 67, done: 2, expected: 3 });
     expect(byDay["2026-10-30"]).toMatchObject({ rate: 0, done: 0, expected: 3 });
+  });
+});
+
+describe("getTodayProgress", () => {
+  const today = (habitId: string, times = 1) =>
+    Array.from({ length: times }, () => ({ habit_id: habitId }));
+
+  it("counts a habit as done only when its daily target is met", () => {
+    const habits = [
+      { id: "read", target_count: 1 },
+      { id: "water", target_count: 3 },
+      { id: "run", target_count: 1 },
+    ];
+    // read done, water 2/3, run not started
+    const completions = [...today("read"), ...today("water", 2)];
+    expect(getTodayProgress(habits, completions)).toEqual({
+      completed: 1,
+      total: 3,
+      percentage: 33,
+    });
+  });
+
+  it("can't go above 100% from extra check-ins or other habits' check-ins", () => {
+    const habits = [{ id: "read", target_count: 1 }];
+    const completions = [...today("read", 4), ...today("archived", 3)];
+    expect(getTodayProgress(habits, completions)).toEqual({
+      completed: 1,
+      total: 1,
+      percentage: 100,
+    });
+  });
+
+  it("is 0 of 0 with no habits", () => {
+    expect(getTodayProgress([], [])).toEqual({
+      completed: 0,
+      total: 0,
+      percentage: 0,
+    });
   });
 });
 

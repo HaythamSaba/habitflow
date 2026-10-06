@@ -31,7 +31,8 @@ export interface DailyTargetPoint {
   expected: number;
 }
 
-const targetOf = (habit: RateHabit) => Math.max(1, habit.target_count || 1);
+const targetOf = (habit: Pick<Habit, "target_count">) =>
+  Math.max(1, habit.target_count || 1);
 
 const windowStart = (today: Date, windowDays: number) =>
   startOfDay(subDays(today, windowDays - 1));
@@ -144,6 +145,37 @@ export function getDailyTargetTrend(
       expected,
     };
   });
+}
+
+export interface TodayProgress {
+  /** Habits whose daily target is met today */
+  completed: number;
+  total: number;
+  /** completed / total as 0–100 */
+  percentage: number;
+}
+
+/**
+ * How many habits are fully done today. The one "today" metric the dashboard
+ * shows (stat card and Today's Progress card both use it).
+ *
+ * @param habits Active habits to count
+ * @param todayCompletions Today's check-ins (e.g. from useCompletions)
+ */
+export function getTodayProgress(
+  habits: Pick<Habit, "id" | "target_count">[],
+  todayCompletions: Pick<Completion, "habit_id">[],
+): TodayProgress {
+  const counts = new Map<string, number>();
+  for (const completion of todayCompletions) {
+    counts.set(completion.habit_id, (counts.get(completion.habit_id) ?? 0) + 1);
+  }
+
+  const completed = habits.filter(
+    (habit) => (counts.get(habit.id) ?? 0) >= targetOf(habit),
+  ).length;
+  const total = habits.length;
+  return { completed, total, percentage: toPercent(completed, total) };
 }
 
 /** Number of check-ins made in the window (any habit). */

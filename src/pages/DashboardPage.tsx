@@ -21,6 +21,7 @@ import { FeaturedTemplates } from "@/components/templates/FeaturedTemplates";
 import { RecentAchievementsSection } from "@/components/dashboard/RecentAchievementsSection";
 import { StatCard } from "@/components/ui/StatCard";
 import { ChartCard } from "@/components/ui/ChartCard";
+import { getTodayProgress } from "@/lib/analytics";
 
 export function DashboardPage() {
   const navigate = useNavigate();
@@ -60,13 +61,9 @@ export function DashboardPage() {
   const displayName =
     user?.user_metadata?.display_name || user?.email?.split("@")[0] || "User";
 
-  const totalTargets =
-    filteredHabits?.reduce((sum, habit) => sum + habit.target_count, 0) || 0;
-
-  const completionRate =
-    totalTargets > 0
-      ? Math.round(((completions?.length || 0) / totalTargets) * 100)
-      : 0;
+  // Habits fully done today — same numbers as the Today's Progress card.
+  // Always all active habits: the category filter only narrows the list below.
+  const todayProgress = getTodayProgress(habits || [], completions || []);
 
   const lockedAchievements = allAchievements.filter(
     (achievement) => !unlockedAchievements.includes(achievement.id),
@@ -99,7 +96,8 @@ export function DashboardPage() {
 
           <StatCard
             value={maxStreak}
-            title="Current Streak"
+            // The highest current streak among your habits, not an overall streak
+            title="Best Active Streak"
             description={
               maxStreak === 0
                 ? "Start a habit today!"
@@ -120,15 +118,15 @@ export function DashboardPage() {
           />
 
           <StatCard
-            value={completionRate}
+            value={todayProgress.percentage}
             isPercentage
-            title="Completion Rate"
+            title="Today"
             description={
-              completionRate === 0
-                ? "Start completing habits!"
-                : completionRate === 100
-                  ? "You did it! 🎉"
-                  : "Keep going!"
+              todayProgress.total === 0
+                ? "Add a habit to get started"
+                : todayProgress.completed === todayProgress.total
+                  ? `All ${todayProgress.total} habits done 🎉`
+                  : `${todayProgress.completed} of ${todayProgress.total} habits done`
             }
             icon={
               <Target className="w-4 h-4 lg:w-6 lg:h-6 text-blue-600 dark:text-blue-400" />
