@@ -9,6 +9,28 @@ import {
 import { POINTS_PER_COMPLETION } from "@/lib/points";
 import { toast } from "react-hot-toast";
 
+/**
+ * The check-in change was saved but the follow-up points update failed.
+ * The two writes aren't atomic yet, so report this case separately instead
+ * of telling the user the whole action failed.
+ */
+class PointsSyncError extends Error {
+  readonly checkInAdded: boolean;
+
+  constructor(checkInAdded: boolean) {
+    super("Points update failed");
+    this.checkInAdded = checkInAdded;
+  }
+}
+
+async function syncPoints(userId: string, delta: number, checkInAdded: boolean) {
+  try {
+    await updateUserPoints(userId, delta);
+  } catch {
+    throw new PointsSyncError(checkInAdded);
+  }
+}
+
 export function useToggleCompletion() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -36,27 +58,34 @@ export function useToggleCompletion() {
         if (lastCompletionId) {
           console.log("❌ Deleting completion:", lastCompletionId); // ⭐ DEBUG
           await deleteCompletion(lastCompletionId, user.id);
-          await updateUserPoints(user.id, -POINTS_PER_COMPLETION);
+          await syncPoints(user.id, -POINTS_PER_COMPLETION, false);
         }
       } else {
         // Add completion
         console.log("✅ Creating completion for habit:", habitId); // ⭐ DEBUG
         const result = await createCompletion(habitId, user.id); // ⭐ CAPTURE RESULT
         console.log("✅ Completion created:", result); // ⭐ DEBUG
-        await updateUserPoints(user.id, POINTS_PER_COMPLETION);
+        await syncPoints(user.id, POINTS_PER_COMPLETION, true);
       }
     },
-    onSuccess: () => {
-      console.log("🎉 Mutation succeeded!"); // ⭐ DEBUG
-      // Invalidate all related queries
+    // Refetch on success AND failure: a partially failed toggle may still
+    // have changed the check-in, and the UI must show what was saved
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["habits"] });
       queryClient.invalidateQueries({ queryKey: ["completions"] });
       queryClient.invalidateQueries({ queryKey: ["all-completions"] });
       queryClient.invalidateQueries({ queryKey: ["user-stats"] });
     },
-    // ⭐⭐⭐ ADD ERROR HANDLER
     onError: (error) => {
       console.error("❌ Mutation failed:", error); // ⭐ DEBUG
+      if (error instanceof PointsSyncError) {
+        toast.error(
+          error.checkInAdded
+            ? "Check-in saved, but your points couldn't be updated."
+            : "Check-in removed, but your points couldn't be updated.",
+        );
+        return;
+      }
       toast.error(`Failed to update habit: ${error.message}`);
     },
   });

@@ -8,6 +8,7 @@ import { useUserStats } from "@/hooks/useUserStats";
 import { useDashboardStreak } from "@/hooks/useDashboardStreak";
 import { useMemo, useState } from "react";
 import PageHeader from "@/components/ui/PageHeader";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 export function AchievementsPage() {
   const { allAchievements, unlockedIds, isLoading } = useAchievements();
@@ -62,10 +63,35 @@ export function AchievementsPage() {
   const completionPercentage = Math.round((unlockedCount / totalCount) * 100);
 
   if (isLoading) {
+    // Skeleton mirrors the real layout so the page doesn't jump when data arrives
     return (
       <DashboardLayout>
-        <div className="flex items-center justify-center h-64">
-          <div className="text-gray-500">Loading achievements...</div>
+        <div
+          className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6"
+          aria-busy="true"
+        >
+          <span className="sr-only">Loading achievements…</span>
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-56" />
+            <Skeleton className="h-4 w-80 max-w-full" />
+          </div>
+          <div className="bg-white dark:bg-gray-950 rounded-xl p-3 sm:p-4 lg:p-6 border border-gray-200 dark:border-gray-800 space-y-3">
+            <div className="flex justify-between">
+              <Skeleton className="h-6 w-40" />
+              <Skeleton className="h-8 w-16" />
+            </div>
+            <Skeleton className="h-3 md:h-4 w-full rounded-full" />
+          </div>
+          <div className="flex gap-2">
+            {Array.from({ length: 5 }, (_, i) => (
+              <Skeleton key={i} className="h-11 w-24 rounded-lg shrink-0" />
+            ))}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
+            {Array.from({ length: 8 }, (_, i) => (
+              <Skeleton key={i} className="h-48 sm:h-56 rounded-xl" />
+            ))}
+          </div>
         </div>
       </DashboardLayout>
     );

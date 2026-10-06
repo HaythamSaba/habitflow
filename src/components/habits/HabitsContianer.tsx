@@ -21,7 +21,13 @@ export default function HabitsContainer({
   const navigate = useNavigate();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
-  const { isLoading, habits: allHabits, error } = useHabits();
+  const {
+    isLoading,
+    isFetching,
+    habits: allHabits,
+    error,
+    refetch,
+  } = useHabits();
   const deleteHabit = useDeleteHabit();
 
   const activeHabits = allHabits.filter((habit) => !habit.archived);
@@ -74,7 +80,8 @@ export default function HabitsContainer({
         </p>
         <Button
           variant="primary"
-          onClick={() => window.location.reload()}
+          onClick={() => refetch()}
+          isLoading={isFetching}
           className="min-h-11"
         >
           Retry

@@ -7,8 +7,10 @@ export function useHabits() {
 
   const {
     isLoading,
+    isFetching,
     data: habits,
     error,
+    refetch,
   } = useQuery({
     queryKey: ["habits", user?.id],
     queryFn: () => getHabits(user?.id),
@@ -17,7 +19,10 @@ export function useHabits() {
 
   return {
     isLoading,
+    isFetching,
     habits: habits || [],
     error,
+    // Retry after an error without reloading the page
+    refetch,
   };
 }
