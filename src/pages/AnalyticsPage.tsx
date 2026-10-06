@@ -57,7 +57,7 @@ export function AnalyticsPage() {
             value={averageRate}
             isPercentage={true}
             title="Avg Rate"
-            description="Completion rate"
+            description="Daily targets met, last 30 days"
             icon={
               <Target className="w-4 h-4 lg:w-6 lg:h-6 text-purple-600 dark:text-purple-400" />
             }
@@ -82,14 +82,14 @@ export function AnalyticsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-6">
           <ChartCard
             title="Completion Trend"
-            subtitle="Daily completions over the last 30 days"
+            subtitle="Share of daily targets met, last 30 days"
           >
             <CompletionTrendChart data={lineChartData} />
           </ChartCard>
 
           <ChartCard
             title="Habit Performance"
-            subtitle="Completion rate by habit (last 30 days)"
+            subtitle="Daily targets met by habit, last 30 days (or since it was created)"
           >
             {barChartData.length > 0 ? (
               <HabitPerformanceChart data={barChartData} />

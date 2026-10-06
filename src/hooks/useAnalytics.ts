@@ -1,114 +1,55 @@
+import { useMemo } from "react";
 import { useHabits } from "./useHabits";
-import {
-  startOfDay,
-  subDays,
-  isAfter,
-  isSameDay,
-  format,
-} from "date-fns";
 import { useAllCompletions } from "./useAllCompletions";
 import { getBestStreaks } from "@/lib/streaks";
+import {
+  ANALYTICS_WINDOW_DAYS,
+  countCompletionsInWindow,
+  getAverageRate,
+  getDailyTargetTrend,
+  getHabitRate,
+} from "@/lib/analytics";
+import { Completion, Habit } from "@/types";
 
+// Per-habit completion rate for the bar charts, best performers first
+function habitPerformance(
+  habits: Habit[],
+  completions: Completion[],
+  windowDays: number,
+) {
+  return habits
+    .map((habit) => ({
+      name: habit.name,
+      rate: getHabitRate(habit, completions, windowDays),
+      color: habit.color,
+    }))
+    .sort((a, b) => b.rate - a.rate);
+}
+
+/** Analytics for active habits. Rate rules live in lib/analytics.ts. */
 export function useAnalytics() {
   const { habits } = useHabits();
   const { completions } = useAllCompletions();
 
-  // get the active habits and remove the archived ones
-  const activeHabits = habits?.filter((h) => !h.archived);
+  return useMemo(() => {
+    const activeHabits = habits.filter((h) => !h.archived);
 
-  // ===== 1. Filter completions to last 30 days =====
-  const today = startOfDay(new Date());
-  const thirtyDaysAgo = subDays(today, 30);
-
-  const completionsLast30Days =
-    completions?.filter((completion) => {
-      const completionDate = new Date(completion.completed_at);
-      return (
-        isAfter(completionDate, thirtyDaysAgo) ||
-        isSameDay(completionDate, thirtyDaysAgo)
-      );
-    }) || [];
-
-  // ===== 2. Total completions (last 30 days) =====
-  const totalCompletions = completionsLast30Days.length;
-
-  // ===== 3. Average completion rate =====
-  const averageRate = (() => {
-    if (!activeHabits || activeHabits.length === 0) return 0;
-
-    // Expected completions = sum of (each habit's target * 30 days)
-    const expectedCompletions = activeHabits.reduce((sum, habit) => {
-      return sum + habit.target_count * 30;
-    }, 0);
-
-    if (expectedCompletions === 0) return 0;
-
-    // Actual completions
-    const actualCompletions = completionsLast30Days.length;
-
-    // Calculate percentage
-    const rate = (actualCompletions / expectedCompletions) * 100;
-    return Math.round(rate);
-  })();
-
-  // ===== 4. Best (longest) streak across active habits =====
-  // Shared rules, see lib/streaks.ts — same value as the Habits page
-  const bestStreak = getBestStreaks(activeHabits, completions).longest;
-
-  // ===== 5. Line chart data (daily completions for last 30 days) =====
-  const lineChartData = (() => {
-    const data = [];
-
-    // Create array of last 30 days
-    for (let i = 29; i >= 0; i--) {
-      const date = subDays(today, i);
-
-      // Count completions on this date
-      const completionsOnDate = completionsLast30Days.filter((completion) => {
-        const completionDate = new Date(completion.completed_at);
-        return isSameDay(completionDate, date);
-      });
-
-      data.push({
-        date: format(date, "MMM dd"), // "Jan 15"
-        completions: completionsOnDate.length,
-      });
-    }
-
-    return data;
-  })();
-
-  // ===== 6. Bar chart data (per-habit performance) =====
-  const barChartData = (() => {
-    if (!activeHabits) return [];
-
-    const data = activeHabits.map((habit) => {
-      // Filter completions for this habit in last 30 days
-      const habitCompletions = completionsLast30Days.filter(
-        (c) => c.habit_id === habit.id,
-      );
-
-      // Calculate completion rate
-      const expected = habit.target_count * 30;
-      const actual = habitCompletions.length;
-      const rate = expected > 0 ? (actual / expected) * 100 : 0;
-
-      return {
-        name: habit.name,
-        rate: Math.round(rate),
-        color: habit.color,
-      };
-    });
-
-    // Sort by rate descending (best performers first)
-    return data.sort((a, b) => b.rate - a.rate);
-  })();
-
-  return {
-    totalCompletions,
-    averageRate,
-    bestStreak,
-    lineChartData,
-    barChartData,
-  };
+    return {
+      // Check-ins in the last 30 days
+      totalCompletions: countCompletionsInWindow(completions),
+      // % of daily targets met in the last 30 days (since creation if newer)
+      averageRate: getAverageRate(activeHabits, completions),
+      // Shared rules, see lib/streaks.ts — same value as the Habits page
+      bestStreak: getBestStreaks(activeHabits, completions).longest,
+      // Daily % of targets met, last 30 days
+      lineChartData: getDailyTargetTrend(activeHabits, completions),
+      // Per-habit rate, last 30 days (Analytics) and last 7 days (dashboard)
+      barChartData: habitPerformance(
+        activeHabits,
+        completions,
+        ANALYTICS_WINDOW_DAYS,
+      ),
+      weeklyBarChartData: habitPerformance(activeHabits, completions, 7),
+    };
+  }, [habits, completions]);
 }

@@ -10,7 +10,7 @@ export function ActivityHeatmap() {
   const { completions } = useAllCompletions();
   // Same "Current Streak" as the dashboard (shared rules in lib/streaks.ts)
   const { maxStreak } = useDashboardStreak();
-  const { weeks, months, maxCount } = useActivityHeatmap(
+  const { weeks, months } = useActivityHeatmap(
     completions || [],
     365,
   );
@@ -94,7 +94,7 @@ export function ActivityHeatmap() {
             </h3>
           </div>
           <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400">
-            {completions?.length || 0} total completions in the last year
+            {calculateTotalCompletions(weeks)} total completions in the last year
           </p>
         </div>
 
@@ -156,101 +156,36 @@ export function ActivityHeatmap() {
 
             {/* Grid - RESPONSIVE */}
             <div className="flex gap-1">
-              {/* ⭐ Day labels - RESPONSIVE (single letter on mobile) */}
+              {/* Day labels — rows run Sunday→Saturday (see useActivityHeatmap) */}
               <div className="flex flex-col gap-2.5 md:gap-1 pb-4 justify-between pr-2 min-w-11 sm:min-w-11">
-                {/* Desktop: Full day names */}
-                <span
-                  className=" sm:block text-xs text-gray-600 dark:text-gray-400"
-                  style={{ height: cellSize }}
-                >
-                  Mon
-                </span>
-                <span
-                  className=" sm:block text-xs text-gray-600 dark:text-gray-400"
-                  style={{ height: cellSize }}
-                >
-                  Tue
-                </span>
-                <span
-                  className=" sm:block text-xs text-gray-600 dark:text-gray-400"
-                  style={{ height: cellSize }}
-                >
-                  Wed
-                </span>
-                <span
-                  className=" sm:block text-xs text-gray-600 dark:text-gray-400"
-                  style={{ height: cellSize }}
-                >
-                  Thu
-                </span>
-                <span
-                  className=" sm:block text-xs text-gray-600 dark:text-gray-400"
-                  style={{ height: cellSize }}
-                >
-                  Fri
-                </span>
-                <span
-                  className=" sm:block text-xs text-gray-600 dark:text-gray-400"
-                  style={{ height: cellSize }}
-                >
-                  Sat
-                </span>
-                <span
-                  className=" sm:block text-xs text-gray-600 dark:text-gray-400"
-                  style={{ height: cellSize }}
-                >
-                  Sun
-                </span>
-
-                {/* ⭐ Mobile: Single letter */}
-                {/* <span
-                  className="sm:hidden text-xs text-gray-600 dark:text-gray-400"
-                  style={{ height: cellSize }}
-                >
-                  M
-                </span>
-                <span
-                  className="sm:hidden text-xs text-gray-600 dark:text-gray-400"
-                  style={{ height: cellSize }}
-                >
-                  T
-                </span>
-                <span
-                  className="sm:hidden text-xs text-gray-600 dark:text-gray-400"
-                  style={{ height: cellSize }}
-                >
-                  W
-                </span>
-                <span
-                  className="sm:hidden text-xs text-gray-600 dark:text-gray-400"
-                  style={{ height: cellSize }}
-                >
-                  T
-                </span>
-                <span
-                  className="sm:hidden text-xs text-gray-600 dark:text-gray-400"
-                  style={{ height: cellSize }}
-                >
-                  F
-                </span>
-                <span
-                  className="sm:hidden text-xs text-gray-600 dark:text-gray-400"
-                  style={{ height: cellSize }}
-                >
-                  S
-                </span>
-                <span
-                  className="sm:hidden text-xs text-gray-600 dark:text-gray-400"
-                  style={{ height: cellSize }}
-                >
-                  S
-                </span> */}
+                {DAY_LABELS.map((label) => (
+                  <span
+                    key={label}
+                    className="text-xs text-gray-600 dark:text-gray-400"
+                    style={{ height: cellSize }}
+                  >
+                    {label}
+                  </span>
+                ))}
               </div>
 
               {/* ⭐ Weeks - TOUCH FRIENDLY */}
               {weeks.map((week, weekIndex) => (
                 <div key={weekIndex} className="flex flex-col gap-2 md:gap-1">
-                  {week.days.map((day, dayIndex) => (
+                  {week.days.map((day, dayIndex) =>
+                    !day.inRange ? (
+                      // Padding outside the year (incl. future days): keep the grid, show nothing
+                      <div
+                        key={dayIndex}
+                        aria-hidden="true"
+                        style={{
+                          width: cellSize,
+                          height: cellSize,
+                          minWidth: cellSize < 10 ? "10px" : "auto",
+                          minHeight: cellSize < 10 ? "10px" : "auto",
+                        }}
+                      />
+                    ) : (
                     <div
                       key={dayIndex}
                       className={`
@@ -284,7 +219,8 @@ export function ActivityHeatmap() {
                       }}
                       title={`${today === day.date.toDateString() ? "Today, " : ""}${format(day.date, "MMM d, yyyy")}: ${day.count} completions`}
                     />
-                  ))}
+                    ),
+                  )}
                 </div>
               ))}
             </div>
@@ -335,7 +271,7 @@ export function ActivityHeatmap() {
               Busiest Day
             </p>
             <p className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
-              {maxCount}
+              {calculateBusiestDay(weeks)}
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">
               completions
@@ -380,21 +316,36 @@ export function ActivityHeatmap() {
   );
 }
 
-// Helper functions
+// Row labels, matching the Sunday-first weeks built by useActivityHeatmap
+const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+// Helper functions — all ignore padding cells outside the year
+function getDaysInRange(weeks: WeekActivity[]) {
+  return weeks.flatMap((w) => w.days).filter((d) => d.inRange);
+}
+
+function calculateTotalCompletions(weeks: WeekActivity[]): number {
+  return getDaysInRange(weeks).reduce((sum, d) => sum + d.count, 0);
+}
+
+function calculateBusiestDay(weeks: WeekActivity[]): number {
+  return Math.max(0, ...getDaysInRange(weeks).map((d) => d.count));
+}
+
 function calculateActiveDays(weeks: WeekActivity[]): number {
-  return weeks.flatMap((w) => w.days).filter((d) => d.count > 0).length;
+  return getDaysInRange(weeks).filter((d) => d.count > 0).length;
 }
 
 function calculateAvgPerDay(weeks: WeekActivity[]): number {
-  const allDays = weeks.flatMap((w) => w.days);
-  const total = allDays.reduce((sum, d) => sum + d.count, 0);
-  return allDays.length > 0
-    ? Math.round((total / allDays.length) * 10) / 10
-    : 0;
+  const days = getDaysInRange(weeks);
+  const total = days.reduce((sum, d) => sum + d.count, 0);
+  return days.length > 0 ? Math.round((total / days.length) * 10) / 10 : 0;
 }
+
 function getTodayCount(weeks: WeekActivity[]): number {
   const today = new Date().toDateString();
-  const allDays = weeks.flatMap((w) => w.days);
-  const todayData = allDays.find((d) => d.date.toDateString() === today);
+  const todayData = getDaysInRange(weeks).find(
+    (d) => d.date.toDateString() === today,
+  );
   return todayData?.count || 0;
 }

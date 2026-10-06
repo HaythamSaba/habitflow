@@ -13,6 +13,8 @@ export interface DayActivity {
   date: Date;
   count: number;
   level: 0 | 1 | 2 | 3 | 4; // Activity level for color intensity
+  /** false for padding cells that fill out the first/last week (outside the range) */
+  inRange: boolean;
 }
 
 export interface WeekActivity {
@@ -63,10 +65,10 @@ export function useActivityHeatmap(
       else if (count <= 9) level = 3;
       else level = 4;
 
-      return { date, count, level };
+      return { date, count, level, inRange: true };
     });
 
-    // Organize into weeks (Sunday-Saturday)
+    // Organize into weeks (Sunday-Saturday; row 0 is Sunday)
     const weeks: WeekActivity[] = [];
     let currentWeek: DayActivity[] = [];
 
@@ -77,6 +79,7 @@ export function useActivityHeatmap(
         date: subDays(dayActivities[0].date, firstDayOfWeek - i),
         count: 0,
         level: 0,
+        inRange: false,
       });
     }
 
@@ -92,6 +95,7 @@ export function useActivityHeatmap(
             date: addDays(lastDate, 1),
             count: 0,
             level: 0,
+            inRange: false,
           });
         }
         weeks.push({ days: currentWeek });

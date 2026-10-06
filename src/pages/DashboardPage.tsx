@@ -20,6 +20,7 @@ import { HabitPerformanceChart } from "@/components/analytics/HabitPerformanceCh
 import { FeaturedTemplates } from "@/components/templates/FeaturedTemplates";
 import { RecentAchievementsSection } from "@/components/dashboard/RecentAchievementsSection";
 import { StatCard } from "@/components/ui/StatCard";
+import { ChartCard } from "@/components/ui/ChartCard";
 
 export function DashboardPage() {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ export function DashboardPage() {
   const { maxStreak } = useDashboardStreak();
   const { totalPoints, levelData } = useUserStats();
   const { unlockedAchievements, allAchievements } = useAchievements();
-  const { barChartData } = useAnalytics();
+  const { weeklyBarChartData } = useAnalytics();
 
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
     null,
@@ -257,13 +258,18 @@ export function DashboardPage() {
             <HabitsContainer filteredHabits={filteredHabits} />
           </div>
           <div className="w-full xl:w-1/2">
-            {barChartData.length > 0 ? (
-              <HabitPerformanceChart data={barChartData} />
-            ) : (
-              <div className="h-52 md:h-75 flex items-center justify-center text-gray-700 dark:text-gray-300">
-                <p>No habit data available</p>
-              </div>
-            )}
+            <ChartCard
+              title="This Week"
+              subtitle="Daily targets met by habit, last 7 days"
+            >
+              {weeklyBarChartData.length > 0 ? (
+                <HabitPerformanceChart data={weeklyBarChartData} />
+              ) : (
+                <div className="h-52 md:h-75 flex items-center justify-center text-gray-700 dark:text-gray-300">
+                  <p>No habit data available</p>
+                </div>
+              )}
+            </ChartCard>
           </div>
         </div>
 

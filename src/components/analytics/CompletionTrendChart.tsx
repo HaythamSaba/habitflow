@@ -9,23 +9,18 @@ import {
 } from "recharts";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useState, useEffect } from "react";
+import { DailyTargetPoint } from "@/lib/analytics";
 
 interface CompletionTrendChartProps {
-  data: Array<{
-    date: string;
-    completions: number;
-  }>;
+  data: DailyTargetPoint[];
 }
 
 // Custom tooltip with proper typing
 interface CustomTooltipProps {
   active?: boolean;
   payload?: Array<{
-    value: number;
-    payload: {
-      date: string;
-      completions: number;
-    };
+    value: number | null;
+    payload: DailyTargetPoint;
   }>;
 }
 
@@ -36,6 +31,7 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
   const tooltipBorder = isDark ? "#374151" : "#e5e7eb";
 
   if (active && payload && payload.length) {
+    const point = payload[0].payload;
     return (
       <div
         className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg shadow-lg border max-w-45"
@@ -45,11 +41,22 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
         }}
       >
         <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-gray-100">
-          {payload[0].payload.date}
+          {point.date}
         </p>
-        <p className="text-xs sm:text-sm text-primary-500 font-bold">
-          {payload[0].value} completions
-        </p>
+        {point.rate === null ? (
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+            No habits yet
+          </p>
+        ) : (
+          <>
+            <p className="text-xs sm:text-sm text-primary-600 dark:text-primary-400 font-bold">
+              {point.rate}% of daily targets
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              {point.done} of {point.expected} check-ins
+            </p>
+          </>
+        )}
       </div>
     );
   }
@@ -73,13 +80,14 @@ function useChartDimensions() {
     height: isMobile ? 220 : isTablet ? 260 : 300,
     fontSize: isMobile ? 10 : 12,
     margin: isMobile
-      ? { top: 5, right: 5, left: -25, bottom: 5 }
-      : { top: 5, right: 10, left: -20, bottom: 5 },
+      ? { top: 5, right: 5, left: -10, bottom: 5 }
+      : { top: 5, right: 10, left: -5, bottom: 5 },
     minTickGap: isMobile ? 50 : 30,
     dotRadius: isMobile ? 2 : 4,
     activeDotRadius: isMobile ? 4 : 6,
     strokeWidth: isMobile ? 1.5 : 2,
-    yAxisWidth: isMobile ? 25 : 35,
+    // Wide enough for "100%" labels
+    yAxisWidth: isMobile ? 36 : 44,
   };
 }
 
@@ -111,11 +119,14 @@ export function CompletionTrendChart({ data }: CompletionTrendChartProps) {
             tickLine={false}
             axisLine={false}
             width={chart.yAxisWidth}
+            domain={[0, 100]}
+            ticks={[0, 25, 50, 75, 100]}
+            tickFormatter={(value: number) => `${value}%`}
           />
           <Tooltip content={<CustomTooltip />} />
           <Line
             type="monotone"
-            dataKey="completions"
+            dataKey="rate"
             stroke="#10b981"
             strokeWidth={chart.strokeWidth}
             dot={{ fill: "#10b981", r: chart.dotRadius }}
