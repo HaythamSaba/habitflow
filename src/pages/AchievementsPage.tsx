@@ -123,7 +123,7 @@ export function AchievementsPage() {
               </p>
             </div>
             {/* RESPONSIVE: Smaller percentage on mobile */}
-            <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary shrink-0">
+            <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary-700 dark:text-primary-400 shrink-0">
               {completionPercentage}%
             </div>
           </div>

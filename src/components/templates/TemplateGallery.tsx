@@ -51,7 +51,7 @@ export function TemplateGallery({
           }`}
         >
           All
-          <span className="ml-1 sm:ml-2 text-[10px] sm:text-xs opacity-75">
+          <span className="ml-1 sm:ml-2 text-xs opacity-75">
             ({HABIT_TEMPLATES.length})
           </span>
         </button>
@@ -72,7 +72,7 @@ export function TemplateGallery({
               }`}
             >
               {category}
-              <span className="ml-1 sm:ml-2 text-[10px] sm:text-xs opacity-75">
+              <span className="ml-1 sm:ml-2 text-xs opacity-75">
                 ({count})
               </span>
             </button>
@@ -121,7 +121,7 @@ export function TemplateGallery({
               setSearchQuery("");
               setSelectedCategory(null);
             }}
-            className="text-primary-500 hover:text-primary-600 font-medium text-sm sm:text-base min-h-11"
+            className="text-primary-700 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium text-sm sm:text-base min-h-11"
           >
             Clear filters
           </button>

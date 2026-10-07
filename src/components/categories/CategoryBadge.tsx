@@ -7,7 +7,7 @@ interface CategoryBadgeProps {
 
 export function CategoryBadge({ category, size = "sm" }: CategoryBadgeProps) {
   const sizeClasses = {
-    sm: "text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5",
+    sm: "text-xs px-1.5 sm:px-2 py-0.5",
     md: "text-xs sm:text-sm px-2 sm:px-3 py-0.5 sm:py-1",
   };
 

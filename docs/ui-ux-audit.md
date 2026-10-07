@@ -32,7 +32,7 @@ Mark items as they are fixed so work can resume in a new session.
 | M7 | Dashboard "today" numbers contradict each other | S | Done |
 | M8 | Inconsistent loading / error / success states | M | Partly done (atomic points needs a DB change, pending decision) |
 | M9 | `Input` breaks email fields on mobile | S | Done |
-| M10 | Contrast failures | S | Open |
+| M10 | Contrast failures | S | Partly done (primary button white-on-green 2.5:1 pending brand decision) |
 | M11 | Links that reload the whole app | S | Done |
 | M12 | Single 1.49 MB JS bundle | S–M | Open |
 | L1 | Code polish a reviewer will notice | S | Open |

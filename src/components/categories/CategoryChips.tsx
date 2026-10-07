@@ -26,7 +26,7 @@ export function CategoryChips({
         <span>All</span>
         {habitCounts.all !== undefined && (
           <span
-            className={`text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full ${
+            className={`text-xs px-1.5 sm:px-2 py-0.5 rounded-full ${
               selectedCategoryId === null
                 ? "bg-white/20"
                 : "bg-gray-200 dark:bg-gray-600"
@@ -68,7 +68,7 @@ export function CategoryChips({
           <span>{category.name}</span>
           {habitCounts[category.id] !== undefined && (
             <span
-              className={`text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded-full ${
+              className={`text-xs px-1 sm:px-1.5 py-0.5 rounded-full ${
                 selectedCategoryId === category.id
                   ? "bg-white/20"
                   : "bg-gray-200 dark:bg-gray-600"

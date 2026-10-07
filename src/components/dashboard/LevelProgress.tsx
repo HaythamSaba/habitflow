@@ -19,21 +19,23 @@ export default function LevelProgress() {
             <h3 className="text-xs sm:text-sm font-semibold text-gray-900 truncate">
               Level {currentLevel} - {levelData.label}
             </h3>
-            <p className="text-[10px] sm:text-xs text-gray-100">
+            {/* gray-900 on primary-500 ≈ 7:1 (light gray text was ≈ 2.3:1) */}
+            <p className="text-xs text-gray-900">
               {isMaxLevel
                 ? "Max level reached!"
                 : `${pointsToNext} pts to Level ${currentLevel + 1}`}
             </p>
           </div>
         </div>
-        <div className="text-left sm:text-right shrink-0">
-          <p
-            className="text-xl sm:text-2xl font-bold"
-            style={{ color: levelData.color }}
-          >
+        {/* Neutral chip: level colors (yellow, blue…) were unreadable on green.
+            The level color stays as an accent stripe. */}
+        <div
+          className="self-start sm:self-auto shrink-0 rounded-xl bg-white px-3 py-1.5 text-center "
+        >
+          <p className="text-xl sm:text-2xl font-bold text-gray-900 leading-tight">
             {totalPoints}
           </p>
-          <p className="text-[10px] sm:text-xs text-gray-100">Total Points</p>
+          <p className="text-xs text-gray-800">Total Points</p>
         </div>
       </div>
 

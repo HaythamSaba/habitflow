@@ -146,7 +146,7 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
             {/* Completion counter badge */}
             {habit.target_count > 1 && (
               <span
-                className={`text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-semibold transition-colors shrink-0 ${
+                className={`text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-semibold transition-colors shrink-0 ${
                   isFullyCompleted
                     ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
                     : isPartiallyCompleted
@@ -159,7 +159,7 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
             )}
 
             {/* Frequency badge */}
-            <span className="text-[10px] sm:text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded capitalize shrink-0">
+            <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded capitalize shrink-0">
               {habit.frequency}
             </span>
 
@@ -184,7 +184,7 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
                   {/* Current Streak */}
                   {currentStreak > 0 && (
                     <span
-                      className={`text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-semibold flex items-center gap-0.5 sm:gap-1 transition-all duration-300 animate-fadeIn ${getStreakColor(currentStreak)}`}
+                      className={`text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-semibold flex items-center gap-0.5 sm:gap-1 transition-all duration-300 animate-fadeIn ${getStreakColor(currentStreak)}`}
                       title={`Current ${currentStreak} day streak`}
                     >
                       <span>{isNewRecord ? "🎉" : "🔥"}</span>
@@ -195,7 +195,7 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
                   {/* Longest Streak */}
                   {longestStreak > currentStreak && (
                     <span
-                      className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-semibold flex items-center gap-0.5 sm:gap-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border border-purple-300 dark:border-purple-700 transition-all duration-300 animate-fadeIn"
+                      className="text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-semibold flex items-center gap-0.5 sm:gap-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border border-purple-300 dark:border-purple-700 transition-all duration-300 animate-fadeIn"
                       title={`Personal best streak: ${longestStreak} days`}
                     >
                       <span>🏆</span>

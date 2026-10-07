@@ -24,7 +24,7 @@ export function RecentAchievementsSection({
         </div>
         <Link
           to="/achievements"
-          className="text-sm font-medium text-primary hover:underline flex items-center gap-1 min-h-11 shrink-0"
+          className="text-sm font-medium text-primary-700 dark:text-primary-400 hover:underline flex items-center gap-1 min-h-11 shrink-0"
         >
           View All
           <svg

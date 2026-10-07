@@ -20,7 +20,9 @@ export default function PageHeader({
       <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1 md:mb-2">
         {title}{" "}
         {styledSubtitle && (
-          <span className="text-primary-500">{styledSubtitle}</span>
+          <span className="text-primary-700 dark:text-primary-400">
+            {styledSubtitle}
+          </span>
         )}
         {emoji && <span>{emoji}</span>}
       </h1>

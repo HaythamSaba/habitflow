@@ -33,11 +33,10 @@ export function AchievementCard({
 
   return (
     <div
-      // RESPONSIVE: Reduced padding on mobile (p-3 sm:p-4) → desktop (lg:p-6)
       className={`relative rounded-xl p-3 sm:p-4 lg:p-6 border-2 transition-all duration-300 ${
         unlocked
           ? `${rarityColor} shadow-md hover:shadow-lg hover:scale-105`
-          : "border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-950 opacity-60"
+          : "border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-950"
       }`}
     >
       {/* Locked overlay */}
@@ -62,7 +61,7 @@ export function AchievementCard({
       {/* RESPONSIVE: Smaller text on mobile, truncate if too long */}
       <h3
         className={`text-sm sm:text-base lg:text-lg font-bold text-center mb-1 sm:mb-2 line-clamp-2 ${
-          unlocked ? "text-gray-900 dark:text-gray-100" : "text-gray-500 dark:text-gray-300"
+          unlocked ? "text-gray-900 dark:text-gray-100" : "text-gray-700 dark:text-gray-300"
         }`}
       >
         {achievement.name}
@@ -72,7 +71,9 @@ export function AchievementCard({
       {/* RESPONSIVE: Smaller text, line-clamp-2 to prevent overflow on small cards */}
       <p
         className={`text-xs sm:text-sm text-center mb-2 sm:mb-3 lg:mb-4 line-clamp-2 ${
-          unlocked ? "text-gray-600 dark:text-gray-400" : "text-gray-400"
+          unlocked
+            ? "text-gray-600 dark:text-gray-200"
+            : "text-gray-600 dark:text-gray-400"
         }`}
       >
         {achievement.description}
@@ -81,7 +82,7 @@ export function AchievementCard({
       {/* Progress bar (only for locked) */}
       {!unlocked && progress > 0 && (
         <div className="mb-2 sm:mb-3">
-          <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+          <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mb-1">
             <span>Progress</span>
             <span>{progress}%</span>
           </div>
@@ -99,7 +100,9 @@ export function AchievementCard({
         <span className="text-yellow-500">⭐</span>
         <span
           className={`text-xs sm:text-sm font-semibold ${
-            unlocked ? "text-gray-700" : "text-gray-400"
+            unlocked
+              ? "text-gray-700 dark:text-gray-200"
+              : "text-gray-600 dark:text-gray-400"
           }`}
         >
           +{achievement.points_reward} pts
@@ -110,13 +113,13 @@ export function AchievementCard({
       {/* RESPONSIVE: Smaller badge on mobile, positioned tighter */}
       <div className="absolute top-2 left-2 sm:top-3 sm:left-3">
         <span
-          className={`text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-semibold ${
-            achievement.rarity === "common" && "bg-gray-200 text-gray-700 dark:text-gray-400 dark:bg-gray-700"
-          } ${achievement.rarity === "rare" && "bg-blue-200 text-blue-700 dark:text-blue-100 dark:bg-blue-500"} ${
-            achievement.rarity === "epic" && "bg-purple-200 text-purple-700 dark:text-purple-100 dark:bg-purple-500"
+          className={`text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-semibold ${
+            achievement.rarity === "common" && "bg-gray-200 text-gray-700 dark:text-gray-200 dark:bg-gray-700"
+          } ${achievement.rarity === "rare" && "bg-blue-200 text-blue-700 dark:text-blue-100 dark:bg-blue-800"} ${
+            achievement.rarity === "epic" && "bg-purple-200 text-purple-700 dark:text-purple-100 dark:bg-purple-800"
           } ${
             achievement.rarity === "legendary" &&
-            "bg-orange-200 text-orange-700 dark:text-orange-100 dark:bg-orange-500"
+            "bg-orange-200 text-orange-800 dark:text-orange-100 dark:bg-orange-800"
           }`}
         >
           {achievement.rarity}

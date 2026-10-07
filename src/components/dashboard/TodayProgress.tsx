@@ -56,7 +56,7 @@ export function TodayProgress() {
           </span>{" "}
           completed
         </span>
-        <span className="font-bold text-primary shrink-0 ml-2">
+        <span className="font-bold text-primary-700 dark:text-primary-400 shrink-0 ml-2">
           {percentage}%
         </span>
       </div>

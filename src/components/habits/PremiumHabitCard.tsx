@@ -248,14 +248,14 @@ export function PremiumHabitCard({
             <div className="bg-linear-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-lg sm:rounded-xl p-2 sm:p-3 border border-orange-200 dark:border-orange-800">
               <div className="flex items-center gap-1 sm:gap-2 mb-0.5 sm:mb-1">
                 <Flame className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500 shrink-0" />
-                <span className="text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400">
+                <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
                   Streak
                 </span>
               </div>
               <p className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 dark:text-gray-100">
                 {currentStreak}
               </p>
-              <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 days
               </p>
             </div>
@@ -263,14 +263,14 @@ export function PremiumHabitCard({
             <div className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-lg sm:rounded-xl p-2 sm:p-3 border border-blue-200 dark:border-blue-800">
               <div className="flex items-center gap-1 sm:gap-2 mb-0.5 sm:mb-1">
                 <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500 shrink-0" />
-                <span className="text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400">
+                <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
                   Target
                 </span>
               </div>
               <p className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 dark:text-gray-100">
                 {habit.target_count}x
               </p>
-              <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 capitalize">
+              <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">
                 {habit.frequency}
               </p>
             </div>
@@ -284,7 +284,7 @@ export function PremiumHabitCard({
               <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4" />
               Last 7 days
             </span>
-            <span className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">
+            <span className="text-xs text-gray-500 dark:text-gray-400">
               {last7Days.reduce((a, b) => a + b, 0)} completions
             </span>
           </div>
@@ -316,12 +316,12 @@ export function PremiumHabitCard({
             {category ? (
               <CategoryBadge category={category} size="sm" />
             ) : (
-              <span className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">
+              <span className="text-xs text-gray-500 dark:text-gray-400">
                 No category
               </span>
             )}
           </div>
-          <span className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">
+          <span className="text-xs text-gray-500 dark:text-gray-400">
             Since {format(new Date(habit.created_at), "MMM yyyy")}
           </span>
         </div>

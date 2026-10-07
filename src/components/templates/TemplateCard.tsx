@@ -21,7 +21,7 @@ export function TemplateCard({ template, onUseTemplate }: TemplateCardProps) {
     <div className="group relative bg-white dark:bg-gray-950 rounded-xl border-2 border-gray-200 dark:border-gray-700 p-3 sm:p-4 lg:p-6 hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer">
       <div className="absolute top-2 right-2 sm:top-4 sm:right-4">
         <span
-          className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-medium"
+          className="text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-medium"
           style={{
             backgroundColor: `${template.color}15`,
             color: template.color,
@@ -54,7 +54,7 @@ export function TemplateCard({ template, onUseTemplate }: TemplateCardProps) {
       </p>
 
       <div className="flex items-center gap-2 mb-3 sm:mb-4">
-        <span className="text-[10px] sm:text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full font-medium">
+        <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full font-medium">
           {getFrequencyText()}
         </span>
       </div>

@@ -95,7 +95,7 @@ export default function HabitsContainer({
       {habits && habits.length > 0 ? (
         <div>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
-            <h3 className="text-lg sm:text-xl font-bold text-primary-500">
+            <h3 className="text-lg sm:text-xl font-bold text-primary-700 dark:text-primary-400">
               Today's Habits
             </h3>
             <div className="flex gap-2 sm:gap-3">

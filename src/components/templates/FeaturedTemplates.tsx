@@ -48,7 +48,7 @@ export function FeaturedTemplates() {
               <h4 className="font-semibold text-xs sm:text-sm">
                 {template.name}
               </h4>
-              <p className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 truncate">
+              <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
                 {template.description}
               </p>
             </div>

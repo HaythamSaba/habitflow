@@ -163,7 +163,7 @@ export default function SideBar({
                   >
                     {item.label}
                     {item.badge && (
-                      <span className="ml-2 px-1.5 py-0.5 bg-purple-500 rounded text-[10px]">
+                      <span className="ml-2 px-1.5 py-0.5 bg-purple-500 rounded text-xs">
                         {item.badge}
                       </span>
                     )}

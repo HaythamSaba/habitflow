@@ -78,7 +78,7 @@ export function ArchiveSection({
           {archivedHabits.map((habit) => (
             <div key={habit.id} className="relative">
               {/* "Archived" Badge */}
-              <div className="absolute -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 z-10 bg-gray-600 dark:bg-gray-500 text-white text-[10px] sm:text-xs font-bold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-lg">
+              <div className="absolute -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 z-10 bg-gray-600 dark:bg-gray-500 text-white text-xs font-bold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-lg">
                 Archived
               </div>
 
