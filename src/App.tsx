@@ -21,6 +21,7 @@ import { NotFoundPage } from "./pages/NotFoundPage";
 import { EmailConfirmationPage } from "./pages/EmailConfirmationPage";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import { ConfirmDialogHost } from "@/components/ui/ConfirmDialogHost";
+import { CelebrationHost } from "@/components/ui/CelebrationHost";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -73,6 +74,9 @@ function AppContent() {
 
       {/* App-wide confirmation dialog, opened via confirmDialog() */}
       <ConfirmDialogHost />
+
+      {/* Confetti burst, fired via celebrate() (e.g. on a perfect day) */}
+      <CelebrationHost />
 
       {/* Routes */}
       <Routes>

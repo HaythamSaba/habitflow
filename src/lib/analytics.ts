@@ -178,6 +178,25 @@ export function getTodayProgress(
   return { completed, total, percentage: toPercent(completed, total) };
 }
 
+/**
+ * True only for the change that completes the day: every habit is done now
+ * and wasn't before. Undoing and redoing the last check-in celebrates again;
+ * further check-ins on an already-perfect day don't.
+ */
+export function isNewPerfectDay(
+  habits: Pick<Habit, "id" | "target_count">[],
+  previousToday: Pick<Completion, "habit_id">[],
+  nextToday: Pick<Completion, "habit_id">[],
+): boolean {
+  const before = getTodayProgress(habits, previousToday);
+  const after = getTodayProgress(habits, nextToday);
+  return (
+    after.total > 0 &&
+    after.completed === after.total &&
+    before.completed < before.total
+  );
+}
+
 /** Number of check-ins made in the window (any habit). */
 export function countCompletionsInWindow(
   completions: RateCompletion[],

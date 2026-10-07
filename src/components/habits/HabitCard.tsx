@@ -1,8 +1,10 @@
 import { Habit } from "@/types";
-import { Circle, CircleCheck, Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { lightenColor } from "@/lib/utils";
+import { POINTS_PER_COMPLETION } from "@/lib/points";
 import { useToggleCompletion } from "@/hooks/useToggleCompletion";
+import { CompletionToggle } from "./CompletionToggle";
 import { useCompletions } from "@/hooks/useCompletions";
 import {
   Dumbbell,
@@ -48,9 +50,8 @@ const HABIT_ICONS = [
 export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
   const { theme } = useTheme();
   const { categories } = useCategories();
-  const { isHabitCompletedToday, getHabitCompletionCount } = useCompletions();
+  const { getHabitCompletionCount, getHabitCompletionIds } = useCompletions();
   const toggleCompletion = useToggleCompletion();
-  const isCompleted = isHabitCompletedToday(habit.id);
 
   const completionCount = getHabitCompletionCount(habit.id);
   const isFullyCompleted = completionCount >= habit.target_count;
@@ -59,12 +60,19 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
   const isLoading = toggleCompletion.isPending;
   const habitCategory = categories.find((cat) => cat.id === habit.category_id);
 
+  // Below the target a tap adds a check-in; at the target it removes the
+  // newest one (an Undo toast follows either way). Returns whether it acted.
   const handleToggle = () => {
-    if (isLoading) return;
-    toggleCompletion.mutate({
-      habitId: habit.id,
-      targetCount: habit.target_count,
-    });
+    if (isLoading) return false;
+    if (!isFullyCompleted) {
+      toggleCompletion.mutate({ habit, action: "add" });
+      return true;
+    }
+    // Today's completions are ordered newest first
+    const [newestId] = getHabitCompletionIds(habit.id);
+    if (!newestId) return false;
+    toggleCompletion.mutate({ habit, action: "remove", completionId: newestId });
+    return true;
   };
 
   const {
@@ -103,28 +111,15 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
       }}
     >
       <div className="flex items-start sm:items-center justify-between gap-2 sm:gap-4">
-        {/* Checkbox */}
-        <button
-          type="button"
-          onClick={handleToggle}
-          disabled={isLoading}
-          role="checkbox"
-          aria-checked={
-            isFullyCompleted ? true : isPartiallyCompleted ? "mixed" : false
-          }
-          aria-label={
-            habit.target_count > 1
-              ? `${habit.name}, ${completionCount} of ${habit.target_count} done today`
-              : habit.name
-          }
-          className="shrink-0 min-w-11 min-h-11 flex items-center justify-center transition-transform hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed -ml-2 sm:ml-0"
-        >
-          {isCompleted ? (
-            <CircleCheck className="w-6 h-6" style={{ color: habit.color }} />
-          ) : (
-            <Circle className="w-6 h-6 text-gray-400 dark:text-gray-500" />
-          )}
-        </button>
+        {/* Check-off control (ring for multi-count habits) */}
+        <CompletionToggle
+          habitName={habit.name}
+          color={habit.color}
+          count={completionCount}
+          target={habit.target_count}
+          points={POINTS_PER_COMPLETION}
+          onToggle={handleToggle}
+        />
 
         {/* Content */}
         <div className="flex-1 min-w-0">
@@ -143,7 +138,7 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
               )}
             </div>
             <h3
-              className={`font-bold text-base sm:text-lg text-gray-900 dark:text-gray-100 truncate max-w-30 sm:max-w-none ${isCompleted ? "line-through opacity-60" : ""}`}
+              className={`font-bold text-base sm:text-lg text-gray-900 dark:text-gray-100 truncate max-w-30 sm:max-w-none ${isFullyCompleted ? "line-through opacity-60" : ""}`}
             >
               {habit.name}
             </h3>

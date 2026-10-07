@@ -5,6 +5,7 @@ import {
   getDailyTargetTrend,
   getHabitRate,
   getTodayProgress,
+  isNewPerfectDay,
 } from "./analytics";
 
 // Dates are built in LOCAL time, so these tests hold in any time zone
@@ -132,6 +133,36 @@ describe("getTodayProgress", () => {
       total: 0,
       percentage: 0,
     });
+  });
+});
+
+describe("isNewPerfectDay", () => {
+  const habits = [
+    { id: "read", target_count: 1 },
+    { id: "water", target_count: 2 },
+  ];
+  const done = (habitId: string, times = 1) =>
+    Array.from({ length: times }, () => ({ habit_id: habitId }));
+
+  it("is true for the check-in that completes the last habit", () => {
+    const before = [...done("read"), ...done("water")];
+    const after = [...before, ...done("water")];
+    expect(isNewPerfectDay(habits, before, after)).toBe(true);
+  });
+
+  it("is false while some habit is still short of its target", () => {
+    expect(isNewPerfectDay(habits, [], [...done("read"), ...done("water")])).toBe(false);
+  });
+
+  it("is false for extra check-ins on an already-perfect day", () => {
+    const perfect = [...done("read"), ...done("water", 2)];
+    expect(isNewPerfectDay(habits, perfect, [...perfect, ...done("read")])).toBe(false);
+  });
+
+  it("is false when removing a check-in, and with no habits", () => {
+    const perfect = [...done("read"), ...done("water", 2)];
+    expect(isNewPerfectDay(habits, perfect, done("read"))).toBe(false);
+    expect(isNewPerfectDay([], [], [])).toBe(false);
   });
 });
 
