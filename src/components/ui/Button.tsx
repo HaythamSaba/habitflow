@@ -35,11 +35,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       primary: "btn-primary bg-primary text-white hover:bg-emerald-600",
       secondary:
         "btn-secondary bg-secondary text-gray-900 hover:bg-yellow-400",
-      ghost: "btn-ghost bg-transparent text-gray-700 hover:bg-gray-100",
+      // Dark variants must live here: these utilities beat the dark: rules in
+      // the .btn-* component classes, which left dark-gray text on dark bgs
+      ghost:
+        "btn-ghost bg-transparent text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800",
       danger:
         "btn-danger bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600",
       outline:
-        "bg-transparent border-2 border-gray-300 text-gray-700 hover:bg-gray-50",
+        "bg-transparent border-2 border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800",
     };
 
     const sizes = {

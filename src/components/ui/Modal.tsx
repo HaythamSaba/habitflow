@@ -88,7 +88,7 @@ export function Modal({
             <div className="w-12 h-1 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mt-2 sm:hidden" />
 
             {(title || showCloseButton) && (
-              <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+              <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-800">
                 {title && (
                   <h2
                     id={titleId}
@@ -102,7 +102,7 @@ export function Modal({
                   <button
                     type="button"
                     onClick={onClose}
-                    className="ml-auto p-1 min-w-11 min-h-11 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-200 rounded-lg transition-colors"
+                    className="ml-auto p-1 min-w-11 min-h-11 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-200 dark:hover:text-gray-200 dark:hover:bg-gray-800 rounded-lg transition-colors"
                     aria-label="Close modal"
                   >
                     <X className="w-6 h-6 sm:w-7 sm:h-7" />

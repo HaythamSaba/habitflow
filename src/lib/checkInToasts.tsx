@@ -42,7 +42,7 @@ export function showCheckInToast({
               toast.dismiss(t.id);
               onUndo();
             }}
-            className="shrink-0 rounded-lg px-2 py-1 text-sm font-semibold text-primary-700 hover:bg-primary-50"
+            className="shrink-0 rounded-lg px-2 py-1 text-sm font-semibold text-primary-700 hover:bg-primary-50 dark:text-primary-300 dark:hover:bg-primary-900/40"
           >
             Undo
           </button>

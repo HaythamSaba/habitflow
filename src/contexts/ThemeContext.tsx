@@ -19,25 +19,46 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
-  // Load theme from localStorage or default to 'light'
-  const [theme, setTheme] = useState<Theme>(() => {
-    const savedTheme = localStorage.getItem("theme");
-    return (savedTheme as Theme) || "light";
-  });
+const DARK_QUERY = "(prefers-color-scheme: dark)";
 
-  // Apply theme to HTML element
+function readSavedTheme(): Theme | null {
+  try {
+    const saved = localStorage.getItem("theme");
+    return saved === "dark" || saved === "light" ? saved : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Saved choice, else the OS preference. Keep in sync with index.html. */
+function getInitialTheme(): Theme {
+  return (
+    readSavedTheme() ??
+    (window.matchMedia(DARK_QUERY).matches ? "dark" : "light")
+  );
+}
+
+export function ThemeProvider({ children }: { children: ReactNode }) {
+  // index.html already applied this before first paint, so no light flash
+  const [theme, setTheme] = useState<Theme>(getInitialTheme);
+
+  // Apply theme to the HTML element; color-scheme makes native controls
+  // (scrollbars, selects, date inputs) match
   useEffect(() => {
     const root = document.documentElement;
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-
-    // Save to localStorage
-    localStorage.setItem("theme", theme);
+    root.classList.toggle("dark", theme === "dark");
+    root.style.colorScheme = theme;
   }, [theme]);
+
+  // Until the user picks a theme, follow OS changes (e.g. auto dark at night)
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(DARK_QUERY);
+    const handleChange = (event: MediaQueryListEvent) => {
+      if (!readSavedTheme()) setTheme(event.matches ? "dark" : "light");
+    };
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
 
   // Fade colors only while switching themes (see .theme-transition in
   // index.css); the rest of the time color changes are instant.
@@ -54,7 +75,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       root.classList.remove("theme-transition");
     }, THEME_TRANSITION_MS);
 
-    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+    const nextTheme: Theme = theme === "light" ? "dark" : "light";
+    // Saved only on an explicit choice, so users who never toggle keep
+    // following their OS setting
+    try {
+      localStorage.setItem("theme", nextTheme);
+    } catch {
+      // Storage unavailable (e.g. private mode): the toggle still works this session
+    }
+    setTheme(nextTheme);
   };
 
   return (

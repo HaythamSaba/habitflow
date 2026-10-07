@@ -14,7 +14,7 @@ import { SettingsPage } from "./pages/SettingsPage";
 
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
 import { AchievementsPage } from "./pages/AchievementsPage";
-import { ThemeProvider } from "./contexts/ThemeContext";
+import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import { TemplatesPage } from "./pages/TemplatesPage";
 import { AboutPage } from "./pages/AboutPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
@@ -38,6 +38,10 @@ function AppContent() {
   // Check for newly unlocked achievements on every page, not just /achievements
   useCheckAchievements();
 
+  // Toasts are styled inline by react-hot-toast, so follow the theme here
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   return (
     <>
       {/* Toast Notifications */}
@@ -46,23 +50,25 @@ function AppContent() {
         toastOptions={{
           duration: 3000,
           style: {
-            background: "#fff",
-            color: "#111827",
-            boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
-            border: "1px solid #e5e7eb",
+            background: isDark ? "#1f2937" : "#fff", // gray-800 / white
+            color: isDark ? "#f3f4f6" : "#111827", // gray-100 / gray-900
+            boxShadow: isDark
+              ? "0 10px 15px -3px rgba(0, 0, 0, 0.5)"
+              : "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+            border: `1px solid ${isDark ? "#374151" : "#e5e7eb"}`, // gray-700 / gray-200
             padding: "16px",
             borderRadius: "12px",
           },
           success: {
             iconTheme: {
               primary: "#10B981",
-              secondary: "#fff",
+              secondary: isDark ? "#1f2937" : "#fff",
             },
           },
           error: {
             iconTheme: {
               primary: "#ef4444",
-              secondary: "#fff",
+              secondary: isDark ? "#1f2937" : "#fff",
             },
           },
           custom: {

@@ -11,6 +11,25 @@
     href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Sora:wght@100..800&display=swap"
     rel="stylesheet">
   <title>Habit Flow - Build Better Habits</title>
+  <!--
+    Apply the theme before first paint so dark-mode users don't see a light
+    flash while the app loads. Must match getInitialTheme() in
+    src/contexts/ThemeContext.tsx: saved choice, else the OS preference.
+  -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("theme");
+        var dark =
+          saved === "dark" ||
+          (saved !== "light" &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches);
+        var root = document.documentElement;
+        if (dark) root.classList.add("dark");
+        root.style.colorScheme = dark ? "dark" : "light";
+      } catch (e) {}
+    })();
+  </script>
 </head>
 
 <body>
