@@ -1,10 +1,16 @@
-import { useState, useEffect, startTransition } from "react";
+import { useState, useEffect, useId, startTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { useCreateHabit } from "@/hooks/useCreateHabit";
-import { habitSchema, HabitFormData } from "@/constants/habits";
+import {
+  habitSchema,
+  HabitFormData,
+  HABIT_FORM_DEFAULTS,
+  DEFAULT_HABIT_COLOR,
+  DEFAULT_HABIT_ICON,
+} from "@/constants/habits";
 import { HabitForm } from "./HabitForm";
 
 interface CreateHabitModalProps {
@@ -20,24 +26,25 @@ export function CreateHabitModal({
   prefilledData,
   onSuccess,
 }: CreateHabitModalProps) {
-  const [selectedIcon, setSelectedIcon] = useState<string>("");
-  const [selectedColor, setSelectedColor] = useState<string>("");
+  // Icon and color start filled in, so typing a name and pressing Enter is enough
+  const [selectedIcon, setSelectedIcon] = useState(DEFAULT_HABIT_ICON);
+  const [selectedColor, setSelectedColor] = useState(DEFAULT_HABIT_COLOR);
   const [targetCount, setTargetCount] = useState(1);
+  const formId = useId();
 
   const createHabit = useCreateHabit();
 
   const {
     register,
+    control,
     handleSubmit,
     setValue,
+    setFocus,
     reset,
     formState: { errors },
   } = useForm<HabitFormData>({
     resolver: zodResolver(habitSchema),
-    defaultValues: {
-      frequency: "daily",
-      target_count: 1,
-    },
+    defaultValues: HABIT_FORM_DEFAULTS,
   });
 
   const handleFormSubmit = async (data: HabitFormData) => {
@@ -51,9 +58,9 @@ export function CreateHabitModal({
   };
 
   const handleClose = () => {
-    reset();
-    setSelectedIcon("");
-    setSelectedColor("");
+    reset(HABIT_FORM_DEFAULTS);
+    setSelectedIcon(DEFAULT_HABIT_ICON);
+    setSelectedColor(DEFAULT_HABIT_COLOR);
     setTargetCount(1);
     onClose();
   };
@@ -61,13 +68,18 @@ export function CreateHabitModal({
   useEffect(() => {
     if (prefilledData && isOpen) {
       startTransition(() => {
-        reset(prefilledData as HabitFormData);
-        setSelectedIcon(prefilledData.icon || "");
-        setSelectedColor(prefilledData.color || "");
+        reset({ ...HABIT_FORM_DEFAULTS, ...prefilledData } as HabitFormData);
+        setSelectedIcon(prefilledData.icon || DEFAULT_HABIT_ICON);
+        setSelectedColor(prefilledData.color || DEFAULT_HABIT_COLOR);
         setTargetCount(prefilledData.target_count || 1);
       });
     }
   }, [isOpen, prefilledData, reset]);
+
+  // Start typing right away. Runs after Modal's focus trap moves focus in.
+  useEffect(() => {
+    if (isOpen) setFocus("name");
+  }, [isOpen, setFocus]);
 
   return (
     <Modal
@@ -85,9 +97,11 @@ export function CreateHabitModal({
           >
             Cancel
           </Button>
+          {/* Outside the <form> (footer), so it's linked with form= */}
           <Button
+            type="submit"
+            form={formId}
             variant="primary"
-            onClick={handleSubmit(handleFormSubmit)}
             isLoading={createHabit.isPending}
             className="min-h-11 w-full sm:w-auto"
           >
@@ -96,17 +110,25 @@ export function CreateHabitModal({
         </div>
       }
     >
-      <HabitForm
-        register={register}
-        errors={errors}
-        setValue={setValue}
-        selectedIcon={selectedIcon}
-        selectedColor={selectedColor}
-        targetCount={targetCount}
-        onIconSelect={setSelectedIcon}
-        onColorSelect={setSelectedColor}
-        onTargetChange={setTargetCount}
-      />
+      {/* A real form: Enter in the name field creates the habit */}
+      <form
+        id={formId}
+        noValidate
+        onSubmit={handleSubmit(handleFormSubmit)}
+      >
+        <HabitForm
+          register={register}
+          control={control}
+          errors={errors}
+          setValue={setValue}
+          selectedIcon={selectedIcon}
+          selectedColor={selectedColor}
+          targetCount={targetCount}
+          onIconSelect={setSelectedIcon}
+          onColorSelect={setSelectedColor}
+          onTargetChange={setTargetCount}
+        />
+      </form>
     </Modal>
   );
 }

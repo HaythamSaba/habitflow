@@ -27,6 +27,7 @@ export function EditHabitModal({
 
   const {
     register,
+    control,
     handleSubmit,
     setValue,
     reset,
@@ -112,6 +113,9 @@ export function EditHabitModal({
     >
       <HabitForm
         register={register}
+        control={control}
+        // Editing: show every field, nothing to hide behind "More options"
+        showAllOptions
         errors={errors}
         setValue={setValue}
         selectedIcon={selectedIcon}

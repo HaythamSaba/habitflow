@@ -25,7 +25,7 @@ Mark items as they are fixed so work can resume in a new session.
 | H9 | Dark mode unfinished | S–M | Open |
 | M1 | No reduced-motion support | S | Open |
 | M2 | Global 300 ms color transition on every element | S | Open |
-| M3 | Creating a habit takes 4+ taps, no defaults | S–M | Open |
+| M3 | Creating a habit takes 4+ taps, no defaults | S–M | Done (template chips deferred: template icons are emojis, see notes) |
 | M4 | Generic first-run experience | M | Open |
 | M5 | Mobile navigation and sidebar layout shift | M | Open |
 | M6 | Heatmap awkward on phones | S | Open |

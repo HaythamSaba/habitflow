@@ -47,3 +47,16 @@ export const habitSchema = z.object({
 });
 
 export type HabitFormData = z.infer<typeof habitSchema>;
+
+// Starting values for a new habit, so a name alone is enough to create one.
+// Icon and color can still be changed before saving.
+export const DEFAULT_HABIT_ICON = "check";
+export const DEFAULT_HABIT_COLOR = "#10B981"; // HABIT_COLORS[0], emerald (brand)
+
+export const HABIT_FORM_DEFAULTS: Partial<HabitFormData> = {
+  icon: DEFAULT_HABIT_ICON,
+  color: DEFAULT_HABIT_COLOR,
+  frequency: "daily",
+  target_count: 1,
+  category_id: "",
+};
