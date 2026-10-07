@@ -154,7 +154,7 @@ export function DashboardPage() {
         </div>
 
         {/* Progress + Achievement Count */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-8">
           <TodayProgress />
 
           {/* ⭐ Achievement Card - Extracted */}
