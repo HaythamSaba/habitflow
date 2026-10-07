@@ -13,7 +13,7 @@ export default function DashboardHeader({
   onBrowseTemplates,
 }: DashboardHeaderProps) {
   return (
-    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 md:gap-4">
+    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
       <PageHeader
         emoji="👋"
         title={`Welcome back,`}
