@@ -164,6 +164,27 @@ export function DashboardPage() {
           />
         </div>
 
+        {/* Habits + Chart */}
+        <div className="flex flex-col xl:flex-row justify-between items-stretch gap-3 sm:gap-4 lg:gap-6">
+          <div className="card bg-[#fefefe] dark:bg-gray-950 rounded-2xl p-3 sm:p-4 lg:p-6 hover:shadow-lg hover:shadow-primary-100 dark:hover:shadow-primary-900 hover:dark:shadow-lg dark:shadow-gray-900 border border-gray-200 dark:border-gray-700 xl:flex-1">
+            <HabitsContainer filteredHabits={filteredHabits} />
+          </div>
+          <div className="w-full xl:w-1/2">
+            <ChartCard
+              title="This Week"
+              subtitle="Daily targets met by habit, last 7 days"
+            >
+              {weeklyBarChartData.length > 0 ? (
+                <HabitPerformanceChart data={weeklyBarChartData} />
+              ) : (
+                <div className="h-52 md:h-75 flex items-center justify-center text-gray-700 dark:text-gray-300">
+                  <p>No habit data available</p>
+                </div>
+              )}
+            </ChartCard>
+          </div>
+        </div>
+
         {/* ⭐ Recent Achievements - Extracted */}
         <RecentAchievementsSection
           achievements={unlockedAchievements.slice(0, 3)}
@@ -249,27 +270,6 @@ export function DashboardPage() {
             />
           </div>
         )}
-
-        {/* Habits + Chart */}
-        <div className="flex flex-col xl:flex-row justify-between items-stretch gap-3 sm:gap-4 lg:gap-6">
-          <div className="card bg-[#fefefe] dark:bg-gray-950 rounded-2xl p-3 sm:p-4 lg:p-6 hover:shadow-lg hover:shadow-primary-100 dark:hover:shadow-primary-900 hover:dark:shadow-lg dark:shadow-gray-900 border border-gray-200 dark:border-gray-700 xl:flex-1">
-            <HabitsContainer filteredHabits={filteredHabits} />
-          </div>
-          <div className="w-full xl:w-1/2">
-            <ChartCard
-              title="This Week"
-              subtitle="Daily targets met by habit, last 7 days"
-            >
-              {weeklyBarChartData.length > 0 ? (
-                <HabitPerformanceChart data={weeklyBarChartData} />
-              ) : (
-                <div className="h-52 md:h-75 flex items-center justify-center text-gray-700 dark:text-gray-300">
-                  <p>No habit data available</p>
-                </div>
-              )}
-            </ChartCard>
-          </div>
-        </div>
 
         {/* Featured Templates */}
         {habits && habits.length > 0 && <FeaturedTemplates />}
