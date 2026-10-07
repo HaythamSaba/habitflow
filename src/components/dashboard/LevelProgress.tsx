@@ -16,7 +16,7 @@ export default function LevelProgress() {
             {levelData.emoji}
           </span>
           <div className="min-w-0">
-            <h3 className="text-xs sm:text-sm font-semibold text-gray-900 truncate">
+            <h3 className="text-sm sm:text-md lg:text-lg font-semibold text-gray-900 truncate">
               Level {currentLevel} - {levelData.label}
             </h3>
             {/* gray-900 on primary-500 ≈ 7:1 (light gray text was ≈ 2.3:1) */}
