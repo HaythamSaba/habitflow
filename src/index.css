@@ -281,6 +281,32 @@
   }
 }
 
+/*
+ * Respect the OS "reduce motion" setting for CSS animations and transitions
+ * (framer-motion is handled by <MotionConfig reducedMotion="user"> in App).
+ * Durations are near-zero rather than "none" so animations with
+ * fill-mode: forwards (e.g. cards that fade in from opacity 0) still end
+ * visible; delays are reset so staggered items appear at once.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Loading spinners stay: they communicate status, not decoration */
+  .animate-spin {
+    animation-duration: 1s !important;
+    animation-iteration-count: infinite !important;
+  }
+}
+
 .glass-card {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);

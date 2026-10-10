@@ -23,7 +23,7 @@ Mark items as they are fixed so work can resume in a new session.
 | H7 | "Complete All" undermines motivation | S | Done (removed; no demo account yet) |
 | H8 | Enter on "Cancel" in delete confirmation deletes | S–M | Done (Delete now hard-deletes; Archive archives) |
 | H9 | Dark mode unfinished | S–M | Done |
-| M1 | No reduced-motion support | S | Open |
+| M1 | No reduced-motion support | S | Done |
 | M2 | Global 300 ms color transition on every element | S | Done |
 | M3 | Creating a habit takes 4+ taps, no defaults | S–M | Done (template chips deferred: template icons are emojis, see notes) |
 | M4 | Generic first-run experience | M | Open |

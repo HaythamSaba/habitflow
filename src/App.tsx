@@ -15,6 +15,7 @@ import { SettingsPage } from "./pages/SettingsPage";
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
 import { AchievementsPage } from "./pages/AchievementsPage";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
+import { MotionConfig } from "framer-motion";
 import { TemplatesPage } from "./pages/TemplatesPage";
 import { AboutPage } from "./pages/AboutPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
@@ -161,14 +162,18 @@ function AppContent() {
 function App() {
   return (
     <ErrorBoundary fullScreen>
-      <ThemeProvider>
-        <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={false} />
-          <BrowserRouter>
-            <AppContent />
-          </BrowserRouter>
-        </QueryClientProvider>
-      </ThemeProvider>
+      {/* Every framer-motion animation follows the OS "reduce motion" setting:
+          transform/layout animations are skipped, opacity fades remain */}
+      <MotionConfig reducedMotion="user">
+        <ThemeProvider>
+          <QueryClientProvider client={queryClient}>
+            <ReactQueryDevtools initialIsOpen={false} />
+            <BrowserRouter>
+              <AppContent />
+            </BrowserRouter>
+          </QueryClientProvider>
+        </ThemeProvider>
+      </MotionConfig>
     </ErrorBoundary>
   );
 }
