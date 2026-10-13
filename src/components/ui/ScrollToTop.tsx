@@ -42,7 +42,8 @@ export function ScrollToTop({ containerRef }: ScrollToTopProps) {
   return (
     <button
       onClick={scrollToTop}
-      className="fixed bottom-8 right-8 w-12 h-12 bg-primary-600 hover:bg-primary-700 text-white rounded-full shadow-lg transition-all hover:scale-110 z-50 flex items-center justify-center"
+      // Phones: sit above the bottom tab bar
+      className="fixed bottom-20 right-4 sm:right-8 lg:bottom-8 w-12 h-12 bg-primary-600 hover:bg-primary-700 text-white rounded-full shadow-lg transition-all hover:scale-110 z-50 flex items-center justify-center"
       aria-label="Scroll to top"
     >
       {/* Progress ring */}

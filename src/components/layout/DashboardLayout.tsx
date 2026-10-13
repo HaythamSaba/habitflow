@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import SideBar from "./Sidebar";
 import { Footer } from "./Footer";
 import { ScrollToTop } from "../ui/ScrollToTop";
+import { BottomTabBar } from "./BottomTabBar";
 import { ErrorBoundary } from "../ui/ErrorBoundary";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
@@ -62,7 +63,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             focus:outline-none focus-visible:ring-0
             fixed top-0 left-0 z-40 h-full
             transition-transform duration-300 ease-in-out
-            lg:static lg:translate-x-0 lg:transition-none lg:shrink-0
+            lg:relative lg:h-auto lg:w-24 lg:shrink-0 lg:translate-x-0 lg:transition-none
             ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
           `}
         >
@@ -74,7 +75,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           className="
             flex-1 flex flex-col
             overflow-y-auto
-            
+            pb-[calc(3.5rem+env(safe-area-inset-bottom))] lg:pb-0
             bg-linear-to-r from-white to-primary-100
             dark:bg-linear-to-r dark:from-gray-950 dark:to-primary-900
           "
@@ -87,6 +88,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
         <ScrollToTop containerRef={mainRef} />
       </div>
+
+      {/* Phones: thumb-reach navigation; "More" opens the drawer above */}
+      <BottomTabBar
+        onOpenMenu={() => setSidebarOpen(true)}
+        menuOpen={sidebarOpen}
+      />
     </div>
   );
 }
