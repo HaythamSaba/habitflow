@@ -73,7 +73,7 @@ export default function SideBar({
     >
       <nav className="p-4" aria-label="Main navigation">
         <motion.div
-          className={`flex flex-col gap-1`}
+          className="flex flex-col gap-1"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
