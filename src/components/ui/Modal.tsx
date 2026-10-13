@@ -92,8 +92,7 @@ export function Modal({
                 {title && (
                   <h2
                     id={titleId}
-                    className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100"
-                    style={{ fontFamily: 'Sora, sans-serif' }}
+                    className="font-display text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100"
                   >
                     {title}
                   </h2>

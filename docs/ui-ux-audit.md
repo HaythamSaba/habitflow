@@ -36,7 +36,7 @@ Mark items as they are fixed so work can resume in a new session.
 | M11 | Links that reload the whole app | S | Done |
 | M12 | Single 1.49 MB JS bundle | S–M | Open |
 | L1 | Code polish a reviewer will notice | S | Open |
-| L2 | Font setup | S | Open |
+| L2 | Font setup | S | Done |
 | L3 | Achievement toast styling | S | Done |
 | L4 | Navbar details | S | Open |
 | L5 | Copy and emoji | S | Open |

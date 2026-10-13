@@ -33,8 +33,7 @@ export function StatCard({
         </div>
 
         <span
-          className="text-base sm:text-lg lg:text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center "
-          style={{ fontFamily: "Sora, sans-serif" }}
+          className="font-display text-base sm:text-lg lg:text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center"
         >
           {showEmoji && emoji && <span>{emoji}</span>}
           <AnimatedNumber value={value as number} />

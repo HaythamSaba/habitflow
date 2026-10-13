@@ -85,8 +85,7 @@ export default function Navbar({
             <img src="/logo.png" alt="" />
           </div>
           <h1
-            className="text-2xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ease-in-out"
-            style={{ fontFamily: "Sora, sans-serif" }}
+            className="font-display text-2xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ease-in-out"
           >
             HabitFlow
           </h1>
@@ -97,8 +96,7 @@ export default function Navbar({
             <img src="/logo.png" alt="HabitFlow" />
           </div>
           <h1
-            className="text-lg font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ease-in-out"
-            style={{ fontFamily: "Sora, sans-serif" }}
+            className="font-display text-lg font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ease-in-out"
           >
             HabitFlow
           </h1>

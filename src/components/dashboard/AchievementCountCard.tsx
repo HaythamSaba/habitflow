@@ -25,8 +25,7 @@ export function AchievementCountCard({
           <Trophy className="w-6 h-6 text-orange-600 dark:text-orange-400" />
         </div>
         <span
-          className="text-2xl font-bold text-gray-900 dark:text-gray-100"
-          style={{ fontFamily: "Sora, sans-serif" }}
+          className="font-display text-2xl font-bold text-gray-900 dark:text-gray-100"
         >
           {unlocked}/{total}
         </span>
