@@ -4,9 +4,9 @@
 
 <div align="center">
 
-[[LiveDemo] https://habitflow-hs.vercel.app ]
-[[GitHub] https://github.com/HaythamSaba/habitflow ]
-[![LinkedIn] https://www.linkedin.com/in/haytham-saba-401148278/ ]
+[ https://habitflow-hs.vercel.app ]
+[ https://github.com/HaythamSaba/habitflow ]
+[ https://www.linkedin.com/in/haytham-saba-401148278/ ]
 
 </div>
 
