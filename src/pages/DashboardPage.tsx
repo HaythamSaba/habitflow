@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
@@ -16,12 +16,19 @@ import TodayProgress from "@/components/dashboard/TodayProgress";
 import { AchievementCountCard } from "@/components/dashboard/AchievementCountCard";
 import { CategoryChips } from "@/components/categories/CategoryChips";
 import HabitsContainer from "@/components/habits/HabitsContianer";
-import { HabitPerformanceChart } from "@/components/analytics/HabitPerformanceChart";
 import { FeaturedTemplates } from "@/components/templates/FeaturedTemplates";
 import { RecentAchievementsSection } from "@/components/dashboard/RecentAchievementsSection";
 import { StatCard } from "@/components/ui/StatCard";
 import { ChartCard } from "@/components/ui/ChartCard";
 import { getTodayProgress } from "@/lib/analytics";
+import { Skeleton } from "@/components/ui/Skeleton";
+
+// Recharts is large: load the chart separately so today's habits render first
+const HabitPerformanceChart = lazy(() =>
+  import("@/components/analytics/HabitPerformanceChart").then((module) => ({
+    default: module.HabitPerformanceChart,
+  })),
+);
 
 export function DashboardPage() {
   const navigate = useNavigate();
@@ -175,7 +182,11 @@ export function DashboardPage() {
               subtitle="Daily targets met by habit, last 7 days"
             >
               {weeklyBarChartData.length > 0 ? (
-                <HabitPerformanceChart data={weeklyBarChartData} />
+                <Suspense
+                  fallback={<Skeleton className="h-70 md:h-95 lg:h-125 w-full" />}
+                >
+                  <HabitPerformanceChart data={weeklyBarChartData} />
+                </Suspense>
               ) : (
                 <div className="h-52 md:h-75 flex items-center justify-center text-gray-700 dark:text-gray-300">
                   <p>No habit data available</p>

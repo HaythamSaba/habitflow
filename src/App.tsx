@@ -5,24 +5,59 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useCheckAchievements } from "@/hooks/useCheckAchievements";
 import { Toaster } from "react-hot-toast";
-import { LoginPage } from "@/pages/LoginPage";
-import { SignupPage } from "@/pages/SignupPage";
-import { DashboardPage } from "@/pages/DashboardPage";
-import { AnalyticsPage } from "./pages/AnalyticsPage";
-import { HabitsPage } from "./pages/HabitsPage";
-import { SettingsPage } from "./pages/SettingsPage";
+import { ComponentType, lazy, Suspense } from "react";
 
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
-import { AchievementsPage } from "./pages/AchievementsPage";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import { MotionConfig } from "framer-motion";
-import { TemplatesPage } from "./pages/TemplatesPage";
-import { AboutPage } from "./pages/AboutPage";
-import { NotFoundPage } from "./pages/NotFoundPage";
-import { EmailConfirmationPage } from "./pages/EmailConfirmationPage";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
+import { PageLoader } from "@/components/ui/PageLoader";
 import { ConfirmDialogHost } from "@/components/ui/ConfirmDialogHost";
 import { CelebrationHost } from "@/components/ui/CelebrationHost";
+
+/**
+ * Code-split each page into its own chunk, downloaded on first visit.
+ * Pages use named exports, while React.lazy needs a default export.
+ */
+function lazyPage<Name extends string>(
+  load: () => Promise<Record<Name, ComponentType>>,
+  name: Name,
+) {
+  return lazy(() => load().then((module) => ({ default: module[name] })));
+}
+
+const LoginPage = lazyPage(() => import("@/pages/LoginPage"), "LoginPage");
+const SignupPage = lazyPage(() => import("@/pages/SignupPage"), "SignupPage");
+const EmailConfirmationPage = lazyPage(
+  () => import("@/pages/EmailConfirmationPage"),
+  "EmailConfirmationPage",
+);
+const DashboardPage = lazyPage(
+  () => import("@/pages/DashboardPage"),
+  "DashboardPage",
+);
+const HabitsPage = lazyPage(() => import("@/pages/HabitsPage"), "HabitsPage");
+const AnalyticsPage = lazyPage(
+  () => import("@/pages/AnalyticsPage"),
+  "AnalyticsPage",
+);
+const AchievementsPage = lazyPage(
+  () => import("@/pages/AchievementsPage"),
+  "AchievementsPage",
+);
+const TemplatesPage = lazyPage(
+  () => import("@/pages/TemplatesPage"),
+  "TemplatesPage",
+);
+const SettingsPage = lazyPage(
+  () => import("@/pages/SettingsPage"),
+  "SettingsPage",
+);
+const AboutPage = lazyPage(() => import("@/pages/AboutPage"), "AboutPage");
+const NotFoundPage = lazyPage(
+  () => import("@/pages/NotFoundPage"),
+  "NotFoundPage",
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -85,7 +120,10 @@ function AppContent() {
       {/* Confetti burst, fired via celebrate() (e.g. on a perfect day) */}
       <CelebrationHost />
 
-      {/* Routes */}
+      {/* Routes — the fallback shows while a page's chunk downloads. React
+          Router wraps navigations in startTransition, so moving between
+          pages keeps the current one on screen instead of flashing this. */}
+      <Suspense fallback={<PageLoader />}>
       <Routes>
         {/* Public Routes */}
         <Route path="/login" element={<LoginPage />} />
@@ -155,6 +193,7 @@ function AppContent() {
         {/* Catch all - redirect to dashboard */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      </Suspense>
     </>
   );
 }

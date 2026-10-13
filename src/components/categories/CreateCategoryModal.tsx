@@ -1,6 +1,6 @@
 import { useCreateCategory } from "@/hooks/useCreateCategory";
 import { useState } from "react";
-import z from "zod";
+import { z } from "zod";
 import { Modal } from "../ui/Modal";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
