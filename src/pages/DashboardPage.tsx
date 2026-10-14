@@ -22,6 +22,9 @@ import { StatCard } from "@/components/ui/StatCard";
 import { ChartCard } from "@/components/ui/ChartCard";
 import { getTodayProgress } from "@/lib/analytics";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { FirstRunWelcome } from "@/components/dashboard/FirstRunWelcome";
+import { FirstCheckInPrompt } from "@/components/dashboard/FirstCheckInPrompt";
+import { useAllCompletions } from "@/hooks/useAllCompletions";
 
 // Recharts is large: load the chart separately so today's habits render first
 const HabitPerformanceChart = lazy(() =>
@@ -34,10 +37,16 @@ export function DashboardPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { categories } = useCategories();
-  const { habits: allHabits } = useHabits();
-  const { completions } = useCompletions();
-  const { maxStreak } = useDashboardStreak();
-  const { totalPoints, levelData } = useUserStats();
+  const { habits: allHabits, isLoading: habitsLoading } = useHabits();
+  const { completions, isLoading: completionsLoading } = useCompletions();
+  const { completions: allCompletions, isLoading: allCompletionsLoading } =
+    useAllCompletions();
+  const { maxStreak, isLoading: streakLoading } = useDashboardStreak();
+  const {
+    totalPoints,
+    levelData,
+    isLoading: statsLoading,
+  } = useUserStats();
   const { unlockedAchievements, allAchievements } = useAchievements();
   const { weeklyBarChartData } = useAnalytics();
 
@@ -76,6 +85,30 @@ export function DashboardPage() {
     (achievement) => !unlockedAchievements.includes(achievement.id),
   );
 
+  // First run: no habits at all (not even archived). Show the welcome step
+  // instead of a dashboard full of zeros.
+  const isFirstRun = !habitsLoading && allHabits.length === 0;
+  // Step 2: habits exist but nothing has ever been checked off
+  const showFirstCheckInPrompt =
+    !habitsLoading &&
+    !allCompletionsLoading &&
+    (habits?.length ?? 0) > 0 &&
+    allCompletions.length === 0;
+
+  if (isFirstRun) {
+    return (
+      <DashboardLayout>
+        <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6">
+          <DashboardHeader
+            displayName={displayName}
+            onBrowseTemplates={() => navigate("/templates")}
+          />
+          <FirstRunWelcome />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
   return (
     <DashboardLayout>
       <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6">
@@ -99,6 +132,7 @@ export function DashboardPage() {
               <CheckCircle2 className="w-4 h-4 lg:w-6 lg:h-6 text-primary-600 dark:text-primary-400" />
             }
             iconBgColor="bg-emerald-100 dark:bg-emerald-900/30"
+            isLoading={habitsLoading}
           />
 
           <StatCard
@@ -122,6 +156,7 @@ export function DashboardPage() {
             iconBgColor="bg-yellow-100 dark:bg-yellow-800/30"
             showEmoji={maxStreak > 0}
             emoji="🔥"
+            isLoading={streakLoading}
           />
 
           <StatCard
@@ -139,6 +174,7 @@ export function DashboardPage() {
               <Target className="w-4 h-4 lg:w-6 lg:h-6 text-blue-600 dark:text-blue-400" />
             }
             iconBgColor="bg-blue-100 dark:bg-blue-900/30"
+            isLoading={habitsLoading || completionsLoading}
           />
 
           <StatCard
@@ -157,6 +193,7 @@ export function DashboardPage() {
             iconBgColor="bg-purple-100 dark:bg-purple-900/30"
             showEmoji={true}
             emoji={levelData?.emoji}
+            isLoading={statsLoading}
           />
         </div>
 
@@ -170,6 +207,9 @@ export function DashboardPage() {
             total={allAchievements.length}
           />
         </div>
+
+        {/* First-run step 2: nudge toward the first check-in */}
+        {showFirstCheckInPrompt && <FirstCheckInPrompt />}
 
         {/* Habits + Chart */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-8">

@@ -1,5 +1,6 @@
 import React from "react";
 import AnimatedNumber from "./AnimatedNumber";
+import { Skeleton } from "./Skeleton";
 
 interface StatCardProps {
   // ⭐ Renamed
@@ -11,6 +12,8 @@ interface StatCardProps {
   iconBgColor: string;
   showEmoji?: boolean;
   emoji?: string;
+  /** Show a placeholder instead of the value (avoids a fake "0" while loading) */
+  isLoading?: boolean;
 }
 
 export function StatCard({
@@ -22,6 +25,7 @@ export function StatCard({
   iconBgColor,
   showEmoji = false,
   emoji,
+  isLoading = false,
 }: StatCardProps) {
   return (
     <div className={`${iconBgColor} flex-1 rounded-3xl p-2.5 sm:p-4 lg:p-6 shadow-primary-100 dark:shadow-primary-800 hover:dark:shadow-xl dark:border-primary-700 hover:shadow-xl transition-shadow duration-500`}>
@@ -32,13 +36,17 @@ export function StatCard({
           {icon}
         </div>
 
-        <span
-          className="font-display text-base sm:text-lg lg:text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center"
-        >
-          {showEmoji && emoji && <span>{emoji}</span>}
-          <AnimatedNumber value={value as number} />
-          {isPercentage && "%"}
-        </span>
+        {isLoading ? (
+          <Skeleton className="h-6 w-10 lg:h-8 lg:w-14 rounded-md" />
+        ) : (
+          <span
+            className="font-display text-base sm:text-lg lg:text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center"
+          >
+            {showEmoji && emoji && <span>{emoji}</span>}
+            <AnimatedNumber value={value as number} />
+            {isPercentage && "%"}
+          </span>
+        )}
       </div>
 
       <h3 className="text-xs lg:text-base font-medium text-gray-600 dark:text-gray-200 mb-1">
