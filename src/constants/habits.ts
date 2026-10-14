@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { z } from "zod";
 
-// ⭐ Shared habit icons
+// Shared habit icons
 export const HABIT_ICONS = [
   { name: "dumbbell", icon: Dumbbell, label: "Exercise" },
   { name: "book", icon: Book, label: "Reading" },

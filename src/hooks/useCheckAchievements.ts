@@ -8,7 +8,7 @@ import { useAchievements } from "./useAchievements";
 import { getAchievementsToUnlock } from "@/lib/achievements";
 import { unlockAchievement } from "@/lib/api";
 import { showAchievementToast } from "@/lib/achievementNotification";
-import { useMemo, useEffect } from "react"; // ⭐ ADD useEffect
+import { useMemo, useEffect } from "react";
 
 export function useCheckAchievements() {
   const { user } = useAuth();
@@ -20,7 +20,7 @@ export function useCheckAchievements() {
   const { maxStreak } = useDashboardStreak();
   const { allAchievements, unlockedIds } = useAchievements();
 
-  // ⭐ Filter out archived habits
+  // Filter out archived habits
   const activeHabits = useMemo(
     () => habits?.filter((h) => !h.archived) || [],
     [habits],
@@ -35,7 +35,7 @@ export function useCheckAchievements() {
       totalCompletions: totalCompletions,
       currentStreak: maxStreak,
       totalPoints: totalPoints,
-      totalHabits: activeHabits.length, // ⭐ Use activeHabits
+      totalHabits: activeHabits.length, // Use activeHabits
       completions: completions || [],
       habits: activeHabits,
     }),
@@ -77,7 +77,7 @@ export function useCheckAchievements() {
     },
   });
 
-  // ⭐⭐⭐ AUTO-RUN WHEN STATS CHANGE
+  // Auto-run when stats change
   useEffect(() => {
     if (!user || allAchievements.length === 0) return;
     // Don't pile on another attempt while one is already in flight —
@@ -93,19 +93,15 @@ export function useCheckAchievements() {
     );
 
     if (toUnlock.length > 0) {
-      console.log(
-        `🎯 Auto-unlocking ${toUnlock.length} achievement(s):`,
-        toUnlock.map((a) => a.name),
-      );
       mutation.mutate();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     user,
-    stats.totalCompletions, // ⭐ Triggers when completion added/removed
-    stats.currentStreak, // ⭐ Triggers when streak changes
-    stats.totalPoints, // ⭐ Triggers when points change
-    stats.totalHabits, // ⭐ Triggers when habits added/removed
+    stats.totalCompletions, // Triggers when completion added/removed
+    stats.currentStreak, // Triggers when streak changes
+    stats.totalPoints, // Triggers when points change
+    stats.totalHabits, // Triggers when habits added/removed
     allAchievements,
     unlockedIds,
   ]);

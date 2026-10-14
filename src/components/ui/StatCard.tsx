@@ -3,7 +3,6 @@ import AnimatedNumber from "./AnimatedNumber";
 import { Skeleton } from "./Skeleton";
 
 interface StatCardProps {
-  // ⭐ Renamed
   value: number | string;
   isPercentage?: boolean;
   title: string;

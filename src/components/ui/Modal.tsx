@@ -56,8 +56,8 @@ export function Modal({
     xl: 'sm:max-w-4xl',
   }
 
-  if (!isOpen) return null
-
+  // Always render the portal: AnimatePresence must see the dialog leave
+  // (isOpen → false) to play its exit animation before unmounting it
   return createPortal(
     <AnimatePresence>
       {isOpen && (

@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react"; // ⭐ ADD useEffect
+import { useState, useEffect } from "react";
 
 const navItems = [
   { path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -38,12 +38,12 @@ export default function SideBar({
   onNavigate?: () => void;
 } = {}) {
   const [isHovered, setIsHovered] = useState(false);
-  const [isMobile, setIsMobile] = useState(false); // ⭐ ADD
+  const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
 
   const isActive = (path: string) => location.pathname === path;
 
-  // ⭐⭐⭐ DETECT MOBILE/DESKTOP
+  // Detect mobile/desktop
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024); // lg breakpoint
@@ -54,7 +54,7 @@ export default function SideBar({
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // ⭐ Show labels if mobile OR hovered
+  // Show labels if mobile OR hovered
   const showLabels = isMobile || isHovered;
 
   return (
@@ -119,7 +119,7 @@ export default function SideBar({
 
                   {/* Label - Show on mobile OR when hovered */}
                   <AnimatePresence>
-                    {showLabels && ( // ⭐ CHANGED: isMobile || isHovered
+                    {showLabels && (
                       <motion.span
                         initial={{ opacity: 0, width: 0 }}
                         animate={{ opacity: 1, width: "auto" }}
@@ -135,7 +135,7 @@ export default function SideBar({
                   {/* Badge */}
                   {item.badge && (
                     <AnimatePresence>
-                      {showLabels && ( // ⭐ CHANGED: isMobile || isHovered
+                      {showLabels && (
                         <motion.span
                           initial={{ scale: 0, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}

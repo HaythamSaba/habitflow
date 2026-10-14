@@ -20,7 +20,7 @@ export function useUpdateHabit() {
         color?: string;
         frequency?: "daily" | "weekly" | "custom";
         target_count?: number;
-        category_id?: string | null;  // ⭐ ADD THIS
+        category_id?: string | null;
       };
     }) => {
       if (!user?.id) throw new Error("User not authenticated");

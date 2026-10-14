@@ -84,7 +84,7 @@ export function SettingsPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-          {/* ⭐ Profile Section - REFACTORED */}
+          {/* Profile Section */}
           <SectionCard
             title="Profile"
             icon={<User className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" />}
@@ -143,7 +143,7 @@ export function SettingsPage() {
             </form>
           </SectionCard>
 
-          {/* ⭐ Categories Section - REFACTORED */}
+          {/* Categories Section */}
           <SectionCard
             title="Categories"
             icon={
@@ -153,7 +153,7 @@ export function SettingsPage() {
             <CategoryManager />
           </SectionCard>
 
-          {/* ⭐ Preferences Section - REFACTORED */}
+          {/* Preferences Section */}
           <SectionCard
             title="Preferences"
             icon={
@@ -190,7 +190,7 @@ export function SettingsPage() {
             </div>
           </SectionCard>
 
-          {/* ⭐ Security Section - REFACTORED */}
+          {/* Security Section */}
           <SectionCard
             title="Security"
             icon={<Shield className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" />}
@@ -228,7 +228,7 @@ export function SettingsPage() {
             </div>
           </SectionCard>
 
-          {/* ⭐ Danger Zone - REFACTORED */}
+          {/* Danger Zone */}
           <SectionCard
             title="Danger Zone"
             icon={<Trash className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />}

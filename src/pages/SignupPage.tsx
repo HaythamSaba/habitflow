@@ -5,7 +5,7 @@ import { Link, Navigate } from "react-router-dom";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
-import { ArrowRight } from "lucide-react"; // ⭐ ADD
+import { ArrowRight } from "lucide-react";
 
 const signupSchema = z
   .object({

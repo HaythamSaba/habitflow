@@ -15,7 +15,7 @@ import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import TodayProgress from "@/components/dashboard/TodayProgress";
 import { AchievementCountCard } from "@/components/dashboard/AchievementCountCard";
 import { CategoryChips } from "@/components/categories/CategoryChips";
-import HabitsContainer from "@/components/habits/HabitsContianer";
+import HabitsContainer from "@/components/habits/HabitsContainer";
 import { FeaturedTemplates } from "@/components/templates/FeaturedTemplates";
 import { RecentAchievementsSection } from "@/components/dashboard/RecentAchievementsSection";
 import { StatCard } from "@/components/ui/StatCard";
@@ -112,13 +112,13 @@ export function DashboardPage() {
   return (
     <DashboardLayout>
       <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6">
-        {/* ⭐ Header - Extracted */}
+        {/* Header */}
         <DashboardHeader
           displayName={displayName}
           onBrowseTemplates={() => navigate("/templates")}
         />
 
-        {/* ⭐ Stats Grid - Already refactored with DashboardCard */}
+        {/* Stats Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-8">
           <StatCard
             value={habits?.length || 0}
@@ -201,7 +201,7 @@ export function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-8">
           <TodayProgress />
 
-          {/* ⭐ Achievement Card - Extracted */}
+          {/* Achievement Card */}
           <AchievementCountCard
             unlocked={unlockedAchievements.length}
             total={allAchievements.length}
@@ -236,7 +236,7 @@ export function DashboardPage() {
           </div>
         </div>
 
-        {/* ⭐ Recent Achievements - Extracted */}
+        {/* Recent Achievements */}
         <RecentAchievementsSection
           achievements={unlockedAchievements.slice(0, 3)}
         />

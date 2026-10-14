@@ -117,11 +117,9 @@ export async function createCompletion(habitId: string, userId: string) {
       .select();
 
     if (error) {
-      console.error("❌ Create completion error:", error);
+      console.error("Create completion error:", error);
       throw new Error(error.message);
     }
-
-    console.log("✅ Completion created:", data);
 
     return data?.[0] || { habit_id: habitId, user_id: userId };
   } catch (error) {
@@ -221,7 +219,7 @@ export async function getUserStats(userId: string) {
     .single();
 
   if (error) {
-    console.error("❌ getUserStats error:", error);
+    console.error("getUserStats error:", error);
     throw new Error(error.message);
   }
 

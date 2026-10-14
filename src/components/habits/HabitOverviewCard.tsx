@@ -1,48 +1,23 @@
 import { Habit } from "@/types";
 import { useState, useRef } from "react";
 import { useCategories } from "@/hooks/useCategories";
-import { useHabitStats } from "@/hooks/useHabitStats"; // ⭐ ADD THIS
+import { useHabitStats } from "@/hooks/useHabitStats";
 import { CategoryBadge } from "../categories/CategoryBadge";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import {
   Archive,
   Calendar,
-  Dumbbell,
   Edit2,
   Flame,
   MoreVertical,
   Star,
   Trash2,
   TrendingUp,
-  Book,
-  Coffee,
-  Heart,
-  Zap,
-  Music,
-  Droplet,
-  Moon,
-  Sun,
-  Target,
-  CheckCircle2,
   RotateCcw,
 } from "lucide-react";
 import { format } from "date-fns";
 import { useAllCompletions } from "@/hooks/useAllCompletions";
-
-const HABIT_ICONS = [
-  { name: "dumbbell", icon: Dumbbell, label: "Exercise" },
-  { name: "book", icon: Book, label: "Reading" },
-  { name: "coffee", icon: Coffee, label: "Coffee" },
-  { name: "heart", icon: Heart, label: "Health" },
-  { name: "zap", icon: Zap, label: "Energy" },
-  { name: "music", icon: Music, label: "Music" },
-  { name: "droplet", icon: Droplet, label: "Water" },
-  { name: "moon", icon: Moon, label: "Sleep" },
-  { name: "sun", icon: Sun, label: "Morning" },
-  { name: "target", icon: Target, label: "Goal" },
-  { name: "check", icon: CheckCircle2, label: "Task" },
-  { name: "flame", icon: Flame, label: "Streak" },
-];
+import { HABIT_ICONS } from "@/constants/habits";
 
 interface HabitOverviewCardProps {
   habit: Habit;
@@ -62,7 +37,6 @@ export function HabitOverviewCard({
   const { categories } = useCategories();
   const { completions } = useAllCompletions();
 
-  // ⭐⭐⭐ GET REAL STATS!
   const { completionRate, currentStreak, last7Days } = useHabitStats(
     habit,
     completions || [],
@@ -291,7 +265,7 @@ export function HabitOverviewCard({
           {/* Sparkline bars */}
           <div className="flex items-end gap-0.5 sm:gap-1 h-8 sm:h-10 lg:h-12">
             {last7Days.map((count, index) => {
-              const maxCount = Math.max(...last7Days, 1); // ⭐ Avoid division by 0
+              const maxCount = Math.max(...last7Days, 1); // Avoid division by 0
               const height = maxCount > 0 ? (count / maxCount) * 100 : 0;
               return (
                 <div
@@ -301,7 +275,7 @@ export function HabitOverviewCard({
                     height: `${height}%`,
                     backgroundColor: habit.color,
                     opacity: count === 0 ? 0.1 : 0.3 + (height / 100) * 0.7,
-                    minHeight: count === 0 ? "2px" : undefined, // ⭐ Show minimal bar for 0
+                    minHeight: count === 0 ? "2px" : undefined, // Show minimal bar for 0
                   }}
                   title={`${count} completions`}
                 />

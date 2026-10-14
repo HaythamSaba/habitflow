@@ -77,7 +77,7 @@ export function AnalyticsPage() {
         {/* Activity Heatmap */}
         <ActivityHeatmap />
 
-        {/* ⭐ Charts - REFACTORED */}
+        {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-6">
           <ChartCard
             title="Completion Trend"

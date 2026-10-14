@@ -6,20 +6,7 @@ import { POINTS_PER_COMPLETION } from "@/lib/points";
 import { useToggleCompletion } from "@/hooks/useToggleCompletion";
 import { CompletionToggle } from "./CompletionToggle";
 import { useCompletions } from "@/hooks/useCompletions";
-import {
-  Dumbbell,
-  Book,
-  Coffee,
-  Heart,
-  Zap,
-  Music,
-  Droplet,
-  Moon,
-  Sun,
-  Target,
-  CheckCircle2,
-  Flame,
-} from "lucide-react";
+import { HABIT_ICONS } from "@/constants/habits";
 import { useHabitStreak } from "@/hooks/useHabitStreak";
 import Spinner from "../ui/Spinner";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -31,21 +18,6 @@ interface HabitCardProps {
   onEdit: (habit: Habit) => void;
   onDelete: (habitId: string) => void;
 }
-
-const HABIT_ICONS = [
-  { name: "dumbbell", icon: Dumbbell, label: "Exercise" },
-  { name: "book", icon: Book, label: "Reading" },
-  { name: "coffee", icon: Coffee, label: "Coffee" },
-  { name: "heart", icon: Heart, label: "Health" },
-  { name: "zap", icon: Zap, label: "Energy" },
-  { name: "music", icon: Music, label: "Music" },
-  { name: "droplet", icon: Droplet, label: "Water" },
-  { name: "moon", icon: Moon, label: "Sleep" },
-  { name: "sun", icon: Sun, label: "Morning" },
-  { name: "target", icon: Target, label: "Goal" },
-  { name: "check", icon: CheckCircle2, label: "Task" },
-  { name: "flame", icon: Flame, label: "Streak" },
-];
 
 export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
   const { theme } = useTheme();

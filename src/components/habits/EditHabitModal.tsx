@@ -40,7 +40,7 @@ export function EditHabitModal({
     },
   });
 
-  // ⭐ FIXED: Wrap state updates in startTransition
+  // Wrap state updates in startTransition
   useEffect(() => {
     if (habit) {
       startTransition(() => {

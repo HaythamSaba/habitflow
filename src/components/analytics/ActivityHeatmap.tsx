@@ -20,15 +20,15 @@ export function ActivityHeatmap() {
     count: number;
   } | null>(null);
 
-  // ⭐ Track dark mode
+  // Track dark mode
   const [isDark, setIsDark] = useState(
     document.documentElement.classList.contains("dark"),
   );
 
-  // ⭐ Responsive cell size
+  // Responsive cell size
   const [cellSize, setCellSize] = useState(12);
 
-  // ⭐ FIXED: Cell size updates
+  // Cell size updates
   useEffect(() => {
     const updateCellSize = () => {
       const width = window.innerWidth;
@@ -46,7 +46,7 @@ export function ActivityHeatmap() {
     return () => window.removeEventListener("resize", updateCellSize);
   }, []);
 
-  // ⭐ FIXED: Dark mode observer (was broken before)
+  // Dark mode observer
   useEffect(() => {
     const checkDarkMode = () => {
       setIsDark(document.documentElement.classList.contains("dark"));
@@ -116,7 +116,7 @@ export function ActivityHeatmap() {
 
       {/* Heatmap Container - RESPONSIVE SCROLL */}
       <div className="relative mb-4">
-        {/* ⭐ Mobile scroll indicator */}
+        {/* Mobile scroll indicator */}
         <div className="md:hidden mb-2 flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
           <svg
             className="w-4 h-4"
@@ -134,7 +134,7 @@ export function ActivityHeatmap() {
           <span>Scroll horizontally to view full calendar</span>
         </div>
 
-        {/* ⭐ Scrollable container */}
+        {/* Scrollable container */}
         <div className="overflow-x-auto overflow-y-hidden -mx-4 md:mx-0 px-4 md:px-0 pb-2">
           <div className="inline-block min-w-max">
             {/* Month labels - RESPONSIVE */}
@@ -147,7 +147,7 @@ export function ActivityHeatmap() {
                     width: `${cellSize * 4.3}px`,
                   }}
                 >
-                  {/* ⭐ Abbreviated on mobile */}
+                  {/* Abbreviated on mobile */}
                   <span className="hidden sm:inline">{month.name}</span>
                   <span className="sm:hidden">{month.name.slice(0, 3)}</span>
                 </div>
@@ -169,7 +169,7 @@ export function ActivityHeatmap() {
                 ))}
               </div>
 
-              {/* ⭐ Weeks - TOUCH FRIENDLY */}
+              {/* Weeks */}
               {weeks.map((week, weekIndex) => (
                 <div key={weekIndex} className="flex flex-col gap-2 md:gap-1">
                   {week.days.map((day, dayIndex) =>
@@ -203,7 +203,7 @@ export function ActivityHeatmap() {
                       style={{
                         width: cellSize,
                         height: cellSize,
-                        backgroundColor: getColor(day.level, isDark), // ⭐ KEEP COMPLETION COLOR!
+                        backgroundColor: getColor(day.level, isDark), // completion level color
                         minWidth: cellSize < 10 ? "10px" : "auto",
                         minHeight: cellSize < 10 ? "10px" : "auto",
                       }}
@@ -228,7 +228,7 @@ export function ActivityHeatmap() {
         </div>
       </div>
 
-      {/* ⭐ Hover/Touch Tooltip - BELOW CALENDAR */}
+      {/* Hover/touch details, below the calendar */}
       <div className="min-h-20 max-w-sm mb-4 max-h-20 p-3 bg-gray-50 dark:bg-primary-700 rounded-lg border border-gray-200 dark:border-gray-600">
         {hoveredDay ? (
           <div>
@@ -254,7 +254,7 @@ export function ActivityHeatmap() {
         )}
       </div>
 
-      {/* ⭐ Stats - RESPONSIVE GRID (centered on mobile) */}
+      {/* Stats - RESPONSIVE GRID (centered on mobile) */}
       <div className="pt-4 md:pt-6 border-t border-gray-200 dark:border-gray-700">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-8">
           <div className="text-center md:text-left bg-amber-100 dark:bg-amber-950 p-6 rounded-2xl">

@@ -2,7 +2,7 @@ import { RefObject, useEffect, useState } from "react";
 import { ArrowUp } from "lucide-react";
 
 interface ScrollToTopProps {
-  containerRef: RefObject<HTMLDivElement | null>;  // ⭐ ADD | null
+  containerRef: RefObject<HTMLDivElement | null>;
 }
 
 export function ScrollToTop({ containerRef }: ScrollToTopProps) {
