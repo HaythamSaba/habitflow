@@ -15,9 +15,9 @@
 ### 🎮 Gamification System
 
 - **Points & Experience** - Earn XP for completing habits and level up your profile
-- **Achievement System** - Unlock 12 different achievement types for reaching milestones
+- **Achievement System** - Unlock achievements for milestones: streaks, total check-ins, points, early or late check-ins and perfect days
 - **Streak Tracking** - Build momentum with visual streak counters and fire emojis
-- **Level Progression** - From Beginner (🌱) to Legendary (👑) with 10 levels
+- **Level Progression** - 11 levels from Beginner (🌱) to Mythic (🔮), on a curve that lasts about a year
 
 ### 📊 Analytics & Insights
 
@@ -29,16 +29,17 @@
 ### 🎯 Smart Habit Management
 
 - **30+ Pre-made Templates** - Quick-start with fitness, health, productivity, and mindfulness habits
-- **Advanced Filtering** - Filter by category, status (active/archived), and frequency
+- **Search & Filtering** - Search habits and filter by category and status (active/archived)
 - **Category Organization** - Create custom categories with emojis
-- **Flexible Scheduling** - Daily, weekly, or custom frequency options
+- **Daily Targets** - Track habits once or several times a day (e.g. 8 glasses of water)
+- **Guided First Run** - New users pick starter habits and are prompted to make their first check-in
 
 ### 🎨 User Experience
 
-- **Complete Dark Mode** - Seamless theme switching with persistent preference
-- **Fully Responsive** - Optimized for mobile, tablet, and desktop
-- **Real-time Updates** - Optimistic UI updates for instant feedback
-- **Smooth Animations** - Framer Motion powered transitions
+- **Complete Dark Mode** - Follows your system setting, remembers your choice, no flash on load
+- **Fully Responsive** - Optimized for mobile (with a bottom tab bar), tablet, and desktop
+- **Instant Feedback** - Optimistic check-ins with undo, points animation and confetti on a perfect day
+- **Smooth Animations** - Framer Motion powered transitions that respect reduced-motion settings
 
 ---
 
@@ -50,7 +51,7 @@ Here you can find some screenshots from the project : https://imgur.com/a/StKWS7
 
 ### Frontend
 
-- **React 18** - Modern React with hooks and concurrent features
+- **React 19** - Modern React with hooks and concurrent features
 - **TypeScript** - Full type safety across the application
 - **TailwindCSS v4** - Utility-first styling with custom design system
 - **React Query (TanStack Query)** - Server state management with optimistic updates
@@ -63,15 +64,16 @@ Here you can find some screenshots from the project : https://imgur.com/a/StKWS7
 
 ### Backend & Database
 
-- **Supabase** - PostgreSQL database with real-time subscriptions
+- **Supabase** - PostgreSQL database
 - **Row-Level Security (RLS)** - Secure, user-specific data access
 - **Supabase Auth** - Email/password authentication
 
 ### Development & Deployment
 
-- **Vite** - Fast build tool and dev server
+- **Vite** - Fast build tool and dev server, with route-level code splitting
+- **Vitest** - Unit tests for the core logic (streaks, analytics, achievements, levels)
 - **Vercel** - Continuous deployment and hosting
-- **ESLint & Prettier** - Code quality and formatting
+- **ESLint** - Code quality
 - **Git & GitHub** - Version control
 
 ---
@@ -94,7 +96,7 @@ src/
 |
 ├── constants/          # Shared constants and schemas
 ├── contexts/           # Managing Theme context
-├── hooks/              # Custom React hooks (15+)
+├── hooks/              # Custom React hooks (25+)
 ├── lib/                # Utility functions
 ├── pages/              # Route-level page components
 ├── store/              # creating store using zustand
@@ -105,10 +107,12 @@ src/
 ### Key Technical Decisions
 
 - **Component Composition** - Built 13+ reusable components following single responsibility principle
-- **Custom Hooks** - Extracted business logic into 15+ custom hooks for reusability
+- **Custom Hooks** - Extracted business logic into 25+ custom hooks for reusability
+- **Tested Core Logic** - Streaks, completion rates, achievements and levels are pure functions with unit tests
+- **Local-Time Correctness** - "Today" and streaks use the user's local day, not the UTC date
 - **Type Safety** - 100% TypeScript coverage with strict mode enabled
-- **Performance** - Memoization, code splitting, and optimistic updates
-- **Accessibility** - Semantic HTML, keyboard navigation, ARIA labels
+- **Performance** - Memoization, route-level code splitting, and optimistic updates
+- **Accessibility** - Semantic HTML, keyboard navigation, focus management, ARIA labels, reduced-motion support
 
 ---
 
@@ -116,7 +120,7 @@ src/
 
 ### Prerequisites
 
-- Node.js 18+ and npm/yarn
+- Node.js 20.19+ (required by Vite 7) and npm
 - Supabase account (free tier works)
 
 ### Installation
@@ -124,7 +128,7 @@ src/
 1. **Clone the repository**
 
 ```bash
-   git clone https://github.com/HaythamSaba
+   git clone https://github.com/HaythamSaba/habitflow.git
    cd habitflow
 ```
 
@@ -136,11 +140,8 @@ src/
 
 3. **Set up environment variables**
 
-```bash
-   cp .env.example .env.local
-```
-
-Add your Supabase credentials to `.env.local`:
+Create a `.env.local` file in the project root with your Supabase credentials
+(Project Settings → API in the Supabase dashboard):
 
 ```env
    VITE_SUPABASE_URL=your_supabase_url
@@ -149,8 +150,8 @@ Add your Supabase credentials to `.env.local`:
 
 4. **Set up Supabase database**
    - Create a new Supabase project
-   - Run the SQL migrations in `/supabase` folder (if provided)
-   - Or use the Supabase dashboard to create tables
+   - Open the SQL editor and run `src/supabase/schema.sql` (tables, RLS policies, triggers and the points function)
+   - Note: the achievement definitions (rows of the `achievements` table) aren't included in that file, so add your own to use achievements
 
 5. **Run development server**
 
@@ -162,6 +163,12 @@ Add your Supabase credentials to `.env.local`:
 
 ```
    http://localhost:5173
+```
+
+### Run Tests
+
+```bash
+npm test         # Vitest: streaks, analytics, achievements, levels
 ```
 
 ### Build for Production
@@ -187,11 +194,11 @@ npm run preview  # Preview production build locally
 
 ### Key Metrics
 
-- **7,500+ lines** of production-quality code
-- **85+ components** following best practices
-- **15+ custom hooks** for business logic
-- **8+ database tables** with RLS policies
-- **0 lines** of duplicated code after refactoring
+- **12,000+ lines** of TypeScript
+- **65+ components** following best practices
+- **25+ custom hooks** for business logic
+- **7 database tables** with RLS policies
+- **60 unit tests** for the core logic
 - **100% TypeScript** coverage
 - **100% responsive** across all breakpoints
 - **100% dark mode** support
@@ -202,17 +209,17 @@ npm run preview  # Preview production build locally
 
 ### Technical Achievements
 
-✅ **Clean Architecture** - Refactored to eliminate all code duplication  
+✅ **Clean Architecture** - Shared logic (streaks, analytics) in single, tested modules  
 ✅ **Type-Safe** - Full TypeScript with strict mode  
 ✅ **Real-time** - Optimistic updates with React Query  
-✅ **Performant** - Memoized calculations, lazy loading  
-✅ **Accessible** - WCAG compliant, keyboard navigation  
+✅ **Performant** - Memoized calculations, lazy-loaded routes and charts  
+✅ **Accessible** - Keyboard navigation, focus management, screen-reader labels, reduced motion  
 ✅ **Scalable** - Component composition patterns
 
 ### Product Achievements
 
-✅ **User Onboarding** - 30 templates reduce setup time by 70%  
-✅ **Engagement** - Gamification increases habit completion  
+✅ **User Onboarding** - A guided first run and 30 templates make setup quick  
+✅ **Engagement** - Points, streaks, levels and achievements reward consistency  
 ✅ **Insights** - 365-day heatmap shows long-term trends  
 ✅ **Experience** - Complete dark mode, smooth animations  
 ✅ **Mobile-First** - Responsive across all devices
@@ -243,7 +250,7 @@ npm run preview  # Preview production build locally
 ### Specific Challenges Solved
 
 1. **GitHub-style heatmap** - Implemented date aggregation algorithm for 365 days
-2. **Streak calculation** - Created efficient algorithm checking consecutive days
+2. **Streak calculation** - One tested module for consecutive days, in the user's local time zone
 3. **Template system** - Designed reusable template structure reducing onboarding time
 4. **Component refactoring** - Extracted shared logic eliminating 500+ lines of duplication
 5. **Real-time updates** - Implemented optimistic UI with React Query mutations
@@ -254,6 +261,7 @@ npm run preview  # Preview production build locally
 
 **Planned Features:**
 
+- [ ] Weekly and custom-day habit schedules
 - [ ] Social features (share achievements, follow friends)
 - [ ] Export data (CSV/JSON download)
 - [ ] Habit reminders and notifications
@@ -288,12 +296,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Haytham** - Frontend Developer
 
-- Portfolio: [MY-PORTFOLIO-URL](https://haytham-saba.vercel.app/)
-- LinkedIn: [MY-LINKEDIN-URL](https://www.linkedin.com/in/haytham-saba-401148278/)
+- Portfolio: [haytham-saba.vercel.app](https://haytham-saba.vercel.app/)
+- LinkedIn: [Haytham Saba](https://www.linkedin.com/in/haytham-saba-401148278/)
 - Email: haythamsaba@gmail.com
-- GitHub: [@MY-USERNAME](https://github.com/HaythamSaba)
+- GitHub: [@HaythamSaba](https://github.com/HaythamSaba)
 
-**Live Demo:** [habitflow.vercel.app](https://habitflow-hs.vercel.app)  
+**Live Demo:** [habitflow-hs.vercel.app](https://habitflow-hs.vercel.app)  
 **GitHub Repo:** [View Source Code](https://github.com/HaythamSaba/habitflow)
 
 ---
