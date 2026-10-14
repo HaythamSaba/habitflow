@@ -49,7 +49,7 @@ export function TemplatesPage() {
   };
 
   const handleHabitCreated = () => {
-    toast.success("Habit created from template! 🎉");
+    toast.success("Habit created from template");
     navigate("/dashboard");
   };
 
@@ -58,8 +58,7 @@ export function TemplatesPage() {
       <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6">
         <PageHeader
           title="Habit Templates"
-          description="Choose from popular habits or customize them to fit your needs"
-          emoji="✨"
+          description="Start from a popular habit and adjust it to fit you"
         />
         <TemplateGallery
           onUseTemplate={handleUseTemplate}

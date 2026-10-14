@@ -79,8 +79,7 @@ export function SettingsPage() {
         <div className="mb-4 sm:mb-6">
           <PageHeader
             title="Settings"
-            emoji="⚙️"
-            description="Manage your account settings and preferences"
+            description="Manage your account and preferences"
           />
         </div>
 

@@ -44,7 +44,7 @@ const HABIT_ICONS = [
   { name: "flame", icon: Flame, label: "Streak" },
 ];
 
-interface PremiumHabitCardProps {
+interface HabitOverviewCardProps {
   habit: Habit;
   onEdit: (habit: Habit) => void;
   onDelete: (habitId: string) => void;
@@ -52,13 +52,13 @@ interface PremiumHabitCardProps {
   onRestore?: (habitId: string) => void;
 }
 
-export function PremiumHabitCard({
+export function HabitOverviewCard({
   habit,
   onEdit,
   onDelete,
   onArchive,
   onRestore,
-}: PremiumHabitCardProps) {
+}: HabitOverviewCardProps) {
   const { categories } = useCategories();
   const { completions } = useAllCompletions();
 

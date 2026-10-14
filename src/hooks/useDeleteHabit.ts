@@ -22,7 +22,7 @@ export function useDeleteHabit() {
       queryClient.invalidateQueries({ queryKey: ["completions"] });
       queryClient.invalidateQueries({ queryKey: ["all-completions"] });
       queryClient.removeQueries({ queryKey: ["habit-completions", habitId] });
-      toast.success("Habit deleted successfully! 🗑️");
+      toast.success("Habit deleted");
     },
 
     onError: (error) => {

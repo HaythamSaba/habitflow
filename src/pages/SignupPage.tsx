@@ -61,10 +61,10 @@ export function SignupPage() {
         <div className="text-center mb-6 sm:mb-8">
 
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-            Start Your Journey ✨
+            Create your account
           </h1>
           <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
-            Create an account and build better habits
+            Track your habits, build streaks and see your progress
           </p>
         </div>
 

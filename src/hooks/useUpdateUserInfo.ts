@@ -12,7 +12,7 @@ export function useUpdateUserInfo() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] }); // ← Refresh user data
-      toast.success("Profile updated successfully! 🎉");
+      toast.success("Profile updated");
     },
     onError: (error) => {
       console.error("Error updating profile:", error);

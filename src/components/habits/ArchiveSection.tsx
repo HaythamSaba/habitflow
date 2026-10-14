@@ -1,6 +1,6 @@
 import { Habit } from "@/types";
 import { useState } from "react";
-import { PremiumHabitCard } from "./PremiumHabitCard";
+import { HabitOverviewCard } from "./HabitOverviewCard";
 import { ChevronDown, ChevronUp, Archive as ArchiveIcon } from "lucide-react";
 
 interface ArchiveSectionProps {
@@ -84,7 +84,7 @@ export function ArchiveSection({
 
               {/* Card with restore option */}
               <div className="opacity-75 hover:opacity-100 transition-opacity">
-                <PremiumHabitCard
+                <HabitOverviewCard
                   habit={habit}
                   onEdit={onEdit}
                   onDelete={onDelete}

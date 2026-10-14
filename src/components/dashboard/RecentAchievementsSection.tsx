@@ -16,7 +16,7 @@ export function RecentAchievementsSection({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 md:mb-6 gap-2">
         <div>
           <h2 className="text-lg md:text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-            🏆 Recent Achievements
+            Recent Achievements
           </h2>
           <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mt-1">
             Your latest unlocked achievements

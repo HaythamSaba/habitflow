@@ -15,10 +15,9 @@ export default function DashboardHeader({
   return (
     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
       <PageHeader
-        emoji="👋"
         title={`Welcome back,`}
         styledSubtitle={displayName}
-        description="Ready to continue your habit journey? Let's make today count!"
+        description="Here's where your habits stand today."
         actions={
           <Button
             variant="primary"

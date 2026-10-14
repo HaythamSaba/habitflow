@@ -61,25 +61,25 @@ export function TodayProgress() {
         </span>
       </div>
 
-      {/* Motivational Message */}
+      {/* Status line: plain and specific; 🎉 only for a real celebration */}
       {percentage === 100 && (
-        <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-green-600 dark:text-green-400 font-medium">
-          🎉 Perfect day! All habits completed!
+        <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-green-700 dark:text-green-400 font-medium">
+          Perfect day: everything's done 🎉
         </p>
       )}
       {percentage >= 50 && percentage < 100 && (
         <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-secondary-700 dark:text-secondary-400 font-medium">
-          🔥 You're on fire! Keep going!
+          More than halfway there.
         </p>
       )}
       {percentage > 0 && percentage < 50 && (
-        <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-medium">
-          💪 Great start! You can do this!
+        <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-blue-700 dark:text-blue-400 font-medium">
+          Good start. Keep it going.
         </p>
       )}
       {percentage === 0 && totalHabits > 0 && (
-        <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-500 dark:text-gray-400 font-medium">
-          ⏰ Ready to start your day?
+        <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-medium">
+          Nothing checked off yet today.
         </p>
       )}
     </ProgressCard>

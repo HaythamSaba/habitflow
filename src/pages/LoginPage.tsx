@@ -45,10 +45,10 @@ export function LoginPage() {
           {/* Header */}
           <div className="text-center mb-6 sm:mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-              Welcome back 👋
+              Welcome back
             </h1>
             <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
-              Continue your journey towards consistency
+              Log in to check off today's habits
             </p>
           </div>
 

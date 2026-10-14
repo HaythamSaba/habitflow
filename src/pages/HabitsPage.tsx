@@ -15,10 +15,10 @@ import { confirmDialog } from "@/lib/confirmDialog";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/Button";
 import { EditHabitModal } from "@/components/habits/EditHabitModal";
-import { PremiumHabitCard } from "@/components/habits/PremiumHabitCard";
+import { HabitOverviewCard } from "@/components/habits/HabitOverviewCard";
 import { ArchiveSection } from "@/components/habits/ArchiveSection";
 import { CreateHabitModal } from "@/components/habits/CreateHabitModal";
-import { PremiumHabitCardSkeleton } from "@/components/habits/PremiumHabitCardSkeleton";
+import { HabitOverviewCardSkeleton } from "@/components/habits/HabitOverviewCardSkeleton";
 
 import { Plus, Sparkles } from "lucide-react";
 import HabitsStatsCards from "@/components/habits/HabitsStatsCards";
@@ -141,11 +141,11 @@ export function HabitsPage() {
               <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2 mx-auto md:mx-0">
                 <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-primary-500 shrink-0" />
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-linear-to-r from-primary-500 to-secondary-500 dark:from-primary-400 dark:to-secondary-400 bg-clip-text text-transparent">
-                  My Habits Library
+                  My Habits
                 </h1>
               </div>
               <p className="text-sm sm:text-base lg:text-lg text-gray-600 dark:text-gray-400">
-                Master your habits with elegance
+                Every habit, with its streak and stats
               </p>
             </div>
             {/* Action Buttons */}
@@ -170,7 +170,7 @@ export function HabitsPage() {
           </div>
         </div>
 
-        {/* Premium Stats Cards */}
+        {/* Stats Cards */}
         <HabitsStatsCards
           totalHabits={stats.totalHabits}
           activeHabits={stats.activeHabits}
@@ -180,7 +180,7 @@ export function HabitsPage() {
           isLoading={isLoading}
         />
 
-        {/* Premium Filters & View Controls */}
+        {/* Filters & View Controls */}
         <div className="relative z-20">
           <HabitsFilterBar
             searchQuery={searchQuery}
@@ -220,7 +220,7 @@ export function HabitsPage() {
           // Loading Skeletons
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
             {[...Array(6)].map((_, i) => (
-              <PremiumHabitCardSkeleton key={i} />
+              <HabitOverviewCardSkeleton key={i} />
             ))}
           </div>
         ) : filteredHabits.length > 0 ? (
@@ -240,7 +240,7 @@ export function HabitsPage() {
                     className="animate-fade-in-up opacity-0"
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
-                    <PremiumHabitCard
+                    <HabitOverviewCard
                       habit={habit}
                       onEdit={handleEdit}
                       onDelete={handleDelete}

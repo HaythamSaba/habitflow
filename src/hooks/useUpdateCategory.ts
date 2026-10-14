@@ -20,7 +20,7 @@ export function useUpdateCategory() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
-      toast.success("Category updated successfully! 🎉");
+      toast.success("Category updated");
     },
     onError: (error: Error) => {
       toast.error(`Failed to update category: ${error.message}`);

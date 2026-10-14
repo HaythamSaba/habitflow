@@ -15,7 +15,7 @@ export function useRestoreHabit() {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["habits", user?.id] });
-      toast.success("Habit restored! ✨");
+      toast.success("Habit restored");
     },
 
     onError: (error) => {

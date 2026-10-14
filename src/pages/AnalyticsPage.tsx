@@ -27,8 +27,7 @@ export function AnalyticsPage() {
         {/* Header */}
         <PageHeader
           title="Analytics"
-          description="Track your progress over the last 30 days"
-          emoji="📊"
+          description="Your progress over the last 30 days"
         />
 
         {/* Stats Grid */}

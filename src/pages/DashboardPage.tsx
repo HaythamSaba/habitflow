@@ -141,14 +141,14 @@ export function DashboardPage() {
             title="Best Active Streak"
             description={
               maxStreak === 0
-                ? "Start a habit today!"
+                ? "Check off a habit to start one"
                 : maxStreak === 1
-                  ? "Great start!"
-                  : maxStreak >= 2 && maxStreak < 7
-                    ? "Keep it up!"
-                    : maxStreak >= 7 && maxStreak < 30
-                      ? "On fire! 🔥"
-                      : "Incredible! 🏆"
+                  ? "Day one: come back tomorrow"
+                  : maxStreak < 7
+                    ? "Building momentum"
+                    : maxStreak < 30
+                      ? "Over a week strong"
+                      : "Over a month strong"
             }
             icon={
               <TrendingUp className="w-4 h-4 lg:w-6 lg:h-6 text-yellow-600 dark:text-yellow-400" />
@@ -250,9 +250,12 @@ export function DashboardPage() {
             <div className="relative">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl">🔥</span>
+                  {/* 🏆 = achievements (🔥 is reserved for streaks) */}
+                  <span className="text-2xl" aria-hidden="true">
+                    🏆
+                  </span>
                   <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                    Keep Going!
+                    Still to unlock
                   </h3>
                 </div>
                 <div className="px-3 py-1 rounded-full bg-secondary-500 dark:bg-secondary-900">
@@ -273,11 +276,11 @@ export function DashboardPage() {
                 </span>{" "}
                 out of{" "}
                 <span className="font-bold">{allAchievements.length}</span>{" "}
-                achievements. Only{" "}
+                achievements.{" "}
                 <span className="font-bold text-orange-600 dark:text-orange-400">
                   {allAchievements.length - unlockedAchievements.length}
                 </span>{" "}
-                more to go!
+                to go.
               </p>
 
               {/* Mini achievement icons preview */}

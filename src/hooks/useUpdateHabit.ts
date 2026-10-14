@@ -28,7 +28,7 @@ export function useUpdateHabit() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["habits"] });
-      toast.success("Habit updated! ✨");
+      toast.success("Habit updated");
     },
     onError: (error: Error) => {
       toast.error(`Failed to update habit: ${error.message}`);

@@ -39,7 +39,7 @@ Mark items as they are fixed so work can resume in a new session.
 | L2 | Font setup | S | Done |
 | L3 | Achievement toast styling | S | Done |
 | L4 | Navbar details | S | Open |
-| L5 | Copy and emoji | S | Open |
+| L5 | Copy and emoji | S | Done |
 | L6 | Level curve ends early | S | Done |
 | L7 | README accuracy | S | Open |
 

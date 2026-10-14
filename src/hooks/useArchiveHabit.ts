@@ -15,7 +15,7 @@ export function useArchiveHabit() {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["habits", user?.id] });
-      toast.success("Habit archived! 📦");
+      toast.success("Habit archived");
     },
 
     onError: (error) => {

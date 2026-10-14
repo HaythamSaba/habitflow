@@ -15,7 +15,7 @@ export function useDeleteCategory() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
       queryClient.invalidateQueries({ queryKey: ["habits"] });
-      toast.success("Category deleted! 🎉");
+      toast.success("Category deleted");
     },
     onError: (error: Error) => {
       toast.error(`Failed to delete category: ${error.message}`);

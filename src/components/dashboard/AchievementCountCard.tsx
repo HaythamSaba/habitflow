@@ -11,11 +11,11 @@ export function AchievementCountCard({
 }: AchievementCountCardProps) {
   // Dynamic description based on progress
   const getDescription = () => {
-    if (unlocked === 0) return "Start unlocking achievements!";
-    if (unlocked < 5) return "Great start!";
-    if (unlocked < 10) return "You're doing amazing!";
-    if (unlocked < 15) return "Achievement hunter!";
-    return "Almost collected them all!";
+    if (unlocked === 0) return "Your first one is a check-in away";
+    if (unlocked < 5) return "A good start";
+    if (unlocked < 10) return "Building a collection";
+    if (unlocked < 15) return "Well on your way";
+    return "Nearly all of them";
   };
 
   return (

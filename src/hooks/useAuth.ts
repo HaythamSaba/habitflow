@@ -100,7 +100,7 @@ export function useAuth() {
         // Store email in session for confirmation page
         sessionStorage.setItem("signup_email", email);
 
-        toast.success("Check your email to confirm your account! 📧");
+        toast.success("Check your email to confirm your account");
 
         navigate(`/email-confirmation?email=${encodeURIComponent(email)}`);
         return { success: true };

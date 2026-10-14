@@ -104,8 +104,7 @@ export function AchievementsPage() {
         {/* Header */}
         <PageHeader
           title="Achievements"
-          emoji="🏆"
-          description="Unlock achievements by completing challenges and milestones!"
+          description="Milestones you've reached, and what's next."
         />
 
         {/* Stats Overview */}
@@ -162,7 +161,7 @@ export function AchievementsPage() {
           <div className="mt-6">
             {/* RESPONSIVE: Smaller section heading on mobile */}
             <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3 md:mb-4">
-              ✨ Unlocked ({unlockedAchievements.length})
+              Unlocked ({unlockedAchievements.length})
             </h2>
             {/* RESPONSIVE: 1 col on mobile → 2 on md → 3 on lg → 4 on xl
                 Reduced gap on mobile (gap-3) → desktop (gap-4 lg:gap-6) */}
@@ -183,7 +182,7 @@ export function AchievementsPage() {
         {lockedAchievements.length > 0 && (
           <div className="mt-6">
             <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3 md:mb-4">
-              🔒 Locked ({lockedAchievements.length})
+              Locked ({lockedAchievements.length})
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
               {lockedAchievements.map((achievement) => (

@@ -1,4 +1,4 @@
-export function PremiumHabitCardSkeleton() {
+export function HabitOverviewCardSkeleton() {
   return (
     <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 border-2 border-gray-200 dark:border-gray-700 shadow-lg animate-pulse">
       {/* Header */}

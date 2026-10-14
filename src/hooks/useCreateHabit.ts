@@ -22,7 +22,7 @@ export function useCreateHabit() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["habits"] });
-      toast.success("Habit created! 🎉");
+      toast.success("Habit created");
     },
     onError: (error: Error) => {
       toast.error(`Failed to create habit: ${error.message}`);

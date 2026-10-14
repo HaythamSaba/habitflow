@@ -127,7 +127,7 @@ export default function HabitsContainer({
             No habits yet
           </h3>
           <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-4 sm:mb-6">
-            Start your journey by creating your first habit!
+            Create your first habit to start tracking.
           </p>
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 justify-center">
             <Button
