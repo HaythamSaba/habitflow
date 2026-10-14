@@ -12,7 +12,7 @@ Mark items as they are fixed so work can resume in a new session.
 |----|-------|--------|--------|
 | C1 | "Today" is a UTC date | S | Done |
 | C2 | Achievements and Habits-page stats only see today's completions | S | Done |
-| C3 | No demo / guest path for recruiters | M | Open |
+| C3 | No demo / guest path for recruiters | M | Dropped (owner's decision) |
 | C4 | Check-off is slow and gives no reward | M | Done |
 | H1 | Habit list buried on dashboard | M | Open |
 | H2 | Bare `primary` color token missing | S | Done |
@@ -40,7 +40,7 @@ Mark items as they are fixed so work can resume in a new session.
 | L3 | Achievement toast styling | S | Done |
 | L4 | Navbar details | S | Open |
 | L5 | Copy and emoji | S | Open |
-| L6 | Level curve ends early | S | Open |
+| L6 | Level curve ends early | S | Done |
 | L7 | README accuracy | S | Open |
 
 ---
