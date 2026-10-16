@@ -8,16 +8,7 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useUpdateUserInfo } from "@/hooks/useUpdateUserInfo";
-import {
-  KeyRound,
-  LogOut,
-  RectangleEllipsis,
-  Settings2,
-  Shield,
-  Trash,
-  User,
-  UserX,
-} from "lucide-react";
+import { LogOut, Settings2, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -161,7 +152,7 @@ export function SettingsPage() {
             }
           >
             <div className="space-y-3 sm:space-y-4">
-              <div className="flex items-center justify-between gap-3 py-2 sm:py-3 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-between gap-3 py-2 sm:py-3">
                 <div className="min-w-0">
                   <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     {theme === "dark" ? "🌙" : "☀️"}{" "}
@@ -175,82 +166,16 @@ export function SettingsPage() {
                 </div>
                 <ThemeToggle />
               </div>
-
-              <div className="flex items-center justify-between gap-3 py-2 sm:py-3">
-                <div className="min-w-0">
-                  <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    🔔 Notifications
-                  </h3>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 sm:mt-1">
-                    Coming soon!
-                  </p>
-                </div>
-                <div className="w-12 h-6 bg-gray-200 dark:bg-gray-700 rounded-full opacity-50 cursor-not-allowed shrink-0" />
-              </div>
             </div>
           </SectionCard>
 
-          {/* Security Section */}
+          {/* Account: logging out is the only account action so far, so this
+              sits beside Preferences rather than in a full-width danger zone */}
           <SectionCard
-            title="Security"
-            icon={<Shield className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" />}
+            title="Account"
+            icon={<LogOut className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" />}
           >
             <div className="space-y-3 sm:space-y-4">
-              <div className="flex items-center justify-between gap-3 py-2 sm:py-3 border-b border-gray-200 dark:border-gray-700">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-1.5 sm:gap-2">
-                    <RectangleEllipsis className="w-4 h-4 text-gray-500 dark:text-gray-400 shrink-0" />
-                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                      Change Password
-                    </h3>
-                  </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 sm:mt-1 ml-5.5 sm:ml-6">
-                    Coming soon!
-                  </p>
-                </div>
-                <div className="w-12 h-6 bg-gray-200 dark:bg-gray-700 rounded-full opacity-50 cursor-not-allowed shrink-0" />
-              </div>
-
-              <div className="flex items-center justify-between gap-3 py-2 sm:py-3">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-1.5 sm:gap-2">
-                    <KeyRound className="w-4 h-4 text-gray-500 dark:text-gray-400 shrink-0" />
-                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                      Two-Factor Auth
-                    </h3>
-                  </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 sm:mt-1 ml-5.5 sm:ml-6">
-                    Coming soon!
-                  </p>
-                </div>
-                <div className="w-12 h-6 bg-gray-200 dark:bg-gray-700 rounded-full opacity-50 cursor-not-allowed shrink-0" />
-              </div>
-            </div>
-          </SectionCard>
-
-          {/* Danger Zone */}
-          <SectionCard
-            title="Danger Zone"
-            icon={<Trash className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />}
-            variant="danger"
-            className="lg:col-span-2"
-          >
-            <div className="space-y-3 sm:space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 py-2 sm:py-3 border-b border-gray-200 dark:border-gray-700">
-                <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-                  <UserX className="w-4 h-4 text-gray-500 dark:text-gray-400 shrink-0" />
-                  <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    Delete Account
-                  </h3>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
-                    Coming soon!
-                  </span>
-                </div>
-                <Button variant="danger" className="min-h-11 w-full sm:w-auto">
-                  Delete
-                </Button>
-              </div>
-
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 py-2 sm:py-3">
                 <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
                   <LogOut className="w-4 h-4 text-gray-500 dark:text-gray-400 shrink-0" />

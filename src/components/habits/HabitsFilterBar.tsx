@@ -1,12 +1,5 @@
 import { useState, useRef } from "react";
-import {
-  Search,
-  ChevronDown,
-  SlidersHorizontal,
-  LayoutGrid,
-  List,
-  Table,
-} from "lucide-react";
+import { Search, ChevronDown, SlidersHorizontal } from "lucide-react";
 import { Category } from "@/types";
 import { useClickOutside } from "@/hooks/useClickOutside";
 
@@ -23,8 +16,6 @@ interface HabitsFilterBarProps {
   onCategoryChange: (categoryId: string | null) => void;
   sortBy: "name" | "streak" | "rate" | "date";
   onSortChange: (sort: "name" | "streak" | "rate" | "date") => void;
-  viewMode: "cards" | "list" | "table";
-  onViewModeChange: (mode: "cards" | "list" | "table") => void;
   onClearAllFilters: () => void;
 }
 
@@ -41,8 +32,6 @@ export function HabitsFilterBar({
   onCategoryChange,
   sortBy,
   onSortChange,
-  viewMode,
-  onViewModeChange,
   onClearAllFilters,
 }: HabitsFilterBarProps) {
   const [showStatusDropdown, setShowStatusDropdown] = useState(false);
@@ -279,7 +268,7 @@ export function HabitsFilterBar({
                           : "text-gray-700 dark:text-gray-300"
                       }`}
                     >
-                      Best Streak
+                      Current Streak
                     </button>
                     <button
                       onClick={() => {
@@ -298,49 +287,6 @@ export function HabitsFilterBar({
                 </div>
               )}
             </div>
-          </div>
-
-          {/* View Mode Toggles */}
-          <div className="flex items-center gap-1 sm:gap-2 bg-gray-100 dark:bg-gray-900 rounded-xl p-1 ml-auto shrink-0">
-            <button
-              type="button"
-              aria-label="Card view"
-              aria-pressed={viewMode === "cards"}
-              onClick={() => onViewModeChange("cards")}
-              className={`p-2 min-h-11 min-w-11 flex items-center justify-center rounded-lg transition-all ${
-                viewMode === "cards"
-                  ? "bg-white dark:bg-gray-800 shadow-md"
-                  : "hover:bg-gray-200 dark:hover:bg-gray-600"
-              }`}
-            >
-              <LayoutGrid className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 dark:text-gray-300" />
-            </button>
-            <button
-              type="button"
-              aria-label="List view"
-              aria-pressed={viewMode === "list"}
-              onClick={() => onViewModeChange("list")}
-              className={`p-2 min-h-11 min-w-11 flex items-center justify-center rounded-lg transition-all ${
-                viewMode === "list"
-                  ? "bg-white dark:bg-gray-800 shadow-md"
-                  : "hover:bg-gray-200 dark:hover:bg-gray-600"
-              }`}
-            >
-              <List className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 dark:text-gray-300" />
-            </button>
-            <button
-              type="button"
-              aria-label="Table view"
-              aria-pressed={viewMode === "table"}
-              onClick={() => onViewModeChange("table")}
-              className={`p-2 min-h-11 min-w-11 flex items-center justify-center rounded-lg transition-all ${
-                viewMode === "table"
-                  ? "bg-white dark:bg-gray-800 shadow-md"
-                  : "hover:bg-gray-200 dark:hover:bg-gray-600"
-              }`}
-            >
-              <Table className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 dark:text-gray-300" />
-            </button>
           </div>
         </div>
       </div>

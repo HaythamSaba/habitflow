@@ -10,7 +10,6 @@ import {
   Edit2,
   Flame,
   MoreVertical,
-  Star,
   Trash2,
   TrendingUp,
   RotateCcw,
@@ -43,7 +42,6 @@ export function HabitOverviewCard({
   );
 
   const [showMenu, setShowMenu] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useClickOutside(menuRef, () => setShowMenu(false));
@@ -102,22 +100,6 @@ export function HabitOverviewCard({
           </div>
 
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-            <button
-              type="button"
-              className="p-1.5 sm:p-2 min-h-11 min-w-11 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-500"
-              onClick={() => setIsFavorite(!isFavorite)}
-              aria-label={`Favorite ${habit.name}`}
-              aria-pressed={isFavorite}
-            >
-              <Star
-                className={`w-4 h-4 sm:w-5 sm:h-5 ${
-                  isFavorite
-                    ? "fill-yellow-400 text-yellow-400"
-                    : "text-gray-400 dark:text-gray-500"
-                }`}
-              />
-            </button>
-
             <div className="relative" ref={menuRef}>
               <button
                 type="button"

@@ -11,6 +11,8 @@ import { useHabitsStats } from "@/hooks/useHabitsStats";
 import { useArchiveHabit } from "@/hooks/useArchiveHabit";
 import { useRestoreHabit } from "@/hooks/useRestoreHabit";
 import { confirmDialog } from "@/lib/confirmDialog";
+import { getHabitStreaks } from "@/lib/streaks";
+import { getHabitRate } from "@/lib/analytics";
 
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/Button";
@@ -40,7 +42,6 @@ export function HabitsPage() {
   const [sortBy, setSortBy] = useState<"name" | "streak" | "rate" | "date">(
     "name",
   );
-  const [viewMode, setViewMode] = useState<"list" | "cards" | "table">("cards");
   const [statusFilter, setStatusFilter] = useState<
     "all" | "active" | "archived"
   >("active");
@@ -75,25 +76,29 @@ export function HabitsPage() {
       );
     }
 
-    const sorted = [...filtered].sort((a, b) => {
-      switch (sortBy) {
-        case "name":
-          return a.name.localeCompare(b.name);
-        case "date":
-          return (
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-          );
-        case "streak":
-          // todo
-          return 0;
-        case "rate":
-          // todo
-          return 0;
-        default:
-          return 0;
-      }
-    });
-    return sorted;
+    if (sortBy === "name") {
+      return [...filtered].sort((a, b) => a.name.localeCompare(b.name));
+    }
+    if (sortBy === "date") {
+      return [...filtered].sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      );
+    }
+
+    // Highest first, ties by name. Values come from the shared rules
+    // (lib/streaks.ts, lib/analytics.ts), computed once per habit.
+    const valueOf = (habit: Habit) =>
+      sortBy === "streak"
+        ? getHabitStreaks(habit, completions).current
+        : getHabitRate(habit, completions);
+    const values = new Map(filtered.map((habit) => [habit.id, valueOf(habit)]));
+
+    return [...filtered].sort(
+      (a, b) =>
+        (values.get(b.id) ?? 0) - (values.get(a.id) ?? 0) ||
+        a.name.localeCompare(b.name),
+    );
   };
 
   const filteredHabits = getFilterAndSortedHabits();
@@ -195,8 +200,6 @@ export function HabitsPage() {
             onCategoryChange={setSelectedCategory}
             sortBy={sortBy}
             onSortChange={setSortBy}
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
             onClearAllFilters={handleClearAllFilters}
           />
         </div>
@@ -226,51 +229,22 @@ export function HabitsPage() {
         ) : filteredHabits.length > 0 ? (
           <>
             {/* Cards Grid */}
-            <div
-              className={`
-              ${viewMode === "cards" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6" : ""}
-              ${viewMode === "list" ? "space-y-3 sm:space-y-4" : ""}
-              ${viewMode === "table" ? "overflow-x-auto" : ""}
-            `}
-            >
-              {viewMode === "cards" &&
-                filteredHabits.map((habit, index) => (
-                  <div
-                    key={habit.id}
-                    className="animate-fade-in-up opacity-0"
-                    style={{ animationDelay: `${index * 50}ms` }}
-                  >
-                    <HabitOverviewCard
-                      habit={habit}
-                      onEdit={handleEdit}
-                      onDelete={handleDelete}
-                      onArchive={handleArchive}
-                      onRestore={handleRestore}
-                    />
-                  </div>
-                ))}
-
-              {viewMode === "list" && (
-                <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 sm:p-8 lg:p-12 border border-gray-200 dark:border-gray-700 text-center">
-                  <p className="text-gray-500 dark:text-gray-400 text-base sm:text-lg">
-                    📋 List view coming in a future update!
-                  </p>
-                  <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 mt-2">
-                    For now, enjoy the beautiful card view ✨
-                  </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+              {filteredHabits.map((habit, index) => (
+                <div
+                  key={habit.id}
+                  className="animate-fade-in-up opacity-0"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <HabitOverviewCard
+                    habit={habit}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                    onArchive={handleArchive}
+                    onRestore={handleRestore}
+                  />
                 </div>
-              )}
-
-              {viewMode === "table" && (
-                <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 sm:p-8 lg:p-12 border border-gray-200 dark:border-gray-700 text-center">
-                  <p className="text-gray-500 dark:text-gray-400 text-base sm:text-lg">
-                    📊 Table view coming in a future update!
-                  </p>
-                  <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 mt-2">
-                    For now, enjoy the beautiful card view ✨
-                  </p>
-                </div>
-              )}
+              ))}
             </div>
 
             {/* Archive Section - Only show when viewing active habits */}

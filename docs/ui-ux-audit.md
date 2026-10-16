@@ -45,7 +45,7 @@ Mark items as they are fixed so work can resume in a new session.
 | L6 | Level curve ends early | S | Done |
 | L7 | README accuracy | S | Done (LICENSE file decision pending) |
 | N1 | Dashboard isn't built around today's check-ins | M | Open |
-| N2 | Controls that look real but do nothing | S | Open |
+| N2 | Controls that look real but do nothing | S | Done (Forgot password link removed, not wired: no reset page yet) |
 | N3 | Weekly/custom frequencies behave as daily | S | Open (decided: hide from selector) |
 | N4 | Same habit shows different completion % per page | S | Open |
 | N5 | No level-up moment, invisible streak risk, cluttered habit card | M | Open |
@@ -328,6 +328,7 @@ Core loop as of this round: creating a habit is 2 taps plus typing (open the for
 ## Decisions (owner, 2026-10-16)
 
 - **N3, weekly/custom frequencies:** hide them for now (option a). Remove "weekly" and "custom" from the selector only; keep the code paths (schema enum, types, DB values) so they can return when their rules exist.
+- **N2, Forgot password:** remove the link instead of wiring it. `resetPassword` redirects to `/reset-password`, which doesn't exist, so the email link would land on the 404 page. A full reset flow (request form plus a set-new-password page, and the URL added to Supabase's allowed redirect URLs) is M effort and left for later.
 - **N6, primary button color:** primary buttons use `primary-700` (#047857) for the background and `primary-800` (#065f46) for hover. `primary-500` stays for fills, rings and accents. Reason: white text on `primary-600` is about 3.8:1, below the 4.5:1 WCAG AA minimum for normal-size text; white on `primary-700` is about 5.5:1 and on `primary-800` about 7.6:1. (The round-2 audit reply had suggested `primary-600` was enough for 16px bold; that was wrong, since bold text only counts as large from about 18.7px.)
 
 ## 🔴 Critical

@@ -81,16 +81,6 @@ export function LoginPage() {
               disabled={isLoading}
             />
 
-            {/* Forgot Password */}
-            <div className="flex items-center justify-end">
-              <button
-                type="button"
-                className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 hover:underline min-h-11 flex items-center transition-colors"
-              >
-                Forgot password?
-              </button>
-            </div>
-
             {/* Submit Button */}
             <Button
               type="submit"
