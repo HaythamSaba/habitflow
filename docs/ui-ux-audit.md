@@ -4,6 +4,8 @@ Audit date: 2026-10-03. Based on reading the source (routes, pages, components, 
 
 Notes: the repo runs React 19 (README says 18), and PostHog is not installed (only Vercel Analytics).
 
+Round 2: 2026-10-16. A re-read of the source after most round-1 fixes landed, adding items N1–N16 (see [Round 2](#round-2-2026-10-16)). The live site was not clicked through and no build was run for this round. Where a round-2 item expands an open round-1 item, work from the N item.
+
 ## Progress tracker
 
 Mark items as they are fixed so work can resume in a new session.
@@ -14,12 +16,12 @@ Mark items as they are fixed so work can resume in a new session.
 | C2 | Achievements and Habits-page stats only see today's completions | S | Done |
 | C3 | No demo / guest path for recruiters | M | Dropped (owner's decision) |
 | C4 | Check-off is slow and gives no reward | M | Done |
-| H1 | Habit list buried on dashboard | M | Open |
+| H1 | Habit list buried on dashboard | M | Open (superseded by N1) |
 | H2 | Bare `primary` color token missing | S | Done |
 | H3 | Keyboard and screen-reader access broken | M | Done |
-| H4 | Five inconsistent streak calculations | M | Done (daily rules for all frequencies; weekly/custom rules pending H6) |
+| H4 | Five inconsistent streak calculations | M | Done (daily rules for all frequencies; weekly/custom hidden for now, see N3) |
 | H5 | Analytics numbers misleading or wrong | M | Done (daily rules for all frequencies, like H4) |
-| H6 | Unfinished features visible in the UI | S each | Open |
+| H6 | Unfinished features visible in the UI | S each | Open (superseded by N2 and N3) |
 | H7 | "Complete All" undermines motivation | S | Done (removed; no demo account yet) |
 | H8 | Enter on "Cancel" in delete confirmation deletes | S–M | Done (Delete now hard-deletes; Archive archives) |
 | H9 | Dark mode unfinished | S–M | Done |
@@ -28,20 +30,36 @@ Mark items as they are fixed so work can resume in a new session.
 | M3 | Creating a habit takes 4+ taps, no defaults | S–M | Done (template chips deferred: template icons are emojis, see notes) |
 | M4 | Generic first-run experience | M | Done |
 | M5 | Mobile navigation and sidebar layout shift | M | Done |
-| M6 | Heatmap awkward on phones | S | Open |
+| M6 | Heatmap awkward on phones | S | Open (superseded by N8) |
 | M7 | Dashboard "today" numbers contradict each other | S | Done |
 | M8 | Inconsistent loading / error / success states | M | Partly done (atomic points needs a DB change, pending decision) |
 | M9 | `Input` breaks email fields on mobile | S | Done |
-| M10 | Contrast failures | S | Partly done (primary button white-on-green 2.5:1 pending brand decision) |
+| M10 | Contrast failures | S | Partly done (primary button: decision made, fix tracked in N6) |
 | M11 | Links that reload the whole app | S | Done |
 | M12 | Single 1.49 MB JS bundle | S–M | Done |
 | L1 | Code polish a reviewer will notice | S | Done |
 | L2 | Font setup | S | Done |
 | L3 | Achievement toast styling | S | Done |
-| L4 | Navbar details | S | Open |
+| L4 | Navbar details | S | Open (superseded by N13) |
 | L5 | Copy and emoji | S | Done |
 | L6 | Level curve ends early | S | Done |
 | L7 | README accuracy | S | Done (LICENSE file decision pending) |
+| N1 | Dashboard isn't built around today's check-ins | M | Open |
+| N2 | Controls that look real but do nothing | S | Open |
+| N3 | Weekly/custom frequencies behave as daily | S | Open (decided: hide from selector) |
+| N4 | Same habit shows different completion % per page | S | Open |
+| N5 | No level-up moment, invisible streak risk, cluttered habit card | M | Open |
+| N6 | Primary button and habit-colored text fail contrast | S | Open (decided: primary-700 / primary-800) |
+| N7 | Charts hard to read, trend dips every morning | S–M | Open |
+| N8 | Heatmap busy and awkward on phones | S–M | Open |
+| N9 | Mobile shell rough edges | S–M | Open |
+| N10 | Navbar and sidebar remount on every page change | S–M | Open |
+| N11 | Loading buttons lose their label | S | Open |
+| N12 | First impression outside the app (login copy, meta tags) | S | Open |
+| N13 | Navbar details | S | Open |
+| N14 | Visual consistency across pages | S–M | Open |
+| N15 | Achievements page doesn't point to the next goal | S | Open |
+| N16 | Tab left open past midnight shows yesterday as today | S | Open |
 
 ---
 
@@ -298,3 +316,167 @@ Mark items as they are fixed so work can resume in a new session.
 3. **Trustworthy numbers (C1 + C2 + H4 + H5).** Local-time day boundaries, one tested `streaks.ts`, all-time achievement data, age-aware rates.
 
 **Quick wins (under an hour total):** `--color-primary` token (H2), focus rings on `Button` (H3), `Input` type bug (M9), remove "coming soon" / `todo` controls (H6).
+
+---
+
+# Round 2 (2026-10-16)
+
+A re-read of the current source after most round-1 items were fixed. Verified working from round 1: optimistic check-off with Undo toast, "+10" burst and perfect-day confetti; one shared local-day rule set for streaks and rates; focus-trapped dialogs with Cancel focused first; reduced-motion support; dark theme applied before first paint; bottom tab bar on phones; route code splitting.
+
+Core loop as of this round: creating a habit is 2 taps plus typing (open the form, type a name, press Enter). Checking off on a phone is 1 tap, but only after scrolling past about 7 blocks.
+
+## Decisions (owner, 2026-10-16)
+
+- **N3, weekly/custom frequencies:** hide them for now (option a). Remove "weekly" and "custom" from the selector only; keep the code paths (schema enum, types, DB values) so they can return when their rules exist.
+- **N6, primary button color:** primary buttons use `primary-700` (#047857) for the background and `primary-800` (#065f46) for hover. `primary-500` stays for fills, rings and accents. Reason: white text on `primary-600` is about 3.8:1, below the 4.5:1 WCAG AA minimum for normal-size text; white on `primary-700` is about 5.5:1 and on `primary-800` about 7.6:1. (The round-2 audit reply had suggested `primary-600` was enough for 16px bold; that was wrong, since bold text only counts as large from about 18.7px.)
+
+## 🔴 Critical
+
+### N1. The dashboard isn't built around today's check-ins (expands H1)
+- **Problem:**
+  - On a phone, `src/pages/DashboardPage.tsx` shows the header with "Browse Templates", the level card, 4 stat tiles, Today's Progress, the achievement count, and sometimes the Step 2 prompt before the first checkbox. The list (`src/components/habits/HabitsContainer.tsx`) then opens with its own search bar and All/Completed/Incomplete chips (`src/components/habits/HabitList.tsx:46-130`).
+  - The category chips that filter the list are rendered at the bottom of the page (`DashboardPage.tsx:316-326`), below the achievement blocks. The list has three separate filter controls.
+  - "Today" appears twice with the same number: the stat card (`DashboardPage.tsx:162`) and the `TodayProgress` card.
+  - Achievements take three blocks: the count card, Recent Achievements, and "Still to unlock" with an endless `animate-pulse` glow (`DashboardPage.tsx:246`).
+  - The header's main button is "Browse Templates", not "New habit". Featured Templates also shows to users who already have habits.
+- **Why it matters:** Streaks, Finch and Habitica open on the list. A recruiter on a phone sees a stats page and has to hunt for the product.
+- **Solution:**
+  1. Order: compact strip (Today ring x/y, 🔥 best streak, level chip), then Today's Habits, then everything else.
+  2. Move the category chips into the list header. Drop the search bar and status chips from the dashboard list (the Habits page has search).
+  3. Sort habits that are done today to the bottom.
+  4. Merge the three achievement blocks into one "Next achievement" card (closest locked one, with progress).
+  5. Header button becomes "New habit". Show Featured Templates only when the user has fewer than 3 habits.
+- **Effort:** M
+
+### N2. Controls that look real but do nothing (expands H6)
+- **Problem:**
+  - "Delete Account" is a live red `Button` with no handler (`src/pages/SettingsPage.tsx:250`).
+  - "Forgot password?" has no handler (`src/pages/LoginPage.tsx:86`), though `resetPassword` exists in `useAuth`.
+  - "Profile" in the account menu goes to `/habits` (`src/components/layout/Navbar.tsx:167`).
+  - The ⭐ favorite is `useState` only and resets on reload (`src/components/habits/HabitOverviewCard.tsx:44`).
+  - Sort by "streak" and "rate" returns 0 (`src/pages/HabitsPage.tsx:86-91`).
+  - List and Table views show "coming in a future update ✨" (`HabitsPage.tsx:262-282`).
+  - Settings has four "Coming soon!" rows with fake grey toggles.
+- **Why it matters:** Reviewers click everything. Dead controls read as an unfinished project; a dead danger button reads as broken.
+- **Solution:** Remove the Delete Account row, the notification / change-password / 2FA rows, the List and Table toggles, the star and the Profile menu item. Wire up Forgot password with the existing `resetPassword`. Implement sort by streak (`getHabitStreaks`) and rate (`getHabitRate`).
+- **Effort:** S
+
+## 🟠 High
+
+### N3. Weekly and custom frequencies can be picked but behave as daily
+- **Problem:** `src/components/habits/FrequencySelector.tsx:15` offers daily, weekly and custom, but everything downstream uses daily rules (`src/lib/streaks.ts:14`, `src/lib/analytics.ts:13`). A weekly habit shows in "Today's Habits" every day, counts toward "perfect day", loses its streak after one day, and rates about 14%.
+- **Why it matters:** The first weekly habit a user creates fails every day.
+- **Decision:** Hide weekly and custom (see [Decisions](#decisions-owner-2026-10-16)).
+- **Solution:** Offer only "daily" in `FrequencySelector` (or remove the selector if a single option looks odd, and keep "Daily" in the More options summary). Keep the `frequency` enum, types and DB values unchanged; existing weekly/custom habits must still load and edit without errors.
+- **Effort:** S
+
+### N4. The same habit shows a different completion % on different pages
+- **Problem:**
+  - Habits-page cards use `calculateCompletionRate` in `src/hooks/useHabitStats.ts:52+`: unique days since creation, ignoring `target_count` (1 of 3 counts as a full day).
+  - Analytics uses `getHabitRate` (`src/lib/analytics.ts`): 30-day window, capped at the daily target.
+  - The 7-day sparkline in `HabitOverviewCard.tsx` scales to its own maximum, so 1/1 every day looks like 3/3 every day, and it has no day labels.
+- **Why it matters:** Undoes the H4/H5 "one set of numbers" work in the view where users compare habits.
+- **Solution:** Use `getHabitRate(habit, completions)` in `useHabitStats`. Scale the sparkline to `target_count`; add M T W… labels with today highlighted.
+- **Effort:** S
+
+### N5. Gamification is missing its two strongest moments
+- **Problem:**
+  - No level-up moment: nothing in `src` reacts to crossing one of the 11 tiers; the level card just changes text.
+  - Streak risk is invisible: `calculateCurrentStreak` keeps yesterday's streak alive, and `HabitCard` shows the same 🔥 N (`src/components/habits/HabitCard.tsx:157-165`) whether today is done or the streak ends at midnight.
+  - `HabitCard` shows up to 7 chips next to the name (count, "daily", category, "1x per day", 🔥, 🏆, 🎉), and on phones the name is capped at `max-w-30` (120px, `HabitCard.tsx:112`).
+- **Why it matters:** "Streak at risk" and "Level up!" drive Duolingo and Finch. Today the reward loop is points-only.
+- **Solution:**
+  - In `useToggleCompletion.onMutate`, compare the level before and after the points change; on a new level, `celebrate()` and show a level-up toast with the tier's emoji and label.
+  - Grey flame and "Keep your N-day streak, check in today" when `current > 0` and today isn't done; orange once it is.
+  - Drop the "daily" and "1x per day" chips; remove the name width cap and let chips wrap below the name.
+- **Effort:** M
+
+### N6. Primary button and habit-colored text fail contrast (closes the M10 decision)
+- **Problem:**
+  - Primary buttons are white on `#10b981` (`primary-500`), about 2.5:1 (`src/components/ui/Button.tsx:37`, `.btn-primary` in `src/index.css`). This covers every main CTA (Log In, Create Habit, Add habits).
+  - Habit names on the Habits page are drawn in the habit's color (`HabitOverviewCard.tsx:91`); amber `#F59E0B`, lime `#84CC16` and cyan `#06B6D4` are about 2:1 on white.
+- **Why it matters:** Lighthouse and axe flag it immediately.
+- **Decision:** `primary-700` background, `primary-800` hover; `primary-500` stays for fills, rings and accents (see [Decisions](#decisions-owner-2026-10-16)).
+- **Solution:** Update the primary variant in `Button.tsx` and `.btn-primary` in `index.css` to `bg-primary-700 hover:bg-primary-800`. Check other white-on-green text against the same rule (e.g. the active sidebar link `bg-primary-500 text-white` in `Sidebar.tsx`, the active Achievements filter chip). Render habit names in gray-900 / gray-100 with the colored icon chip carrying the color.
+- **Effort:** S
+
+## 🟡 Medium
+
+### N7. Charts are hard to read and in places misleading
+- **Problem:**
+  - The trend line includes today's unfinished day (`getDailyTargetTrend` ends at today), so it drops toward 0% every morning; it also draws 30 dots, even on phones (`src/components/analytics/CompletionTrendChart.tsx`).
+  - `src/components/analytics/HabitPerformanceChart.tsx`: vertical bars with names rotated -45° to -60° and cut to 7 characters on phones; 500px tall on desktop; Y axis not fixed to 0–100; a 0% habit has no visible bar.
+  - No chart has a text alternative.
+- **Solution:** Draw today as a hollow/dashed point, or end the trend at yesterday; hide dots on phones. Horizontal bar chart (`layout="vertical"`) with full names, 0–100 domain, % label at each bar end, about 32px per row. `role="img"` plus an `aria-label` summary (best and lowest habit).
+- **Effort:** S–M
+
+### N8. Heatmap is busy and still awkward on phones (expands M6)
+- **Problem:** In `src/components/analytics/ActivityHeatmap.tsx`:
+  - GitHub's green palette instead of the brand ramp; its own `MutationObserver` instead of `useTheme`.
+  - Colors raw check-in counts while every other chart uses % of target.
+  - Five tinted stat tiles (amber, green, red, blue, fuchsia) in a 4-column grid leave one orphan; "Total Days" in red reads as an error.
+  - "Best Active Streak" here vs "Best Streak" in the page header measure different things with near-identical names.
+  - On phones it opens at the oldest end, cells are 8px, and the hint says "Hover over a day".
+  - Day labels use `gap-2.5` while cells use `gap-2`, so labels drift from their rows.
+  - Cells aren't focusable and have only a `title`.
+- **Solution:** Scroll to the end on mount; 4 months on phones. Brand ramp (`primary-100`…`primary-700`), colored by % of target met. Three neutral tiles (active days, busiest day, average per day). Label Mon, Wed, Fri only. "Tap a day" on touch. Visually hidden text summary.
+- **Effort:** S–M
+
+### N9. Mobile shell rough edges
+- **Problem:**
+  - `h-screen` with an inner scroll container (`src/components/layout/DashboardLayout.tsx:42`): on iOS Safari `100vh` exceeds the visible area, and the inner scroller stops the address bar from collapsing.
+  - Two menu buttons on phones: the navbar hamburger and the tab bar's "More".
+  - Toasts are top-right over the navbar; a check-in that completes the day and unlocks an achievement shows 3 toasts plus confetti at once.
+- **Solution:** `h-dvh`, or let the body scroll. Remove the hamburger below `lg`. `position="bottom-center"` above the tab bar on phones; fold the check-in toast into the achievement toast when both fire.
+- **Effort:** S–M
+
+### N10. Navbar and sidebar remount on every page change
+- **Problem:** Every page renders its own `<DashboardLayout>`, so navigation unmounts and remounts Navbar and Sidebar. Each sidebar link replays its entry animation (`src/components/layout/Sidebar.tsx:90-96`).
+- **Why it matters:** Feels like a full reload; a reviewer will look for the layout-route pattern.
+- **Solution:** One layout route in `src/App.tsx`: `<Route element={<ProtectedRoute><DashboardLayout><Outlet /></DashboardLayout></ProtectedRoute>}>` with the pages as children; remove the per-page wrappers.
+- **Effort:** S–M
+
+### N11. Loading buttons lose their label
+- **Problem:** `src/components/ui/Button.tsx:66-70` replaces the label with "Loading..." ("Delete" → "Loading...", "Log In" → "Loading..."), and the width jumps. Settings works around it with its own "Saving..." (`src/pages/SettingsPage.tsx:149`).
+- **Solution:** Keep the label, show the spinner in place of the left icon, set `aria-busy`; optional `loadingText` prop.
+- **Effort:** S
+
+### N12. First impression outside the app
+- **Problem:**
+  - Login has no logo or line about what HabitFlow is, only "Welcome back" (`src/pages/LoginPage.tsx`).
+  - `index.html` has no `meta description`, Open Graph image, `theme-color` or apple-touch-icon.
+  - The favicon is declared `image/svg+xml` but is `logo.png`.
+  - The `<title>` says "Habit Flow"; the UI says "HabitFlow".
+- **Why it matters:** The live link is shared on LinkedIn, résumés and Slack, where it previews as a bare title. (Separate from the dropped demo account, C3.)
+- **Solution:** Logo plus a one-line pitch and 3 feature bullets on login and signup. OG/meta tags with a screenshot, `theme-color #10b981`, correct icon type, consistent name.
+- **Effort:** S
+
+## 🟢 Low
+
+### N13. Navbar details (expands L4)
+- **Problem:** The time in `src/components/layout/Navbar.tsx:36-42` never updates. A decorative `<h3>` "Happy Monday!" precedes the page `<h1>`, and there are two `<h1>` logos. `LevelBadge` has `cursor-pointer` and `hover:scale` but does nothing; its explanation is only a `title`.
+- **Solution:** Date only. Logo text as a `span`. Make the badge a link (achievements/level) or drop its hover styles.
+- **Effort:** S
+
+### N14. Visual consistency across pages
+- **Problem:** The Habits page uses its own gradient-text title with a Sparkles icon instead of `PageHeader` (`src/pages/HabitsPage.tsx:141-148`); its cards replay a 1s staggered fade after every filter change (`:252`) and use `hover:scale-[1.02]` plus a blur glow. Dashboard stat tiles use 4 different tints. Card surfaces vary (`bg-[#fefefe]` at `DashboardPage.tsx:216`, `.card`, hand-rolled `rounded-3xl`).
+- **Solution:** `PageHeader` everywhere, one `Card` surface, neutral stat tiles with colored icons only, animate on first mount only.
+- **Effort:** S–M
+
+### N15. Achievements page doesn't point to the next goal
+- **Problem:** Locked achievements are in database order; progress bars are hidden at 0% (`src/components/achievements/AchievementCard.tsx:84`); filter chips lack `aria-pressed` (`src/pages/AchievementsPage.tsx:125`); dark rarity backgrounds like `dark:bg-blue-800` are heavy.
+- **Solution:** Sort locked by progress, highest first; pin a "Closest to unlocking" row; show progress as "3 / 7"; add `aria-pressed`; lighten dark tints to `/30`.
+- **Effort:** S
+
+### N16. A tab left open past midnight shows yesterday as today
+- **Problem:** The `["completions", userId]` key in `src/hooks/useCompletions.ts` has no date, so an open tab keeps yesterday's check-ins until something refetches.
+- **Solution:** Include `toDayKey(new Date())` in the key, or schedule a refetch at local midnight.
+- **Effort:** S
+
+## Top 3 for a portfolio review (round 2)
+
+1. **Rebuild the dashboard around Today's Habits (N1).** The check-off is the best-built part of the app and it's halfway down the page.
+2. **Remove or wire up every dead control (N2, N3).** Under an hour; removes the clearest "unfinished" signal.
+3. **Add the missing reward moments (N5) and fix button contrast (N6).** Level-up, streak-at-risk, and readable CTAs.
+
+**Quick wins:** N2, N3, N4, N6, N11, N12.
