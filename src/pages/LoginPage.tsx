@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/Button";
 import { ArrowRight } from "lucide-react";
+import { AuthBrand, AuthFeatures } from "@/components/auth/AuthBrand";
 
 const loginSchema = z.object({
   email: z
@@ -38,8 +39,10 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-primary-100 dark:from-gray-950 dark:via-gray-900 dark:to-primary-950 flex items-center justify-center p-4 sm:p-6">
+    <div className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-primary-100 dark:from-gray-950 dark:via-gray-900 dark:to-primary-950 flex flex-col items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-md">
+        <AuthBrand />
+
         {/* Card */}
         <div className="rounded-2xl border border-gray-200 dark:border-gray-800 p-5 sm:p-6 lg:p-8 shadow-xl shadow-primary-200/50 dark:shadow-primary-950/50 bg-white dark:bg-gray-900 backdrop-blur-sm">
           {/* Header */}
@@ -116,8 +119,8 @@ export function LoginPage() {
             </Link>
           </div>
         </div>
-
       </div>
+      <AuthFeatures />
     </div>
   );
 }

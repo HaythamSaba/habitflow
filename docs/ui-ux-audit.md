@@ -55,7 +55,7 @@ Mark items as they are fixed so work can resume in a new session.
 | N9 | Mobile shell rough edges | S–M | Open |
 | N10 | Navbar and sidebar remount on every page change | S–M | Open |
 | N11 | Loading buttons lose their label | S | Done |
-| N12 | First impression outside the app (login copy, meta tags) | S | Open |
+| N12 | First impression outside the app (login copy, meta tags) | S | Done (preview image is the logo until a 1200×630 screenshot exists) |
 | N13 | Navbar details | S | Open |
 | N14 | Visual consistency across pages | S–M | Open |
 | N15 | Achievements page doesn't point to the next goal | S | Open |

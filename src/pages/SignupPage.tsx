@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
 import { ArrowRight } from "lucide-react";
+import { AuthBrand, AuthFeatures } from "@/components/auth/AuthBrand";
 
 const signupSchema = z
   .object({
@@ -55,11 +56,12 @@ export function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-primary-100 dark:from-gray-950 dark:via-gray-900 dark:to-primary-950 flex items-center justify-center p-4 sm:p-6">
+    <div className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-primary-100 dark:from-gray-950 dark:via-gray-900 dark:to-primary-950 flex flex-col items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-md">
+        <AuthBrand />
+
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
-
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             Create your account
           </h1>
@@ -156,7 +158,9 @@ export function SignupPage() {
             </Link>
           </div>
         </div>
+
       </div>
+        <AuthFeatures />
     </div>
   );
 }
