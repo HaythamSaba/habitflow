@@ -60,18 +60,17 @@ export function SignupPage() {
       <div className="w-full max-w-md">
         <AuthBrand />
 
-        {/* Header */}
-        <div className="text-center mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-            Create your account
-          </h1>
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
-            Track your habits, build streaks and see your progress
-          </p>
-        </div>
-
         {/* Card */}
         <div className="rounded-3xl border border-gray-200 dark:border-gray-800 p-5 sm:p-6 lg:p-8 shadow-xl shadow-primary-200/50 dark:shadow-primary-950/50 bg-white dark:bg-gray-900 backdrop-blur-sm">
+          {/* Card */}
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+              Create your account
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
+              Track your habits, build streaks and see your progress
+            </p>
+          </div>
           {/* noValidate: zod shows the errors, not the browser's native bubbles */}
           <form
             noValidate
@@ -158,9 +157,8 @@ export function SignupPage() {
             </Link>
           </div>
         </div>
-
       </div>
-        <AuthFeatures />
+      <AuthFeatures />
     </div>
   );
 }
