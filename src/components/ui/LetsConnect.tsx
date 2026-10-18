@@ -30,10 +30,10 @@ export default function LetsConnect() {
 
       </div>
 
-      <div className="mt-6 pt-6 border-t border-gray-700">
+      <div className="mt-6">
         <a
           href="mailto:haythamsaba@gmail.com?subject=HabitFlow%20Feedback"
-          className="block w-full text-center px-4 py-3 bg-primary-700 hover:bg-primary-800 text-white rounded-2xl font-medium transition-colors"
+          className="block w-full text-center px-4 py-3 bg-primary-500 hover:bg-primary-800 text-white rounded-2xl font-medium transition-colors"
         >
           Send Feedback
         </a>

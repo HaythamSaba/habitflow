@@ -35,7 +35,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     // Focus ring uses primary-600 (≥3:1 against white and dark backgrounds);
     // danger overrides it with red so the ring matches the button
     const variants = {
-      primary: "btn-primary bg-primary-700 text-white hover:bg-primary-800",
+      primary: "btn-primary bg-primary-500 text-white hover:bg-primary-800",
       secondary:
         "btn-secondary bg-secondary text-gray-900 hover:bg-yellow-400",
       // Dark variants must live here: these utilities beat the dark: rules in

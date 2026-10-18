@@ -150,7 +150,7 @@ export default function Navbar({
                   aria-controls="account-menu"
                 >
                   <span
-                    className="bg-primary-700 rounded-full text-white p-2 font-bold text-sm md:text-base"
+                    className="bg-primary-500 rounded-full text-white p-2 font-bold text-sm md:text-base"
                     aria-hidden="true"
                   >
                     {userInitials}
