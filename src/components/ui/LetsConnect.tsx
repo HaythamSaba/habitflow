@@ -33,7 +33,7 @@ export default function LetsConnect() {
       <div className="mt-6 pt-6 border-t border-gray-700">
         <a
           href="mailto:haythamsaba@gmail.com?subject=HabitFlow%20Feedback"
-          className="block w-full text-center px-4 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-medium transition-colors"
+          className="block w-full text-center px-4 py-3 bg-primary-700 hover:bg-primary-800 text-white rounded-2xl font-medium transition-colors"
         >
           Send Feedback
         </a>

@@ -103,7 +103,7 @@ export default function SideBar({
                     transition-all duration-200 relative
                     ${
                       active
-                        ? "bg-primary-500 text-white"
+                        ? "bg-primary-700 text-white"
                         : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                     }`}
                 >

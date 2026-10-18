@@ -42,10 +42,8 @@ export function TemplateCard({ template, onUseTemplate }: TemplateCardProps) {
         {template.icon}
       </div>
 
-      <div
-        className="text-base sm:text-lg lg:text-xl font-bold mb-1.5 sm:mb-2 truncate pr-16 sm:pr-20"
-        style={{ color: template.color }}
-      >
+      {/* Neutral text for contrast; the icon tile above carries the color */}
+      <div className="text-base sm:text-lg lg:text-xl font-bold mb-1.5 sm:mb-2 truncate pr-16 sm:pr-20 text-gray-900 dark:text-gray-100">
         {template.name}
       </div>
 

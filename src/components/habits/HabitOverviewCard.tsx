@@ -89,10 +89,9 @@ export function HabitOverviewCard({
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <h3
-                className="font-bold text-base sm:text-lg truncate"
-                style={{ color: habit.color }}
-              >
+              {/* Neutral text: palette colors like amber and lime are ~2:1 on
+                  white. The icon chip beside it carries the habit color. */}
+              <h3 className="font-bold text-base sm:text-lg truncate text-gray-900 dark:text-gray-100">
                 {habit.name}
               </h3>
               {habit.description && (

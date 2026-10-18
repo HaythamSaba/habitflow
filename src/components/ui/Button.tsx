@@ -6,6 +6,8 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "ghost" | "danger" | "outline";
   size?: "sm" | "md" | "lg";
   isLoading?: boolean;
+  /** Label shown while loading, e.g. "Saving…". Defaults to the normal label. */
+  loadingText?: React.ReactNode;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
 }
@@ -17,6 +19,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       variant = "primary",
       size = "md",
       isLoading = false,
+      loadingText,
       leftIcon,
       rightIcon,
       children,
@@ -32,7 +35,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     // Focus ring uses primary-600 (≥3:1 against white and dark backgrounds);
     // danger overrides it with red so the ring matches the button
     const variants = {
-      primary: "btn-primary bg-primary text-white hover:bg-emerald-600",
+      primary: "btn-primary bg-primary-700 text-white hover:bg-primary-800",
       secondary:
         "btn-secondary bg-secondary text-gray-900 hover:bg-yellow-400",
       // Dark variants must live here: these utilities beat the dark: rules in
@@ -51,26 +54,28 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       lg: "btn-lg px-4 sm:px-6 py-2.5 sm:py-3 text-base sm:text-lg min-h-11 sm:min-h-12",
     };
 
+    // While loading, the label stays (so "Delete" doesn't become a generic
+    // "Loading...") and the spinner takes an icon's slot: the left icon's,
+    // else the right icon's, so the button keeps its width where it can
+    const spinner = (
+      <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+    );
+    const spinnerOnRight = isLoading && !leftIcon && !!rightIcon;
+    const left = isLoading && !spinnerOnRight ? spinner : leftIcon;
+    const right = spinnerOnRight ? spinner : rightIcon;
+
     return (
       <button
         ref={ref}
         disabled={disabled || isLoading}
+        aria-busy={isLoading || undefined}
         className={cn(baseStyles, variants[variant], sizes[size], className)}
         {...props}
         onClick={onClick}
       >
-        {isLoading ? (
-          <>
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-            Loading...
-          </>
-        ) : (
-          <>
-            {leftIcon && <span className="mr-1.5 sm:mr-2">{leftIcon}</span>}
-            {children}
-            {rightIcon && <span className="ml-1.5 sm:ml-2">{rightIcon}</span>}
-          </>
-        )}
+        {left && <span className="mr-1.5 sm:mr-2">{left}</span>}
+        {isLoading && loadingText ? loadingText : children}
+        {right && <span className="ml-1.5 sm:ml-2">{right}</span>}
       </button>
     );
   },

@@ -34,7 +34,7 @@ Mark items as they are fixed so work can resume in a new session.
 | M7 | Dashboard "today" numbers contradict each other | S | Done |
 | M8 | Inconsistent loading / error / success states | M | Partly done (atomic points needs a DB change, pending decision) |
 | M9 | `Input` breaks email fields on mobile | S | Done |
-| M10 | Contrast failures | S | Partly done (primary button: decision made, fix tracked in N6) |
+| M10 | Contrast failures | S | Done (primary button fixed in N6) |
 | M11 | Links that reload the whole app | S | Done |
 | M12 | Single 1.49 MB JS bundle | S–M | Done |
 | L1 | Code polish a reviewer will notice | S | Done |
@@ -49,12 +49,12 @@ Mark items as they are fixed so work can resume in a new session.
 | N3 | Weekly/custom frequencies behave as daily | S | Open (decided: hide from selector) |
 | N4 | Same habit shows different completion % per page | S | Done |
 | N5 | No level-up moment, invisible streak risk, cluttered habit card | M | Open |
-| N6 | Primary button and habit-colored text fail contrast | S | Open (decided: primary-700 / primary-800) |
+| N6 | Primary button and habit-colored text fail contrast | S | Done (primary-700 / primary-800) |
 | N7 | Charts hard to read, trend dips every morning | S–M | Open |
 | N8 | Heatmap busy and awkward on phones | S–M | Open |
 | N9 | Mobile shell rough edges | S–M | Open |
 | N10 | Navbar and sidebar remount on every page change | S–M | Open |
-| N11 | Loading buttons lose their label | S | Open |
+| N11 | Loading buttons lose their label | S | Done |
 | N12 | First impression outside the app (login copy, meta tags) | S | Open |
 | N13 | Navbar details | S | Open |
 | N14 | Visual consistency across pages | S–M | Open |

@@ -19,7 +19,7 @@ export function CategoryChips({
         onClick={() => onSelectCategory(null)}
         className={`inline-flex items-center gap-1 sm:gap-2 py-1.5 sm:py-2 px-3 sm:px-4 min-h-11 rounded-full font-medium text-xs sm:text-sm transition-all whitespace-nowrap shrink-0 ${
           selectedCategoryId === null
-            ? "bg-primary-500 text-white shadow-md"
+            ? "bg-primary-700 text-white shadow-md"
             : "bg-gray-100 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
         }`}
       >

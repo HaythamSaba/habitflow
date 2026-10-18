@@ -46,7 +46,7 @@ export function TemplateGallery({
           onClick={() => setSelectedCategory(null)}
           className={`px-3 sm:px-4 py-1.5 sm:py-2 min-h-11 rounded-full font-medium text-xs sm:text-sm transition-all whitespace-nowrap shrink-0 ${
             selectedCategory === null
-              ? "bg-primary-500 text-white shadow-lg scale-105"
+              ? "bg-primary-700 text-white shadow-lg scale-105"
               : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
           }`}
         >
@@ -67,7 +67,7 @@ export function TemplateGallery({
               onClick={() => setSelectedCategory(category)}
               className={`px-3 sm:px-4 py-1.5 sm:py-2 min-h-11 rounded-full font-medium text-xs sm:text-sm transition-all whitespace-nowrap shrink-0 ${
                 selectedCategory === category
-                  ? "bg-primary-500 text-white shadow-lg scale-105"
+                  ? "bg-primary-700 text-white shadow-lg scale-105"
                   : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
               }`}
             >

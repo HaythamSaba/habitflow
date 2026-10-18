@@ -116,9 +116,11 @@ export function SettingsPage() {
                   type="submit"
                   size="md"
                   disabled={!canSave}
+                  isLoading={updateUserInfo.isPending}
+                  loadingText="Saving…"
                   className={`min-h-11 w-full sm:w-auto ${!canSave ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
-                  {updateUserInfo.isPending ? "Saving..." : "Save Changes"}
+                  Save Changes
                 </Button>
                 <Button
                   type="button"

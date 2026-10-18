@@ -90,7 +90,7 @@ export function EmailConfirmationPage() {
             {/* Step 1 */}
             <div className="flex gap-4">
               <div className="shrink-0">
-                <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center 
+                <div className="w-8 h-8 bg-primary-700 rounded-full flex items-center 
                   justify-center text-white font-bold text-sm">
                   1
                 </div>
@@ -108,7 +108,7 @@ export function EmailConfirmationPage() {
             {/* Step 2 */}
             <div className="flex gap-4">
               <div className="shrink-0">
-                <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center 
+                <div className="w-8 h-8 bg-primary-700 rounded-full flex items-center 
                   justify-center text-white font-bold text-sm">
                   2
                 </div>
@@ -126,7 +126,7 @@ export function EmailConfirmationPage() {
             {/* Step 3 */}
             <div className="flex gap-4">
               <div className="shrink-0">
-                <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center 
+                <div className="w-8 h-8 bg-primary-700 rounded-full flex items-center 
                   justify-center text-white font-bold text-sm">
                   3
                 </div>
