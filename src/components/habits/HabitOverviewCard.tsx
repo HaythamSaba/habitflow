@@ -41,6 +41,10 @@ export function HabitOverviewCard({
     completions || [],
   );
 
+  // Sparkline bars are scaled to the daily target
+  const target = Math.max(1, habit.target_count || 1);
+  const daysOnTarget = last7Days.filter((day) => day.count >= target).length;
+
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -192,9 +196,15 @@ export function HabitOverviewCard({
                 className="transition-all duration-1000 ease-out"
               />
             </svg>
-            <div className="absolute inset-0 flex items-center justify-center">
+            <div
+              className="absolute inset-0 flex items-center justify-center"
+              title="Daily targets met, last 30 days (or since created)"
+            >
               <span className="text-sm sm:text-lg lg:text-2xl font-bold text-gray-900 dark:text-gray-100">
                 {completionRate}%
+              </span>
+              <span className="sr-only">
+                of daily targets met in the last 30 days
               </span>
             </div>
           </div>
@@ -241,28 +251,48 @@ export function HabitOverviewCard({
               Last 7 days
             </span>
             <span className="text-xs text-gray-500 dark:text-gray-400">
-              {last7Days.reduce((a, b) => a + b, 0)} completions
+              {daysOnTarget} of 7 days on target
             </span>
           </div>
-          {/* Sparkline bars */}
-          <div className="flex items-end gap-0.5 sm:gap-1 h-8 sm:h-10 lg:h-12">
-            {last7Days.map((count, index) => {
-              const maxCount = Math.max(...last7Days, 1); // Avoid division by 0
-              const height = maxCount > 0 ? (count / maxCount) * 100 : 0;
+          {/* Sparkline bars: full height = daily target met, so 1/1 and 3/3
+              look the same and 1/3 is a third. Extra check-ins are capped. */}
+          <div
+            role="img"
+            aria-label={`Last 7 days: daily target met on ${daysOnTarget} of 7 days`}
+            className="flex items-end gap-0.5 sm:gap-1 h-8 sm:h-10 lg:h-12"
+          >
+            {last7Days.map((day) => {
+              const progress = Math.min(day.count / target, 1);
               return (
                 <div
-                  key={index}
+                  key={day.dayKey}
                   className="flex-1 rounded-t-md sm:rounded-t-lg transition-all duration-300 hover:opacity-80"
                   style={{
-                    height: `${height}%`,
+                    height: `${progress * 100}%`,
                     backgroundColor: habit.color,
-                    opacity: count === 0 ? 0.1 : 0.3 + (height / 100) * 0.7,
-                    minHeight: count === 0 ? "2px" : undefined, // Show minimal bar for 0
+                    // Met days solid, partial days lighter, empty days a faint stub
+                    opacity: progress === 0 ? 0.15 : progress < 1 ? 0.5 : 1,
+                    minHeight: progress === 0 ? "2px" : undefined,
                   }}
-                  title={`${count} completions`}
+                  title={`${day.isToday ? "Today, " : ""}${day.fullLabel}: ${day.count} of ${target}`}
                 />
               );
             })}
+          </div>
+          {/* Weekday labels, today highlighted */}
+          <div className="flex gap-0.5 sm:gap-1 mt-1" aria-hidden="true">
+            {last7Days.map((day) => (
+              <span
+                key={day.dayKey}
+                className={`flex-1 text-center text-xs ${
+                  day.isToday
+                    ? "font-bold text-gray-900 dark:text-gray-100"
+                    : "text-gray-500 dark:text-gray-400"
+                }`}
+              >
+                {day.label}
+              </span>
+            ))}
           </div>
         </div>
 
