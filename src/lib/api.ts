@@ -139,9 +139,9 @@ export async function deleteCompletion(completionId: string, userId: string) {
   if (error) throw new Error(error.message);
 }
 
-export async function getTodayCompletions(userId: string) {
-  // Bounds of the user's local "today", not the UTC date
-  const { start, end } = getLocalDayRange();
+export async function getTodayCompletions(userId: string, day: Date = new Date()) {
+  // Bounds of the user's local day, not the UTC date
+  const { start, end } = getLocalDayRange(day);
 
   const { data, error } = await supabase
     .from("completions")

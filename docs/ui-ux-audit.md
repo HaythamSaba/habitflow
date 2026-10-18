@@ -59,7 +59,7 @@ Mark items as they are fixed so work can resume in a new session.
 | N13 | Navbar details | S | Open |
 | N14 | Visual consistency across pages | S–M | Open |
 | N15 | Achievements page doesn't point to the next goal | S | Open |
-| N16 | Tab left open past midnight shows yesterday as today | S | Open |
+| N16 | Tab left open past midnight shows yesterday as today | S | Done |
 
 ---
 

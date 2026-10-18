@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "./useAuth";
+import { useTodayKey } from "./useTodayKey";
 import {
   createCompletion,
   deleteCompletion,
@@ -51,7 +52,8 @@ export function useToggleCompletion() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const userId = user?.id;
-  const todayKey = ["completions", userId];
+  // Must match useCompletions' key, which includes the local day
+  const todayKey = ["completions", userId, useTodayKey()];
   const allKey = ["all-completions", userId];
   const statsKey = ["user-stats", userId];
   const habitsKey = ["habits", userId];

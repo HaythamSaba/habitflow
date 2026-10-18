@@ -1,20 +1,26 @@
 import { useQuery } from "@tanstack/react-query";
+import { parseISO } from "date-fns";
 import { useAuth } from "./useAuth";
+import { useTodayKey } from "./useTodayKey";
 import { getTodayCompletions } from "@/lib/api";
 import { Completion } from "@/types";
 
 export function useCompletions() {
   const { user } = useAuth();
-  // Fetch today's completions
+  // The day is part of the key: at local midnight useTodayKey changes, the
+  // key changes, and the new (empty) day is fetched instead of showing
+  // yesterday's check-ins as today's
+  const todayKey = useTodayKey();
   const {
     data: completions,
     isLoading,
     error,
   } = useQuery<Completion[]>({
-    queryKey: ["completions", user?.id],
+    queryKey: ["completions", user?.id, todayKey],
     queryFn: () => {
       if (!user) throw new Error("User not authenticated");
-      return getTodayCompletions(user.id);
+      // parseISO reads a date-only key as local midnight
+      return getTodayCompletions(user.id, parseISO(todayKey));
     },
     enabled: !!user,
   });
