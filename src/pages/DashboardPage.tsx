@@ -213,10 +213,10 @@ export function DashboardPage() {
 
         {/* Habits + Chart */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-8">
-          <div className="card bg-[#fefefe] dark:bg-gray-950 rounded-2xl p-3 sm:p-4 lg:p-6 hover:shadow-lg hover:shadow-primary-100 dark:hover:shadow-primary-900 hover:dark:shadow-lg dark:shadow-gray-900 border border-gray-200 dark:border-gray-700">
+          <div className="card bg-[#fefefe] dark:bg-gray-950 rounded-2xl p-4 lg:p-6 hover:shadow-lg hover:shadow-primary-100 dark:hover:shadow-primary-900 hover:dark:shadow-lg dark:shadow-gray-900 border border-gray-200 dark:border-gray-700">
             <HabitsContainer filteredHabits={filteredHabits} />
           </div>
-          <div className="w-full">
+          <div className="card bg-[#fefefe] dark:bg-gray-950 rounded-2xl p-4 lg:p-6 hover:shadow-lg hover:shadow-primary-100 dark:hover:shadow-primary-900 hover:dark:shadow-lg dark:shadow-gray-900 border border-gray-200 dark:border-gray-700">
             <ChartCard
               title="This Week"
               subtitle="Daily targets met by habit, last 7 days"
