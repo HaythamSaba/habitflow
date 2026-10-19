@@ -12,7 +12,7 @@ import { useRef, useState } from "react";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { LevelBadge } from "@/components/ui/LevelBadge";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function Navbar({
   displayName,
@@ -29,6 +29,15 @@ export default function Navbar({
   const navigate = useNavigate();
   const [isShowDropdown, setIsShowDropdown] = useState(false);
   const dropdownWrapperRef = useRef<HTMLDivElement>(null);
+
+  // The navbar stays mounted between pages (layout route), so close the
+  // account menu whenever the page changes, e.g. after picking Settings
+  const { pathname } = useLocation();
+  const [shownPath, setShownPath] = useState(pathname);
+  if (pathname !== shownPath) {
+    setShownPath(pathname);
+    setIsShowDropdown(false);
+  }
 
   useClickOutside(dropdownWrapperRef, () => {
     setIsShowDropdown(false);

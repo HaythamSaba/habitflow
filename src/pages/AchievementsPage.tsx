@@ -1,4 +1,3 @@
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { useAchievements } from "@/hooks/useAchievements";
 import { AchievementCard } from "@/components/achievements/AchievementCard";
 import { calculateAchievementProgress } from "@/lib/achievements";
@@ -65,148 +64,144 @@ export function AchievementsPage() {
   if (isLoading) {
     // Skeleton mirrors the real layout so the page doesn't jump when data arrives
     return (
-      <DashboardLayout>
-        <div
-          className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6"
-          aria-busy="true"
-        >
-          <span className="sr-only">Loading achievements…</span>
-          <div className="space-y-2">
-            <Skeleton className="h-8 w-56" />
-            <Skeleton className="h-4 w-80 max-w-full" />
-          </div>
-          <div className="bg-white dark:bg-gray-950 rounded-xl p-3 sm:p-4 lg:p-6 border border-gray-200 dark:border-gray-800 space-y-3">
-            <div className="flex justify-between">
-              <Skeleton className="h-6 w-40" />
-              <Skeleton className="h-8 w-16" />
-            </div>
-            <Skeleton className="h-3 md:h-4 w-full rounded-full" />
-          </div>
-          <div className="flex gap-2">
-            {Array.from({ length: 5 }, (_, i) => (
-              <Skeleton key={i} className="h-11 w-24 rounded-lg shrink-0" />
-            ))}
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
-            {Array.from({ length: 8 }, (_, i) => (
-              <Skeleton key={i} className="h-48 sm:h-56 rounded-xl" />
-            ))}
-          </div>
+      <div
+        className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6"
+        aria-busy="true"
+      >
+        <span className="sr-only">Loading achievements…</span>
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-56" />
+          <Skeleton className="h-4 w-80 max-w-full" />
         </div>
-      </DashboardLayout>
+        <div className="bg-white dark:bg-gray-950 rounded-xl p-3 sm:p-4 lg:p-6 border border-gray-200 dark:border-gray-800 space-y-3">
+          <div className="flex justify-between">
+            <Skeleton className="h-6 w-40" />
+            <Skeleton className="h-8 w-16" />
+          </div>
+          <Skeleton className="h-3 md:h-4 w-full rounded-full" />
+        </div>
+        <div className="flex gap-2">
+          {Array.from({ length: 5 }, (_, i) => (
+            <Skeleton key={i} className="h-11 w-24 rounded-lg shrink-0" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
+          {Array.from({ length: 8 }, (_, i) => (
+            <Skeleton key={i} className="h-48 sm:h-56 rounded-xl" />
+          ))}
+        </div>
+      </div>
     );
   }
 
   return (
-    <DashboardLayout>
-      {/* RESPONSIVE: overflow-x-hidden prevents horizontal scroll on small screens */}
-      <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6">
-        {/* Header */}
-        <PageHeader
-          title="Achievements"
-          description="Milestones you've reached, and what's next."
-        />
+    // RESPONSIVE: overflow-x-hidden prevents horizontal scroll on small screens
+    <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6">
+      {/* Header */}
+      <PageHeader
+        title="Achievements"
+        description="Milestones you've reached, and what's next."
+      />
 
-        {/* Stats Overview */}
-        {/* RESPONSIVE: Reduced padding on mobile (p-3 sm:p-4) → desktop (lg:p-6) */}
-        <div className="bg-white dark:bg-gray-950 rounded-xl p-3 sm:p-4 lg:p-6 border border-gray-200 dark:border-primary-700">
-          {/* RESPONSIVE: Stack on very small screens, row on sm+ */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 md:mb-4 gap-2">
-            <div>
-              {/* RESPONSIVE: Smaller subheading on mobile */}
-              <h2 className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 dark:text-gray-100">
-                Your Progress
-              </h2>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                {unlockedCount} of {totalCount} achievements unlocked
-              </p>
-            </div>
-            {/* RESPONSIVE: Smaller percentage on mobile */}
-            <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary-700 dark:text-primary-400 shrink-0">
-              {completionPercentage}%
-            </div>
-          </div>
-
-          {/* Progress bar */}
-          {/* RESPONSIVE: Slightly thinner on mobile (h-3) → desktop (h-4) */}
-          <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-3 md:h-4 overflow-hidden">
-            <div
-              className="bg-primary-500 h-full transition-all duration-500"
-              style={{ width: `${completionPercentage}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Category Filter */}
-        <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1 -mb-1">
-          {["all", "completion", "streak", "points", "habit", "special"].map(
-            (category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-3 sm:px-4 py-2 min-h-11 rounded-lg font-medium transition-all text-sm sm:text-base whitespace-nowrap shrink-0 ${
-                  selectedCategory === category
-                    ? "bg-primary-500 text-white border border-primary-700 shadow-md dark:bg-primary-900 dark:text-primary-300 dark:border-primary-300"
-                    : "bg-white text-gray-700 border border-gray-300 hover:border-primary dark:bg-gray-950 dark:text-gray-400 dark:border-gray-600 hover:dark:border-primary-500"
-                }`}
-              >
-                {category.charAt(0).toUpperCase() + category.slice(1)}
-              </button>
-            ),
-          )}
-        </div>
-
-        {/* Unlocked Achievements */}
-        {unlockedAchievements.length > 0 && (
-          <div className="mt-6">
-            {/* RESPONSIVE: Smaller section heading on mobile */}
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3 md:mb-4">
-              Unlocked ({unlockedAchievements.length})
+      {/* Stats Overview */}
+      {/* RESPONSIVE: Reduced padding on mobile (p-3 sm:p-4) → desktop (lg:p-6) */}
+      <div className="bg-white dark:bg-gray-950 rounded-xl p-3 sm:p-4 lg:p-6 border border-gray-200 dark:border-primary-700">
+        {/* RESPONSIVE: Stack on very small screens, row on sm+ */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 md:mb-4 gap-2">
+          <div>
+            {/* RESPONSIVE: Smaller subheading on mobile */}
+            <h2 className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 dark:text-gray-100">
+              Your Progress
             </h2>
-            {/* RESPONSIVE: 1 col on mobile → 2 on md → 3 on lg → 4 on xl
-                Reduced gap on mobile (gap-3) → desktop (gap-4 lg:gap-6) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
-              {unlockedAchievements.map((achievement) => (
-                <AchievementCard
-                  key={achievement.id}
-                  achievement={achievement}
-                  unlocked={true}
-                  progress={100}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Locked Achievements */}
-        {lockedAchievements.length > 0 && (
-          <div className="mt-6">
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3 md:mb-4">
-              Locked ({lockedAchievements.length})
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
-              {lockedAchievements.map((achievement) => (
-                <AchievementCard
-                  key={achievement.id}
-                  achievement={achievement}
-                  unlocked={false}
-                  progress={progressMap.get(achievement.id) || 0}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Empty state */}
-        {filteredAchievements.length === 0 && (
-          // RESPONSIVE: Less vertical padding on mobile
-          <div className="text-center py-8 md:py-12">
-            <p className="text-gray-500 text-base md:text-lg">
-              No achievements in this category yet!
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+              {unlockedCount} of {totalCount} achievements unlocked
             </p>
           </div>
+          {/* RESPONSIVE: Smaller percentage on mobile */}
+          <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary-700 dark:text-primary-400 shrink-0">
+            {completionPercentage}%
+          </div>
+        </div>
+
+        {/* Progress bar */}
+        {/* RESPONSIVE: Slightly thinner on mobile (h-3) → desktop (h-4) */}
+        <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-3 md:h-4 overflow-hidden">
+          <div
+            className="bg-primary-500 h-full transition-all duration-500"
+            style={{ width: `${completionPercentage}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Category Filter */}
+      <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1 -mb-1">
+        {["all", "completion", "streak", "points", "habit", "special"].map(
+          (category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`px-3 sm:px-4 py-2 min-h-11 rounded-lg font-medium transition-all text-sm sm:text-base whitespace-nowrap shrink-0 ${
+                selectedCategory === category
+                  ? "bg-primary-500 text-white border border-primary-700 shadow-md dark:bg-primary-900 dark:text-primary-300 dark:border-primary-300"
+                  : "bg-white text-gray-700 border border-gray-300 hover:border-primary dark:bg-gray-950 dark:text-gray-400 dark:border-gray-600 hover:dark:border-primary-500"
+              }`}
+            >
+              {category.charAt(0).toUpperCase() + category.slice(1)}
+            </button>
+          ),
         )}
       </div>
-    </DashboardLayout>
+
+      {/* Unlocked Achievements */}
+      {unlockedAchievements.length > 0 && (
+        <div className="mt-6">
+          {/* RESPONSIVE: Smaller section heading on mobile */}
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3 md:mb-4">
+            Unlocked ({unlockedAchievements.length})
+          </h2>
+          {/* RESPONSIVE: 1 col on mobile → 2 on md → 3 on lg → 4 on xl
+              Reduced gap on mobile (gap-3) → desktop (gap-4 lg:gap-6) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
+            {unlockedAchievements.map((achievement) => (
+              <AchievementCard
+                key={achievement.id}
+                achievement={achievement}
+                unlocked={true}
+                progress={100}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Locked Achievements */}
+      {lockedAchievements.length > 0 && (
+        <div className="mt-6">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3 md:mb-4">
+            Locked ({lockedAchievements.length})
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
+            {lockedAchievements.map((achievement) => (
+              <AchievementCard
+                key={achievement.id}
+                achievement={achievement}
+                unlocked={false}
+                progress={progressMap.get(achievement.id) || 0}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Empty state */}
+      {filteredAchievements.length === 0 && (
+        // RESPONSIVE: Less vertical padding on mobile
+        <div className="text-center py-8 md:py-12">
+          <p className="text-gray-500 text-base md:text-lg">
+            No achievements in this category yet!
+          </p>
+        </div>
+      )}
+    </div>
   );
 }

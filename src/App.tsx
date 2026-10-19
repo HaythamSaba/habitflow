@@ -26,6 +26,13 @@ function lazyPage<Name extends string>(
   return lazy(() => load().then((module) => ({ default: module[name] })));
 }
 
+// The signed-in shell (navbar, sidebar) is lazy too, so the login page
+// doesn't download it
+const DashboardLayout = lazyPage(
+  () => import("@/components/layout/DashboardLayout"),
+  "DashboardLayout",
+);
+
 const LoginPage = lazyPage(() => import("@/pages/LoginPage"), "LoginPage");
 const SignupPage = lazyPage(() => import("@/pages/SignupPage"), "SignupPage");
 const EmailConfirmationPage = lazyPage(
@@ -130,63 +137,23 @@ function AppContent() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/email-confirmation" element={<EmailConfirmationPage />} />
 
-        {/* Protected Routes */}
+        {/* Protected Routes: one layout route, so the navbar and sidebar
+            stay mounted while the page inside <Outlet /> changes */}
         <Route
-          path="/analytics"
           element={
             <ProtectedRoute>
-              <AnalyticsPage />
+              <DashboardLayout />
             </ProtectedRoute>
           }
-        />
-        <Route
-          path="/habits"
-          element={
-            <ProtectedRoute>
-              <HabitsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/settings"
-          element={
-            <ProtectedRoute>
-              <SettingsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <DashboardPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/achievements"
-          element={
-            <ProtectedRoute>
-              <AchievementsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/templates"
-          element={
-            <ProtectedRoute>
-              <TemplatesPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/about"
-          element={
-            <ProtectedRoute>
-              <AboutPage />
-            </ProtectedRoute>
-          }
-        />
+        >
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/habits" element={<HabitsPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/achievements" element={<AchievementsPage />} />
+          <Route path="/templates" element={<TemplatesPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/about" element={<AboutPage />} />
+        </Route>
         {/* Redirect root to dashboard */}
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
 

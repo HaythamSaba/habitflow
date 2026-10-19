@@ -1,7 +1,6 @@
 import { lazy, Suspense, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { useHabits } from "@/hooks/useHabits";
 import { useCompletions } from "@/hooks/useCompletions";
 import { useDashboardStreak } from "@/hooks/useDashboardStreak";
@@ -97,238 +96,234 @@ export function DashboardPage() {
 
   if (isFirstRun) {
     return (
-      <DashboardLayout>
-        <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6">
-          <DashboardHeader
-            displayName={displayName}
-            onBrowseTemplates={() => navigate("/templates")}
-          />
-          <FirstRunWelcome />
-        </div>
-      </DashboardLayout>
-    );
-  }
-
-  return (
-    <DashboardLayout>
       <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6">
-        {/* Header */}
         <DashboardHeader
           displayName={displayName}
           onBrowseTemplates={() => navigate("/templates")}
         />
+        <FirstRunWelcome />
+      </div>
+    );
+  }
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-8">
-          <StatCard
-            value={habits?.length || 0}
-            title="Active Habits"
-            description={
-              habits?.length === 0
-                ? "Start by creating your first habit"
-                : `You have ${habits?.length} active ${habits?.length === 1 ? "habit" : "habits"}`
-            }
-            icon={
-              <CheckCircle2 className="w-4 h-4 lg:w-6 lg:h-6 text-primary-600 dark:text-primary-400" />
-            }
-            iconBgColor="bg-emerald-100 dark:bg-emerald-900/30"
-            isLoading={habitsLoading}
-          />
+  return (
+    <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6">
+      {/* Header */}
+      <DashboardHeader
+        displayName={displayName}
+        onBrowseTemplates={() => navigate("/templates")}
+      />
 
-          <StatCard
-            value={maxStreak}
-            // The highest current streak among your habits, not an overall streak
-            title="Best Active Streak"
-            description={
-              maxStreak === 0
-                ? "Check off a habit to start one"
-                : maxStreak === 1
-                  ? "Day one: come back tomorrow"
-                  : maxStreak < 7
-                    ? "Building momentum"
-                    : maxStreak < 30
-                      ? "Over a week strong"
-                      : "Over a month strong"
-            }
-            icon={
-              <TrendingUp className="w-4 h-4 lg:w-6 lg:h-6 text-yellow-600 dark:text-yellow-400" />
-            }
-            iconBgColor="bg-yellow-100 dark:bg-yellow-800/30"
-            showEmoji={maxStreak > 0}
-            emoji="🔥"
-            isLoading={streakLoading}
-          />
-
-          <StatCard
-            value={todayProgress.percentage}
-            isPercentage
-            title="Today"
-            description={
-              todayProgress.total === 0
-                ? "Add a habit to get started"
-                : todayProgress.completed === todayProgress.total
-                  ? `All ${todayProgress.total} habits done 🎉`
-                  : `${todayProgress.completed} of ${todayProgress.total} habits done`
-            }
-            icon={
-              <Target className="w-4 h-4 lg:w-6 lg:h-6 text-blue-600 dark:text-blue-400" />
-            }
-            iconBgColor="bg-blue-100 dark:bg-blue-900/30"
-            isLoading={habitsLoading || completionsLoading}
-          />
-
-          <StatCard
-            value={totalPoints}
-            title="Total Points"
-            description={
-              totalPoints === 0
-                ? "Complete habits to earn points!"
-                : totalPoints > 0 && totalPoints < 100
-                  ? `Level ${levelData?.level} - ${levelData?.label}`
-                  : `${levelData?.emoji} Level ${levelData?.level} - ${levelData?.label}`
-            }
-            icon={
-              <Award className="w-4 h-4 lg:w-6 lg:h-6 text-purple-600 dark:text-purple-400" />
-            }
-            iconBgColor="bg-purple-100 dark:bg-purple-900/30"
-            showEmoji={true}
-            emoji={levelData?.emoji}
-            isLoading={statsLoading}
-          />
-        </div>
-
-        {/* Progress + Achievement Count */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-8">
-          <TodayProgress />
-
-          {/* Achievement Card */}
-          <AchievementCountCard
-            unlocked={unlockedAchievements.length}
-            total={allAchievements.length}
-          />
-        </div>
-
-        {/* First-run step 2: nudge toward the first check-in */}
-        {showFirstCheckInPrompt && <FirstCheckInPrompt />}
-
-        {/* Habits + Chart */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-8">
-          <div className="card bg-[#fefefe] dark:bg-gray-950 rounded-3xl p-4 lg:p-6 hover:shadow-lg hover:shadow-primary-100 dark:hover:shadow-primary-900 hover:dark:shadow-lg dark:shadow-gray-900 border border-gray-200 dark:border-gray-700">
-            <HabitsContainer filteredHabits={filteredHabits} />
-          </div>
-          <div className="card bg-[#fefefe] dark:bg-gray-950 rounded-3xl p-4 lg:p-6 hover:shadow-lg hover:shadow-primary-100 dark:hover:shadow-primary-900 hover:dark:shadow-lg dark:shadow-gray-900 border border-gray-200 dark:border-gray-700">
-            <ChartCard
-              title="This Week"
-              subtitle="Daily targets met by habit, last 7 days"
-            >
-              {weeklyBarChartData.length > 0 ? (
-                <Suspense
-                  fallback={<Skeleton className="h-70 md:h-95 lg:h-125 w-full" />}
-                >
-                  <HabitPerformanceChart data={weeklyBarChartData} />
-                </Suspense>
-              ) : (
-                <div className="h-52 md:h-75 flex items-center justify-center text-gray-700 dark:text-gray-300">
-                  <p>No habit data available</p>
-                </div>
-              )}
-            </ChartCard>
-          </div>
-        </div>
-
-        {/* Recent Achievements */}
-        <RecentAchievementsSection
-          achievements={unlockedAchievements.slice(0, 3)}
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-8">
+        <StatCard
+          value={habits?.length || 0}
+          title="Active Habits"
+          description={
+            habits?.length === 0
+              ? "Start by creating your first habit"
+              : `You have ${habits?.length} active ${habits?.length === 1 ? "habit" : "habits"}`
+          }
+          icon={
+            <CheckCircle2 className="w-4 h-4 lg:w-6 lg:h-6 text-primary-600 dark:text-primary-400" />
+          }
+          iconBgColor="bg-emerald-100 dark:bg-emerald-900/30"
+          isLoading={habitsLoading}
         />
 
-        {/* Next Achievement Preview */}
-        {unlockedAchievements.length < allAchievements.length && (
-          <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-primary-200 to-secondary-200 dark:bg-linear-to-br dark:from-primary-900 dark:to-secondary-900 p-4 sm:p-6 md:p-8 lg:p-6">
-            {/* Animated background glow */}
-            <div className="absolute top-0 right-0 w-40 h-40 bg-linear-to-br from-orange-400/20 to-yellow-400/20 rounded-full blur-3xl animate-pulse"></div>
+        <StatCard
+          value={maxStreak}
+          // The highest current streak among your habits, not an overall streak
+          title="Best Active Streak"
+          description={
+            maxStreak === 0
+              ? "Check off a habit to start one"
+              : maxStreak === 1
+                ? "Day one: come back tomorrow"
+                : maxStreak < 7
+                  ? "Building momentum"
+                  : maxStreak < 30
+                    ? "Over a week strong"
+                    : "Over a month strong"
+          }
+          icon={
+            <TrendingUp className="w-4 h-4 lg:w-6 lg:h-6 text-yellow-600 dark:text-yellow-400" />
+          }
+          iconBgColor="bg-yellow-100 dark:bg-yellow-800/30"
+          showEmoji={maxStreak > 0}
+          emoji="🔥"
+          isLoading={streakLoading}
+        />
 
-            <div className="relative">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  {/* 🏆 = achievements (🔥 is reserved for streaks) */}
-                  <span className="text-2xl" aria-hidden="true">
-                    🏆
-                  </span>
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                    Still to unlock
-                  </h3>
-                </div>
-                <div className="px-3 py-1 rounded-full bg-secondary-500 dark:bg-secondary-900">
-                  <span className="text-xs font-bold text-orange-700 dark:text-orange-300">
-                    {Math.round(
-                      (unlockedAchievements.length / allAchievements.length) *
-                        100,
-                    )}
-                    % Complete
-                  </span>
-                </div>
+        <StatCard
+          value={todayProgress.percentage}
+          isPercentage
+          title="Today"
+          description={
+            todayProgress.total === 0
+              ? "Add a habit to get started"
+              : todayProgress.completed === todayProgress.total
+                ? `All ${todayProgress.total} habits done 🎉`
+                : `${todayProgress.completed} of ${todayProgress.total} habits done`
+          }
+          icon={
+            <Target className="w-4 h-4 lg:w-6 lg:h-6 text-blue-600 dark:text-blue-400" />
+          }
+          iconBgColor="bg-blue-100 dark:bg-blue-900/30"
+          isLoading={habitsLoading || completionsLoading}
+        />
+
+        <StatCard
+          value={totalPoints}
+          title="Total Points"
+          description={
+            totalPoints === 0
+              ? "Complete habits to earn points!"
+              : totalPoints > 0 && totalPoints < 100
+                ? `Level ${levelData?.level} - ${levelData?.label}`
+                : `${levelData?.emoji} Level ${levelData?.level} - ${levelData?.label}`
+          }
+          icon={
+            <Award className="w-4 h-4 lg:w-6 lg:h-6 text-purple-600 dark:text-purple-400" />
+          }
+          iconBgColor="bg-purple-100 dark:bg-purple-900/30"
+          showEmoji={true}
+          emoji={levelData?.emoji}
+          isLoading={statsLoading}
+        />
+      </div>
+
+      {/* Progress + Achievement Count */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-8">
+        <TodayProgress />
+
+        {/* Achievement Card */}
+        <AchievementCountCard
+          unlocked={unlockedAchievements.length}
+          total={allAchievements.length}
+        />
+      </div>
+
+      {/* First-run step 2: nudge toward the first check-in */}
+      {showFirstCheckInPrompt && <FirstCheckInPrompt />}
+
+      {/* Habits + Chart */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-8">
+        <div className="card bg-[#fefefe] dark:bg-gray-950 rounded-3xl p-4 lg:p-6 hover:shadow-lg hover:shadow-primary-100 dark:hover:shadow-primary-900 hover:dark:shadow-lg dark:shadow-gray-900 border border-gray-200 dark:border-gray-700">
+          <HabitsContainer filteredHabits={filteredHabits} />
+        </div>
+        <div className="card bg-[#fefefe] dark:bg-gray-950 rounded-3xl p-4 lg:p-6 hover:shadow-lg hover:shadow-primary-100 dark:hover:shadow-primary-900 hover:dark:shadow-lg dark:shadow-gray-900 border border-gray-200 dark:border-gray-700">
+          <ChartCard
+            title="This Week"
+            subtitle="Daily targets met by habit, last 7 days"
+          >
+            {weeklyBarChartData.length > 0 ? (
+              <Suspense
+                fallback={<Skeleton className="h-70 md:h-95 lg:h-125 w-full" />}
+              >
+                <HabitPerformanceChart data={weeklyBarChartData} />
+              </Suspense>
+            ) : (
+              <div className="h-52 md:h-75 flex items-center justify-center text-gray-700 dark:text-gray-300">
+                <p>No habit data available</p>
               </div>
+            )}
+          </ChartCard>
+        </div>
+      </div>
 
-              <p className="text-sm text-gray-600 dark:text-gray-200 mb-4">
-                You've unlocked{" "}
-                <span className="font-bold text-orange-600 dark:text-orange-400">
-                  {unlockedAchievements.length}
-                </span>{" "}
-                out of{" "}
-                <span className="font-bold">{allAchievements.length}</span>{" "}
-                achievements.{" "}
-                <span className="font-bold text-orange-600 dark:text-orange-400">
-                  {allAchievements.length - unlockedAchievements.length}
-                </span>{" "}
-                to go.
-              </p>
+      {/* Recent Achievements */}
+      <RecentAchievementsSection
+        achievements={unlockedAchievements.slice(0, 3)}
+      />
 
-              {/* Mini achievement icons preview */}
+      {/* Next Achievement Preview */}
+      {unlockedAchievements.length < allAchievements.length && (
+        <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-primary-200 to-secondary-200 dark:bg-linear-to-br dark:from-primary-900 dark:to-secondary-900 p-4 sm:p-6 md:p-8 lg:p-6">
+          {/* Animated background glow */}
+          <div className="absolute top-0 right-0 w-40 h-40 bg-linear-to-br from-orange-400/20 to-yellow-400/20 rounded-full blur-3xl animate-pulse"></div>
+
+          <div className="relative">
+            <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <div className="flex -space-x-2">
-                  {lockedAchievements.slice(0, 5).map((achievement, i) => (
-                    <div
-                      key={achievement.id}
-                      className="w-10 h-10 rounded-full bg-white dark:bg-primary-900 border-2 border-primary-100 dark:border-primary-500 flex items-center justify-center"
-                      style={{ zIndex: 5 - i }}
-                    >
-                      <span className="text-lg filter  ">
-                        {achievement.emoji}
-                      </span>
-                    </div>
-                  ))}
-                  {lockedAchievements.length > 5 && (
-                    <div className="w-10 h-10 rounded-full bg-secondary-100 dark:bg-secondary-900 border-2 border-secondary-300 dark:border-secondary-700 flex items-center justify-center">
-                      <span className="text-xs font-bold text-secondary-700 dark:text-secondary-300">
-                        +{lockedAchievements.length - 5}
-                      </span>
-                    </div>
+                {/* 🏆 = achievements (🔥 is reserved for streaks) */}
+                <span className="text-2xl" aria-hidden="true">
+                  🏆
+                </span>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                  Still to unlock
+                </h3>
+              </div>
+              <div className="px-3 py-1 rounded-full bg-secondary-500 dark:bg-secondary-900">
+                <span className="text-xs font-bold text-orange-700 dark:text-orange-300">
+                  {Math.round(
+                    (unlockedAchievements.length / allAchievements.length) *
+                      100,
                   )}
-                </div>
-                <span className="text-xs text-gray-500 dark:text-gray-200 ml-2">
-                  Waiting to be unlocked
+                  % Complete
                 </span>
               </div>
             </div>
-          </div>
-        )}
 
-        {/* Category Filter */}
-        {categories.length > 0 && (
-          <div className="flex items-center gap-2 md:gap-4 min-w-0 w-full scrollbar-hide">
-            <CategoryChips
-              categories={categories}
-              selectedCategoryId={selectedCategoryId}
-              onSelectCategory={setSelectedCategoryId}
-              habitCounts={habitCounts}
-            />
-          </div>
-        )}
+            <p className="text-sm text-gray-600 dark:text-gray-200 mb-4">
+              You've unlocked{" "}
+              <span className="font-bold text-orange-600 dark:text-orange-400">
+                {unlockedAchievements.length}
+              </span>{" "}
+              out of{" "}
+              <span className="font-bold">{allAchievements.length}</span>{" "}
+              achievements.{" "}
+              <span className="font-bold text-orange-600 dark:text-orange-400">
+                {allAchievements.length - unlockedAchievements.length}
+              </span>{" "}
+              to go.
+            </p>
 
-        {/* Featured Templates */}
-        {habits && habits.length > 0 && <FeaturedTemplates />}
-      </div>
-    </DashboardLayout>
+            {/* Mini achievement icons preview */}
+            <div className="flex items-center gap-2">
+              <div className="flex -space-x-2">
+                {lockedAchievements.slice(0, 5).map((achievement, i) => (
+                  <div
+                    key={achievement.id}
+                    className="w-10 h-10 rounded-full bg-white dark:bg-primary-900 border-2 border-primary-100 dark:border-primary-500 flex items-center justify-center"
+                    style={{ zIndex: 5 - i }}
+                  >
+                    <span className="text-lg filter  ">
+                      {achievement.emoji}
+                    </span>
+                  </div>
+                ))}
+                {lockedAchievements.length > 5 && (
+                  <div className="w-10 h-10 rounded-full bg-secondary-100 dark:bg-secondary-900 border-2 border-secondary-300 dark:border-secondary-700 flex items-center justify-center">
+                    <span className="text-xs font-bold text-secondary-700 dark:text-secondary-300">
+                      +{lockedAchievements.length - 5}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <span className="text-xs text-gray-500 dark:text-gray-200 ml-2">
+                Waiting to be unlocked
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Category Filter */}
+      {categories.length > 0 && (
+        <div className="flex items-center gap-2 md:gap-4 min-w-0 w-full scrollbar-hide">
+          <CategoryChips
+            categories={categories}
+            selectedCategoryId={selectedCategoryId}
+            onSelectCategory={setSelectedCategoryId}
+            habitCounts={habitCounts}
+          />
+        </div>
+      )}
+
+      {/* Featured Templates */}
+      {habits && habits.length > 0 && <FeaturedTemplates />}
+    </div>
   );
 }
 

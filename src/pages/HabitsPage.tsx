@@ -14,7 +14,6 @@ import { confirmDialog } from "@/lib/confirmDialog";
 import { getHabitStreaks } from "@/lib/streaks";
 import { getHabitRate } from "@/lib/analytics";
 
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/Button";
 import { EditHabitModal } from "@/components/habits/EditHabitModal";
 import { HabitOverviewCard } from "@/components/habits/HabitOverviewCard";
@@ -137,7 +136,7 @@ export function HabitsPage() {
   };
 
   return (
-    <DashboardLayout>
+    <>
       <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6">
         {/* Hero Header */}
         <div className="relative">
@@ -281,6 +280,6 @@ export function HabitsPage() {
         onClose={() => setEditingHabit(null)}
         habit={editingHabit}
       />
-    </DashboardLayout>
+    </>
   );
 }

@@ -1,4 +1,6 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 import Navbar from "./Navbar";
 import { useAuth } from "@/hooks/useAuth";
 import SideBar from "./Sidebar";
@@ -9,18 +11,33 @@ import { ErrorBoundary } from "../ui/ErrorBoundary";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 
-interface DashboardLayoutProps {
-  children: ReactNode;
-}
-
-export function DashboardLayout({ children }: DashboardLayoutProps) {
+/**
+ * App shell for signed-in pages, rendered once by a layout route in App.tsx.
+ * Pages render into <Outlet />, so the navbar and sidebar stay mounted
+ * between pages instead of being rebuilt (and re-animated) on every visit.
+ */
+export function DashboardLayout() {
   const { user, signOut } = useAuth();
+  const { pathname } = useLocation();
   const displayName =
     user?.user_metadata?.display_name || user?.email?.split("@")[0] || "User";
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // The shell now outlives page changes, so close the mobile drawer when the
+  // page changes by any route (including the browser's Back button)
+  const [shownPath, setShownPath] = useState(pathname);
+  if (pathname !== shownPath) {
+    setShownPath(pathname);
+    setSidebarOpen(false);
+  }
+
   const mainRef = useRef<HTMLDivElement>(null);
+
+  // Each page starts at the top, as it did when the shell remounted per page
+  useEffect(() => {
+    mainRef.current?.scrollTo({ top: 0 });
+  }, [pathname]);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   // Below lg the sidebar is an off-canvas drawer: trap focus while it's open,
@@ -81,7 +98,26 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           "
         >
           <div className="flex-1">
-            <ErrorBoundary>{children}</ErrorBoundary>
+            {/* Keyed by path so a crashed page doesn't keep showing its error
+                after you navigate to another page */}
+            <ErrorBoundary key={pathname}>
+              {/* A page's first visit downloads its chunk; the shell stays on
+                  screen meanwhile. Later page changes run in a transition,
+                  so the current page stays visible instead of this. */}
+              <Suspense
+                fallback={
+                  <div className="flex justify-center py-24" role="status">
+                    <Loader2
+                      className="w-8 h-8 text-primary animate-spin"
+                      aria-hidden="true"
+                    />
+                    <span className="sr-only">Loading page…</span>
+                  </div>
+                }
+              >
+                <Outlet />
+              </Suspense>
+            </ErrorBoundary>
           </div>
           <Footer />
         </main>

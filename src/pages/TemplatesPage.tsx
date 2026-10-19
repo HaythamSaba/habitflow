@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { TemplateGallery } from "@/components/templates/TemplateGallery";
 import { CreateHabitModal } from "@/components/habits/CreateHabitModal";
 import { HabitTemplate } from "@/types";
@@ -54,25 +53,23 @@ export function TemplatesPage() {
   };
 
   return (
-    <DashboardLayout>
-      <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6">
-        <PageHeader
-          title="Habit Templates"
-          description="Start from a popular habit and adjust it to fit you"
-        />
-        <TemplateGallery
-          onUseTemplate={handleUseTemplate}
-          isLoading={categoriesLoading}
-        />
+    <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6">
+      <PageHeader
+        title="Habit Templates"
+        description="Start from a popular habit and adjust it to fit you"
+      />
+      <TemplateGallery
+        onUseTemplate={handleUseTemplate}
+        isLoading={categoriesLoading}
+      />
 
-        {/* Create Habit Modal with pre-filled template data */}
-        <CreateHabitModal
-          isOpen={isCreateModalOpen}
-          onClose={handleModalClose}
-          prefilledData={getPrefilledData()}
-          onSuccess={handleHabitCreated}
-        />
-      </div>
-    </DashboardLayout>
+      {/* Create Habit Modal with pre-filled template data */}
+      <CreateHabitModal
+        isOpen={isCreateModalOpen}
+        onClose={handleModalClose}
+        prefilledData={getPrefilledData()}
+        onSuccess={handleHabitCreated}
+      />
+    </div>
   );
 }
