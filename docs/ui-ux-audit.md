@@ -50,7 +50,7 @@ Mark items as they are fixed so work can resume in a new session.
 | N4 | Same habit shows different completion % per page | S | Done |
 | N5 | No level-up moment, invisible streak risk, cluttered habit card | M | Done |
 | N6 | Primary button and habit-colored text fail contrast | S | Done (primary-700 / primary-800) |
-| N7 | Charts hard to read, trend dips every morning | S–M | Open |
+| N7 | Charts hard to read, trend dips every morning | S–M | Done (today marked in progress, fixed 0–100% bar scale; vertical bars and no chart text summaries by owner's decision) |
 | N8 | Heatmap busy and awkward on phones | S–M | Open |
 | N9 | Mobile shell rough edges | S–M | Done (h-dvh, merged celebration toasts; hamburger and toast position kept by owner's decision) |
 | N10 | Navbar and sidebar remount on every page change | S–M | Done |

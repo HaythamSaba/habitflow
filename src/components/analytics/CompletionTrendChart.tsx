@@ -10,6 +10,9 @@ import {
 import { useTheme } from "@/contexts/ThemeContext";
 import { useState, useEffect } from "react";
 import { DailyTargetPoint } from "@/lib/analytics";
+import { useTodayKey } from "@/hooks/useTodayKey";
+
+const LINE_COLOR = "#10b981";
 
 interface CompletionTrendChartProps {
   data: DailyTargetPoint[];
@@ -26,6 +29,7 @@ interface CustomTooltipProps {
 
 function CustomTooltip({ active, payload }: CustomTooltipProps) {
   const { theme } = useTheme();
+  const todayKey = useTodayKey();
   const isDark = theme === "dark";
   const tooltipBg = isDark ? "#1f2937" : "#ffffff";
   const tooltipBorder = isDark ? "#374151" : "#e5e7eb";
@@ -41,7 +45,9 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
         }}
       >
         <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-gray-100">
-          {point.date}
+          {point.dayKey === todayKey
+            ? `Today, ${point.date} · in progress`
+            : point.date}
         </p>
         {point.rate === null ? (
           <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
@@ -77,6 +83,7 @@ function useChartDimensions() {
   const isTablet = width >= 640 && width < 1024;
 
   return {
+    isMobile,
     height: isMobile ? 220 : isTablet ? 260 : 300,
     fontSize: isMobile ? 10 : 12,
     margin: isMobile
@@ -94,11 +101,45 @@ function useChartDimensions() {
 export function CompletionTrendChart({ data }: CompletionTrendChartProps) {
   const { theme } = useTheme();
   const chart = useChartDimensions();
+  const todayKey = useTodayKey();
 
   // Dark mode colors
   const isDark = theme === "dark";
   const textColor = isDark ? "#9ca3af" : "#6b7280";
   const gridColor = isDark ? "#374151" : "#e5e7eb";
+  const cardBg = isDark ? "#030712" : "#ffffff"; // gray-950 / white
+
+  // Today's point is hollow: the day isn't over, so a low value there isn't
+  // a real drop. Other dots are hidden on phones, where 30 crowd the line.
+  const renderDot = (props: {
+    cx?: number;
+    cy?: number;
+    index?: number;
+    payload?: DailyTargetPoint;
+  }) => {
+    const { cx, cy, index, payload } = props;
+    const key = `dot-${index}`;
+    if (cx == null || cy == null || payload?.rate == null) {
+      return <g key={key} />;
+    }
+    if (payload.dayKey === todayKey) {
+      return (
+        <circle
+          key={key}
+          cx={cx}
+          cy={cy}
+          r={Math.max(chart.dotRadius, 3) + 1}
+          fill={cardBg}
+          stroke={LINE_COLOR}
+          strokeWidth={2}
+        />
+      );
+    }
+    if (chart.isMobile) return <g key={key} />;
+    return (
+      <circle key={key} cx={cx} cy={cy} r={chart.dotRadius} fill={LINE_COLOR} />
+    );
+  };
 
   return (
     <div className="w-full min-w-0">
@@ -127,9 +168,9 @@ export function CompletionTrendChart({ data }: CompletionTrendChartProps) {
           <Line
             type="monotone"
             dataKey="rate"
-            stroke="#10b981"
+            stroke={LINE_COLOR}
             strokeWidth={chart.strokeWidth}
-            dot={{ fill: "#10b981", r: chart.dotRadius }}
+            dot={renderDot}
             activeDot={{ r: chart.activeDotRadius }}
           />
         </LineChart>

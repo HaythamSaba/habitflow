@@ -86,6 +86,8 @@ function useChartDimensions() {
     margin: isMobile
       ? { top: 5, right: 5, left: -15, bottom: 5 }
       : { top: 5, right: 10, left: -2, bottom: 5 },
+    // Y-axis width that fits "100%" ticks
+    yAxisWidth: isMobile ? 36 : 44,
     // RESPONSIVE: Truncate long habit names on mobile
     tickFormatter: (value: string) =>
       isMobile && value.length > 8 ? `${value.slice(0, 7)}…` : value,
@@ -120,22 +122,21 @@ export function HabitPerformanceChart({ data }: HabitPerformanceChartProps) {
             // RESPONSIVE: Truncate long names on mobile
             tickFormatter={chart.tickFormatter}
           />
+          {/* Fixed 0–100% scale: a best habit at 40% shouldn't fill the chart */}
           <YAxis
             stroke={textColor}
             fontSize={chart.fontSize}
             tickLine={false}
             axisLine={false}
-            // RESPONSIVE: Narrower Y-axis on mobile
-            width={30}
-            label={{
-              value: "%",
-              angle: -90,
-              position: "insideLeft",
-              style: { fill: textColor, fontSize: chart.fontSize },
-            }}
+            // Wide enough for "100%" labels
+            width={chart.yAxisWidth}
+            domain={[0, 100]}
+            ticks={[0, 25, 50, 75, 100]}
+            tickFormatter={(value: number) => `${value}%`}
           />
           <Tooltip content={<CustomTooltip />} cursor={false} />
-          <Bar dataKey="rate" radius={chart.barRadius}>
+          {/* minPointSize keeps a 0% habit visible as a thin stub */}
+          <Bar dataKey="rate" radius={chart.barRadius} minPointSize={3}>
             {data.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
