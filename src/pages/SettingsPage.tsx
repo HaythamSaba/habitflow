@@ -116,7 +116,7 @@ export function SettingsPage() {
                 disabled={!canSave}
                 isLoading={updateUserInfo.isPending}
                 loadingText="Saving…"
-                className={`min-h-11 w-full sm:w-auto ${!canSave ? "opacity-50 cursor-not-allowed" : ""}`}
+                className="min-h-11 w-full sm:w-auto"
               >
                 Save Changes
               </Button>
@@ -126,7 +126,7 @@ export function SettingsPage() {
                 size="md"
                 onClick={handleCancel}
                 disabled={!hasChanges}
-                className={`min-h-11 w-full sm:w-auto ${!hasChanges ? "opacity-50 cursor-not-allowed" : ""}`}
+                className="min-h-11 w-full sm:w-auto"
               >
                 Cancel
               </Button>

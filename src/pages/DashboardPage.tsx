@@ -19,6 +19,7 @@ import { FeaturedTemplates } from "@/components/templates/FeaturedTemplates";
 import { RecentAchievementsSection } from "@/components/dashboard/RecentAchievementsSection";
 import { StatCard } from "@/components/ui/StatCard";
 import { ChartCard } from "@/components/ui/ChartCard";
+import { Card } from "@/components/ui/Card";
 import { getTodayProgress } from "@/lib/analytics";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { FirstRunWelcome } from "@/components/dashboard/FirstRunWelcome";
@@ -31,6 +32,10 @@ const HabitPerformanceChart = lazy(() =>
     default: module.HabitPerformanceChart,
   })),
 );
+
+// Padding and hover glow for the two main dashboard cards
+const DASHBOARD_PANEL =
+  "p-4 sm:p-4 lg:p-6 hover:shadow-lg hover:shadow-primary-100 dark:hover:shadow-primary-900 dark:shadow-gray-900";
 
 export function DashboardPage() {
   const navigate = useNavigate();
@@ -207,27 +212,28 @@ export function DashboardPage() {
 
       {/* Habits + Chart */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 lg:gap-8">
-        <div className="card bg-[#fefefe] dark:bg-gray-950 rounded-3xl p-4 lg:p-6 hover:shadow-lg hover:shadow-primary-100 dark:hover:shadow-primary-900 hover:dark:shadow-lg dark:shadow-gray-900 border border-gray-200 dark:border-gray-700">
+        {/* Both use the shared Card surface (no card-in-card), keeping the
+            dashboard's padding and hover glow */}
+        <Card className={DASHBOARD_PANEL}>
           <HabitsContainer filteredHabits={filteredHabits} />
-        </div>
-        <div className="card bg-[#fefefe] dark:bg-gray-950 rounded-3xl p-4 lg:p-6 hover:shadow-lg hover:shadow-primary-100 dark:hover:shadow-primary-900 hover:dark:shadow-lg dark:shadow-gray-900 border border-gray-200 dark:border-gray-700">
-          <ChartCard
-            title="This Week"
-            subtitle="Daily targets met by habit, last 7 days"
-          >
-            {weeklyBarChartData.length > 0 ? (
-              <Suspense
-                fallback={<Skeleton className="h-70 md:h-95 lg:h-125 w-full" />}
-              >
-                <HabitPerformanceChart data={weeklyBarChartData} />
-              </Suspense>
-            ) : (
-              <div className="h-52 md:h-75 flex items-center justify-center text-gray-700 dark:text-gray-300">
-                <p>No habit data available</p>
-              </div>
-            )}
-          </ChartCard>
-        </div>
+        </Card>
+        <ChartCard
+          title="This Week"
+          subtitle="Daily targets met by habit, last 7 days"
+          className={DASHBOARD_PANEL}
+        >
+          {weeklyBarChartData.length > 0 ? (
+            <Suspense
+              fallback={<Skeleton className="h-70 md:h-95 lg:h-125 w-full" />}
+            >
+              <HabitPerformanceChart data={weeklyBarChartData} />
+            </Suspense>
+          ) : (
+            <div className="h-52 md:h-75 flex items-center justify-center text-gray-700 dark:text-gray-300">
+              <p>No habit data available</p>
+            </div>
+          )}
+        </ChartCard>
       </div>
 
       {/* Recent Achievements */}

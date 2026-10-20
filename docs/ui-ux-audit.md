@@ -57,7 +57,7 @@ Mark items as they are fixed so work can resume in a new session.
 | N11 | Loading buttons lose their label | S | Done |
 | N12 | First impression outside the app (login copy, meta tags) | S | Done (preview image is the logo until a 1200×630 screenshot exists) |
 | N13 | Navbar details | S | Open |
-| N14 | Visual consistency across pages | S–M | Open |
+| N14 | Visual consistency across pages | S–M | Done (shared Card surface: rounded-3xl, gray border, p-4 sm:p-6) |
 | N15 | Achievements page doesn't point to the next goal | S | Open |
 | N16 | Tab left open past midnight shows yesterday as today | S | Done |
 

@@ -57,15 +57,10 @@ export function HabitOverviewCard({
   const progress = circumference - (completionRate / 100) * circumference;
 
   return (
-    <div className="relative group z-0">
+    <div className="relative z-0">
+      {/* Hover is a shadow lift only (no scale-up or colored glow) */}
       <div
-        className="absolute inset-0 rounded-xl sm:rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"
-        style={{
-          background: `radial-gradient(circle at center, ${habit.color}30, transparent 70%)`,
-        }}
-      />
-      <div
-        className="relative bg-white dark:bg-gray-900 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 border hover:border-white/40 dark:hover:border-gray-700/40 shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]"
+        className="relative bg-white dark:bg-gray-900 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 border shadow-lg hover:shadow-2xl transition-shadow duration-300"
         style={{ borderColor: habit.color }}
       >
         {/* Header */}

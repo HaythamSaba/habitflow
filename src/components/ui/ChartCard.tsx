@@ -5,11 +5,17 @@ interface ChartCardProps {
   title: string;
   subtitle?: string;
   children: React.ReactNode;
+  className?: string;
 }
 
-export function ChartCard({ title, subtitle, children }: ChartCardProps) {
+export function ChartCard({
+  title,
+  subtitle,
+  children,
+  className = "",
+}: ChartCardProps) {
   return (
-    <Card className="min-w-0">
+    <Card className={`min-w-0 ${className}`}>
       <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100 mb-2 md:mb-4">
         {title}
       </h3>

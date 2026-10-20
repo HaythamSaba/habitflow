@@ -25,6 +25,7 @@ import { Plus, Sparkles } from "lucide-react";
 import HabitsStatsCards from "@/components/habits/HabitsStatsCards";
 import { HabitsFilterBar } from "@/components/habits/HabitsFilterBar";
 import EmptyState from "@/components/habits/EmptyState";
+import PageHeader from "@/components/ui/PageHeader";
 
 export function HabitsPage() {
   const { habits, isLoading } = useHabits();
@@ -47,6 +48,7 @@ export function HabitsPage() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isCardIntroDone, setIsCardIntroDone] = useState(false);
 
   const activeHabits = habits.filter((habit) => !habit.archived);
   const archivedHabits = habits.filter((habit) => habit.archived);
@@ -138,20 +140,13 @@ export function HabitsPage() {
   return (
     <>
       <div className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6">
-        {/* Hero Header */}
+        {/* Header: shared PageHeader like the other pages; buttons on the right */}
         <div className="relative">
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4 text-center md:text-left">
-            <div className="flex flex-col gap-1 sm:gap-2 text-center md:text-left">
-              <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2 mx-auto md:mx-0">
-                <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-primary-500 shrink-0" />
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-linear-to-r from-primary-500 to-secondary-500 dark:from-primary-400 dark:to-secondary-400 bg-clip-text text-transparent">
-                  My Habits
-                </h1>
-              </div>
-              <p className="text-sm sm:text-base lg:text-lg text-gray-600 dark:text-gray-400">
-                Every habit, with its streak and stats
-              </p>
-            </div>
+            <PageHeader
+              title="My Habits"
+              description="Every habit, with its streak and stats"
+            />
             {/* Action Buttons */}
             <div className="flex items-center gap-2 sm:gap-3 shrink-0  mx-auto md:mx-0">
               <Button
@@ -232,8 +227,21 @@ export function HabitsPage() {
               {filteredHabits.map((habit, index) => (
                 <div
                   key={habit.id}
-                  className="animate-fade-in-up opacity-0"
-                  style={{ animationDelay: `${index * 50}ms` }}
+                  // Staggered fade-in on the first load only; cards that
+                  // reappear after a search or filter show at once
+                  className={
+                    isCardIntroDone ? undefined : "animate-fade-in-up opacity-0"
+                  }
+                  style={
+                    isCardIntroDone
+                      ? undefined
+                      : { animationDelay: `${index * 50}ms` }
+                  }
+                  onAnimationEnd={
+                    index === filteredHabits.length - 1
+                      ? () => setIsCardIntroDone(true)
+                      : undefined
+                  }
                 >
                   <HabitOverviewCard
                     habit={habit}

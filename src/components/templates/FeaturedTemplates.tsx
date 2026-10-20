@@ -2,6 +2,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "../ui/Button";
 import { useNavigate } from "react-router-dom";
 import { HABIT_TEMPLATES } from "@/lib/habitTemplates";
+import { Card } from "@/components/ui/Card";
 
 export function FeaturedTemplates() {
   const navigate = useNavigate();
@@ -9,7 +10,8 @@ export function FeaturedTemplates() {
   const featuredTemplates = HABIT_TEMPLATES.slice(0, 3);
 
   return (
-    <div className="card bg-linear-to-br from-primary-50 to-secondary-50 dark:from-primary-900/20 dark:to-secondary-900/20 rounded-xl sm:rounded-2xl border border-primary-200 dark:border-primary-800 p-3 sm:p-4">
+    // Shared Card surface, keeping its green-to-yellow tint as a promo panel
+    <Card className="bg-linear-to-br from-primary-50 to-secondary-50 dark:from-primary-900/20 dark:to-secondary-900/20 border-primary-200 dark:border-primary-800 p-3 sm:p-4 shadow-none">
       <div className="flex items-center justify-between mb-3 sm:mb-4">
         <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
           <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600 dark:text-primary-400 shrink-0" />
@@ -60,6 +62,6 @@ export function FeaturedTemplates() {
           </button>
         ))}
       </div>
-    </div>
+    </Card>
   );
 }

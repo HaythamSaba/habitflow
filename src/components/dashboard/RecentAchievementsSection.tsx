@@ -1,6 +1,7 @@
 // Move Achievement type to types.ts first, then:
 import { Achievement } from "@/types";
 import { Link } from "react-router-dom";
+import { Card } from "@/components/ui/Card";
 
 interface RecentAchievementsSectionProps {
   achievements: Achievement[];
@@ -12,7 +13,7 @@ export function RecentAchievementsSection({
   if (achievements.length === 0) return null;
 
   return (
-    <div className="card bg-white dark:bg-gray-950 rounded-3xl p-3 sm:p-4 shadow-lg shadow-primary-200 dark:shadow-gray-900 border border-gray-300 dark:border-gray-700">
+    <Card className="p-3 sm:p-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 md:mb-6 gap-2">
         <div>
           <h2 className="text-lg md:text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
@@ -74,6 +75,6 @@ export function RecentAchievementsSection({
           </div>
         ))}
       </div>
-    </div>
+    </Card>
   );
 }

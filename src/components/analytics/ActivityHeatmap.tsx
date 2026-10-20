@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { Calendar } from "lucide-react";
 import { useAllCompletions } from "@/hooks/useAllCompletions";
 import { useDashboardStreak } from "@/hooks/useDashboardStreak";
+import { Card } from "@/components/ui/Card";
 
 export function ActivityHeatmap() {
   const today = new Date().toDateString();
@@ -83,7 +84,7 @@ export function ActivityHeatmap() {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-950 rounded-2xl p-4 md:p-6 border border-gray-200 dark:border-gray-800">
+    <Card className="p-4 sm:p-4 md:p-6 shadow-none">
       {/* Header - RESPONSIVE */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
@@ -312,7 +313,7 @@ export function ActivityHeatmap() {
           </div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }
 

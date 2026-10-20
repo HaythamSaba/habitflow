@@ -8,6 +8,7 @@ import { useDashboardStreak } from "@/hooks/useDashboardStreak";
 import { useMemo, useState } from "react";
 import PageHeader from "@/components/ui/PageHeader";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { Card } from "@/components/ui/Card";
 
 export function AchievementsPage() {
   const { allAchievements, unlockedIds, isLoading } = useAchievements();
@@ -73,13 +74,13 @@ export function AchievementsPage() {
           <Skeleton className="h-8 w-56" />
           <Skeleton className="h-4 w-80 max-w-full" />
         </div>
-        <div className="bg-white dark:bg-gray-950 rounded-xl p-3 sm:p-4 lg:p-6 border border-gray-200 dark:border-gray-800 space-y-3">
+        <Card className="p-3 sm:p-4 lg:p-6 shadow-none space-y-3">
           <div className="flex justify-between">
             <Skeleton className="h-6 w-40" />
             <Skeleton className="h-8 w-16" />
           </div>
           <Skeleton className="h-3 md:h-4 w-full rounded-full" />
-        </div>
+        </Card>
         <div className="flex gap-2">
           {Array.from({ length: 5 }, (_, i) => (
             <Skeleton key={i} className="h-11 w-24 rounded-lg shrink-0" />
@@ -105,7 +106,7 @@ export function AchievementsPage() {
 
       {/* Stats Overview */}
       {/* RESPONSIVE: Reduced padding on mobile (p-3 sm:p-4) → desktop (lg:p-6) */}
-      <div className="bg-white dark:bg-gray-950 rounded-xl p-3 sm:p-4 lg:p-6 border border-gray-200 dark:border-primary-700">
+      <Card className="p-3 sm:p-4 lg:p-6 shadow-none">
         {/* RESPONSIVE: Stack on very small screens, row on sm+ */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 md:mb-4 gap-2">
           <div>
@@ -131,7 +132,7 @@ export function AchievementsPage() {
             style={{ width: `${completionPercentage}%` }}
           />
         </div>
-      </div>
+      </Card>
 
       {/* Category Filter */}
       <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1 -mb-1">

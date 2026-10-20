@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { Search, ChevronDown, SlidersHorizontal } from "lucide-react";
 import { Category } from "@/types";
 import { useClickOutside } from "@/hooks/useClickOutside";
+import { Card } from "@/components/ui/Card";
 
 interface HabitsFilterBarProps {
   searchQuery: string;
@@ -49,7 +50,7 @@ export function HabitsFilterBar({
     searchQuery || selectedCategory || statusFilter !== "active";
 
   return (
-    <div className="bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 border border-white/20 dark:border-gray-700/50 shadow-xl relative z-20">
+    <Card className="p-3 sm:p-4 lg:p-6 shadow-xl relative z-20">
       <div className="flex flex-col gap-3 sm:gap-4">
         {/* Search */}
         <div className="relative w-full sm:w-auto sm:flex-1 sm:min-w-70">
@@ -353,6 +354,6 @@ export function HabitsFilterBar({
           </div>
         </div>
       )}
-    </div>
+    </Card>
   );
 }
