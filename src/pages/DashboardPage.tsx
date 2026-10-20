@@ -46,7 +46,9 @@ export function DashboardPage() {
     levelData,
     isLoading: statsLoading,
   } = useUserStats();
-  const { unlockedAchievements, allAchievements } = useAchievements();
+  // lockedAchievements comes from the hook, which compares by unlocked id
+  const { unlockedAchievements, lockedAchievements, allAchievements } =
+    useAchievements();
   const { weeklyBarChartData } = useAnalytics();
 
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
@@ -79,10 +81,6 @@ export function DashboardPage() {
   // Habits fully done today — same numbers as the Today's Progress card.
   // Always all active habits: the category filter only narrows the list below.
   const todayProgress = getTodayProgress(habits || [], completions || []);
-
-  const lockedAchievements = allAchievements.filter(
-    (achievement) => !unlockedAchievements.includes(achievement.id),
-  );
 
   // First run: no habits at all (not even archived). Show the welcome step
   // instead of a dashboard full of zeros.
