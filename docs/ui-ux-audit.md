@@ -52,7 +52,7 @@ Mark items as they are fixed so work can resume in a new session.
 | N6 | Primary button and habit-colored text fail contrast | S | Done (primary-700 / primary-800) |
 | N7 | Charts hard to read, trend dips every morning | S–M | Open |
 | N8 | Heatmap busy and awkward on phones | S–M | Open |
-| N9 | Mobile shell rough edges | S–M | Open |
+| N9 | Mobile shell rough edges | S–M | Done (h-dvh, merged celebration toasts; hamburger and toast position kept by owner's decision) |
 | N10 | Navbar and sidebar remount on every page change | S–M | Done |
 | N11 | Loading buttons lose their label | S | Done |
 | N12 | First impression outside the app (login copy, meta tags) | S | Done (preview image is the logo until a 1200×630 screenshot exists) |

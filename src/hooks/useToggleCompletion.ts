@@ -14,11 +14,7 @@ import {
 } from "@/lib/points";
 import { isNewPerfectDay } from "@/lib/analytics";
 import { celebrate } from "@/lib/celebration";
-import {
-  showCheckInToast,
-  showLevelUpToast,
-  showPerfectDayToast,
-} from "@/lib/checkInToasts";
+import { showCheckInToast } from "@/lib/checkInToasts";
 import { Completion, Habit } from "@/types";
 import { toast } from "react-hot-toast";
 
@@ -185,23 +181,34 @@ export function useToggleCompletion() {
               }
             : null;
 
+      // Perfect day and level-up go into the check-in toast itself, so one
+      // check-in shows one toast (with Undo) instead of a stack of three
+      const celebrations: string[] = [];
+      if (context?.becamePerfectDay) {
+        const count = context.habitCount;
+        celebrations.push(
+          `Perfect day! All ${count} ${count === 1 ? "habit" : "habits"} done`,
+        );
+      }
+      if (context?.reachedLevel) {
+        const level = getLevelData(context.reachedLevel);
+        celebrations.push(
+          `Level up! You're now Level ${level.level}: ${level.label} ${level.emoji}`,
+        );
+      }
+
       showCheckInToast({
         habitId: variables.habit.id,
         habitName: variables.habit.name,
         added: variables.action === "add",
         points: POINTS_PER_COMPLETION,
         onUndo: undo ? () => mutateRef.current(undo) : undefined,
+        celebrations,
       });
 
       // One confetti burst, even when a level-up and a perfect day coincide
-      if (context?.becamePerfectDay || context?.reachedLevel) {
+      if (celebrations.length > 0) {
         celebrate();
-      }
-      if (context?.reachedLevel) {
-        showLevelUpToast(getLevelData(context.reachedLevel));
-      }
-      if (context?.becamePerfectDay) {
-        showPerfectDayToast(context.habitCount);
       }
     },
 

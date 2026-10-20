@@ -56,7 +56,7 @@ export function DashboardLayout() {
   }, [isDrawerOpen]);
 
   return (
-    <div className="h-screen w-full overflow-hidden flex flex-col bg-white dark:bg-gray-950">
+    <div className="h-dvh w-full overflow-hidden flex flex-col bg-white dark:bg-gray-950">
       <Navbar
         displayName={displayName}
         signOut={signOut}

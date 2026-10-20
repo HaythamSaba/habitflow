@@ -62,7 +62,7 @@ export default function SideBar({
     // DashboardLayout), so expanding on hover overlays the page instead of
     // pushing it sideways
     <aside
-      className={`lg:absolute lg:top-0 lg:left-0 transition-all duration-300 ease-out h-[calc(100vh-8rem)]
+      className={`lg:absolute lg:top-0 lg:left-0 transition-all duration-300 ease-out h-[calc(100dvh-8rem)]
         mt-22 lg:mt-4 ml-4 rounded-4xl border border-gray-200 dark:border-gray-800
         bg-white dark:bg-gray-950/80 backdrop-blur-xl
         shadow-xl shadow-gray-200 dark:shadow-gray-700

@@ -1,5 +1,4 @@
 import toast from "react-hot-toast";
-import type { LevelData } from "./points";
 
 interface CheckInToastOptions {
   habitId: string;
@@ -9,6 +8,11 @@ interface CheckInToastOptions {
   points: number;
   /** Omitted when the change can't be undone (e.g. the saved row has no id) */
   onUndo?: () => void;
+  /**
+   * Celebration lines for this check-in (perfect day, level up). Shown in
+   * the same toast, so one check-in doesn't stack several toasts.
+   */
+  celebrations?: string[];
 }
 
 /**
@@ -21,10 +25,14 @@ export function showCheckInToast({
   added,
   points,
   onUndo,
+  celebrations = [],
 }: CheckInToastOptions) {
+  const isCelebrating = celebrations.length > 0;
+
   toast(
     (t) => (
-      <span className="w-xl flex items-center gap-3">
+      // Full width on phones (a fixed 576px would overflow), wider from sm up
+      <span className="w-full sm:w-xl flex items-center gap-3">
         <span className="text-sm">
           {added ? (
             <>
@@ -35,6 +43,11 @@ export function showCheckInToast({
               Removed a <strong>{habitName}</strong> check-in · −{points} pts
             </>
           )}
+          {celebrations.map((line) => (
+            <span key={line} className="block mt-0.5 font-semibold">
+              {line}
+            </span>
+          ))}
         </span>
         {onUndo && (
           <button
@@ -50,21 +63,11 @@ export function showCheckInToast({
         )}
       </span>
     ),
-    { id: `check-in-${habitId}`, icon: added ? "✅" : "↩️", duration: 4000 },
-  );
-}
-
-/** Shown when a check-in's points reach a new level. */
-export function showLevelUpToast(level: Pick<LevelData, "level" | "label" | "emoji">) {
-  toast.success(`Level up! You're now Level ${level.level}: ${level.label} ${level.emoji}`, {
-    id: "level-up",
-    duration: 5000,
-  });
-}
-
-export function showPerfectDayToast(habitCount: number) {
-  toast.success(
-    `Perfect day! All ${habitCount} ${habitCount === 1 ? "habit" : "habits"} done 🎉`,
-    { id: "perfect-day", duration: 5000 },
+    {
+      id: `check-in-${habitId}`,
+      icon: isCelebrating ? "🎉" : added ? "✅" : "↩️",
+      // Celebrations get a little longer on screen
+      duration: isCelebrating ? 6000 : 4000,
+    },
   );
 }
