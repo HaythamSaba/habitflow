@@ -7,10 +7,18 @@ import {
   deleteCompletion,
   updateUserPoints,
 } from "@/lib/api";
-import { POINTS_PER_COMPLETION } from "@/lib/points";
+import {
+  POINTS_PER_COMPLETION,
+  calculateLevel,
+  getLevelData,
+} from "@/lib/points";
 import { isNewPerfectDay } from "@/lib/analytics";
 import { celebrate } from "@/lib/celebration";
-import { showCheckInToast, showPerfectDayToast } from "@/lib/checkInToasts";
+import {
+  showCheckInToast,
+  showLevelUpToast,
+  showPerfectDayToast,
+} from "@/lib/checkInToasts";
 import { Completion, Habit } from "@/types";
 import { toast } from "react-hot-toast";
 
@@ -133,6 +141,19 @@ export function useToggleCompletion() {
         queryClient.getQueryData<Habit[]>(habitsKey) ?? []
       ).filter((habit) => !habit.archived);
 
+      // Did this check-in's points reach a new level? Celebrated in
+      // onSuccess, only once the server has saved it
+      const levelBefore = previousStats
+        ? calculateLevel(previousStats.total_points)
+        : null;
+      const levelAfter = previousStats
+        ? calculateLevel(previousStats.total_points + delta)
+        : null;
+      const reachedLevel =
+        levelBefore !== null && levelAfter !== null && levelAfter > levelBefore
+          ? levelAfter
+          : null;
+
       return {
         previousToday,
         previousAll,
@@ -140,6 +161,7 @@ export function useToggleCompletion() {
         tempId,
         becamePerfectDay: isNewPerfectDay(activeHabits, previousToday, nextToday),
         habitCount: activeHabits.length,
+        reachedLevel,
       };
     },
 
@@ -171,8 +193,14 @@ export function useToggleCompletion() {
         onUndo: undo ? () => mutateRef.current(undo) : undefined,
       });
 
-      if (context?.becamePerfectDay) {
+      // One confetti burst, even when a level-up and a perfect day coincide
+      if (context?.becamePerfectDay || context?.reachedLevel) {
         celebrate();
+      }
+      if (context?.reachedLevel) {
+        showLevelUpToast(getLevelData(context.reachedLevel));
+      }
+      if (context?.becamePerfectDay) {
         showPerfectDayToast(context.habitCount);
       }
     },

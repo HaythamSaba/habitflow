@@ -53,17 +53,27 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
     isLoading: isLoadingStreak,
   } = useHabitStreak(habit);
 
+  // The current streak counts through yesterday until today is done
+  // (lib/streaks.ts), so until then it's at risk of ending at midnight
+  const isStreakAtRisk = currentStreak > 0 && !isFullyCompleted;
+
   const getStreakColor = (streak: number) => {
-    if (streak >= 30) {
+    // Grey while at risk; warm colors once today keeps it going
+    if (isStreakAtRisk) {
+      return "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-gray-600";
+    } else if (streak >= 30) {
       return "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 border border-orange-300 dark:border-orange-700";
     } else if (streak >= 7) {
       return "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 border border-yellow-300 dark:border-yellow-700";
     } else {
-      return "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-gray-600";
+      return "bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-400 border border-orange-200 dark:border-orange-800";
     }
   };
 
   const isNewRecord = currentStreak > 0 && currentStreak === longestStreak;
+  const streakDescription = isStreakAtRisk
+    ? `${currentStreak}-day streak. Check in today to keep it.`
+    : `${currentStreak}-day streak, kept going today.`;
 
   // Smart background color based on theme
   const getBackgroundColor = () => {
@@ -110,7 +120,7 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
               )}
             </div>
             <h3
-              className={`font-bold text-base sm:text-lg text-gray-900 dark:text-gray-100 truncate max-w-30 sm:max-w-none ${isFullyCompleted ? "line-through opacity-60" : ""}`}
+              className={`font-bold text-base sm:text-lg text-gray-900 dark:text-gray-100 min-w-0 wrap-break-word ${isFullyCompleted ? "line-through opacity-60" : ""}`}
             >
               {habit.name}
             </h3>
@@ -130,21 +140,16 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
               </span>
             )}
 
-            {/* Frequency badge */}
-            <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded capitalize shrink-0">
-              {habit.frequency}
-            </span>
+            {/* Frequency badge: daily is the default, so only show others */}
+            {habit.frequency !== "daily" && (
+              <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded capitalize shrink-0">
+                {habit.frequency}
+              </span>
+            )}
 
             {/* Category Badge */}
             {habitCategory && (
               <CategoryBadge category={habitCategory} size="sm" />
-            )}
-
-            {/* Target count */}
-            {habit.target_count === 1 && (
-              <span className="hidden sm:inline text-xs text-gray-500 dark:text-gray-400 shrink-0">
-                {habit.target_count}x per day
-              </span>
             )}
 
             {/* Streaks */}
@@ -157,10 +162,16 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
                   {currentStreak > 0 && (
                     <span
                       className={`text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-semibold flex items-center gap-0.5 sm:gap-1 transition-all duration-300 animate-fadeIn ${getStreakColor(currentStreak)}`}
-                      title={`Current ${currentStreak} day streak`}
+                      title={streakDescription}
                     >
-                      <span>{isNewRecord ? "🎉" : "🔥"}</span>
-                      <span>{currentStreak}</span>
+                      <span
+                        aria-hidden="true"
+                        className={isStreakAtRisk ? "grayscale opacity-60" : ""}
+                      >
+                        {isNewRecord && !isStreakAtRisk ? "🎉" : "🔥"}
+                      </span>
+                      <span aria-hidden="true">{currentStreak}</span>
+                      <span className="sr-only">{streakDescription}</span>
                     </span>
                   )}
 

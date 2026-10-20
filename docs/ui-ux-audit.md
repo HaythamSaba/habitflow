@@ -48,7 +48,7 @@ Mark items as they are fixed so work can resume in a new session.
 | N2 | Controls that look real but do nothing | S | Done (Forgot password link removed, not wired: no reset page yet) |
 | N3 | Weekly/custom frequencies behave as daily | S | Open (decided: hide from selector) |
 | N4 | Same habit shows different completion % per page | S | Done |
-| N5 | No level-up moment, invisible streak risk, cluttered habit card | M | Open |
+| N5 | No level-up moment, invisible streak risk, cluttered habit card | M | Done |
 | N6 | Primary button and habit-colored text fail contrast | S | Done (primary-700 / primary-800) |
 | N7 | Charts hard to read, trend dips every morning | S–M | Open |
 | N8 | Heatmap busy and awkward on phones | S–M | Open |

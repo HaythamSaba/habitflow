@@ -1,4 +1,5 @@
 import toast from "react-hot-toast";
+import type { LevelData } from "./points";
 
 interface CheckInToastOptions {
   habitId: string;
@@ -23,7 +24,7 @@ export function showCheckInToast({
 }: CheckInToastOptions) {
   toast(
     (t) => (
-      <span className="flex items-center gap-3">
+      <span className="w-xl flex items-center gap-3">
         <span className="text-sm">
           {added ? (
             <>
@@ -51,6 +52,14 @@ export function showCheckInToast({
     ),
     { id: `check-in-${habitId}`, icon: added ? "✅" : "↩️", duration: 4000 },
   );
+}
+
+/** Shown when a check-in's points reach a new level. */
+export function showLevelUpToast(level: Pick<LevelData, "level" | "label" | "emoji">) {
+  toast.success(`Level up! You're now Level ${level.level}: ${level.label} ${level.emoji}`, {
+    id: "level-up",
+    duration: 5000,
+  });
 }
 
 export function showPerfectDayToast(habitCount: number) {
