@@ -8,7 +8,7 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "../ui/Button";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { LevelBadge } from "@/components/ui/LevelBadge";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -44,7 +44,23 @@ export default function Navbar({
   });
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const currentDate = new Date().toLocaleDateString("en-US", {
+  // The navbar stays mounted, so keep the shown time current: tick at the
+  // start of each minute
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval> | undefined;
+    const msToNextMinute = 60_000 - (Date.now() % 60_000);
+    const timeout = setTimeout(() => {
+      setNow(new Date());
+      interval = setInterval(() => setNow(new Date()), 60_000);
+    }, msToNextMinute);
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(interval);
+    };
+  }, []);
+
+  const currentDate = now.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -52,7 +68,7 @@ export default function Navbar({
     minute: "2-digit",
   });
 
-  const currentDay = new Date().toLocaleDateString("en-US", {
+  const currentDay = now.toLocaleDateString("en-US", {
     weekday: "long",
   });
 
@@ -90,33 +106,35 @@ export default function Navbar({
           className="hidden lg:flex items-center gap-3 border-r border-gray-300 dark:border-gray-700 pr-4 md:pr-8 p-4 h-22 w-76 cursor-pointer"
         >
           <div className="w-10 h-10 flex items-center justify-center">
-            {/* Decorative: the "HabitFlow" heading next to it names the link */}
+            {/* Decorative: the "HabitFlow" text next to it names the link */}
             <img src="/logo.png" alt="" />
           </div>
-          <h1
+          {/* Not a heading: each page has its own <h1> */}
+          <span
             className="font-display text-2xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ease-in-out"
           >
             HabitFlow
-          </h1>
+          </span>
         </Link>
 
         <div className="flex lg:hidden items-center gap-2 p-2">
           <div className="w-8 h-8 flex items-center justify-center">
             <img src="/logo.png" alt="HabitFlow" />
           </div>
-          <h1
+          <span
             className="font-display text-lg font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300 ease-in-out"
           >
             HabitFlow
-          </h1>
+          </span>
         </div>
 
         <div className="flex-1 p-2 md:p-4">
           <div className="flex items-center justify-between">
             <div className="hidden md:block">
-              <h3 className="text-gray-900 dark:text-gray-100 text-sm md:text-lg lg:text-3xl">
+              {/* Decorative greeting, so a paragraph rather than a heading */}
+              <p className="font-display font-bold text-gray-900 dark:text-gray-100 text-sm md:text-lg lg:text-3xl">
                 Happy {currentDay}!
-              </h3>
+              </p>
               <p className="text-gray-600 dark:text-gray-400 text-sm">
                 {currentDate}
               </p>
