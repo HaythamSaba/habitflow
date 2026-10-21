@@ -53,9 +53,13 @@ export function AchievementsPage() {
   const unlockedAchievements = filteredAchievements.filter((a) =>
     unlockedIds.includes(a.id),
   );
-  const lockedAchievements = filteredAchievements.filter(
-    (a) => !unlockedIds.includes(a.id),
-  );
+  // Closest to unlocking first. The sort is stable, so ties keep their
+  // original order (the achievements' sort_order).
+  const lockedAchievements = filteredAchievements
+    .filter((a) => !unlockedIds.includes(a.id))
+    .sort(
+      (a, b) => (progressMap.get(b.id) || 0) - (progressMap.get(a.id) || 0),
+    );
 
   // Calculate stats
   const totalCount = allAchievements.length;
@@ -66,7 +70,7 @@ export function AchievementsPage() {
     // Skeleton mirrors the real layout so the page doesn't jump when data arrives
     return (
       <div
-        className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6"
+        className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidd  en p-4 sm:p-6"
         aria-busy="true"
       >
         <span className="sr-only">Loading achievements…</span>
