@@ -22,7 +22,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-3xl border p-4 sm:p-6 shadow-md",
+        "rounded-3xl border p-4 sm:p-6",
         variant === "danger"
           ? "bg-red-100 dark:bg-red-950 border-red-200 dark:border-red-900"
           : "bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-700",
