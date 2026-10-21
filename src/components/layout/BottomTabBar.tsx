@@ -11,7 +11,7 @@ const tabs = [
   { path: "/dashboard", icon: LayoutDashboard, label: "Today" },
   { path: "/habits", icon: SquareCheckBig, label: "Habits" },
   { path: "/analytics", icon: ChartSpline, label: "Stats" },
-  { path: "/achievements", icon: Trophy, label: "Awards" },
+  { path: "/achievements", icon: Trophy, label: "Achievements" },
 ];
 
 const tabClass =
