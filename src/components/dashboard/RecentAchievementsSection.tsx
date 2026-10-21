@@ -2,6 +2,7 @@
 import { Achievement } from "@/types";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/Card";
+import LabelSpan from "../ui/LabelSpan";
 
 interface RecentAchievementsSectionProps {
   achievements: Achievement[];
@@ -58,9 +59,7 @@ export function RecentAchievementsSection({
                 <h3 className="font-bold text-sm md:text-lg text-gray-900 dark:text-gray-100 truncate">
                   {achievement.name}
                 </h3>
-                <span className="text-xs rounded-full bg-primary/20 dark:bg-primary/30 text-primary-700 dark:text-primary-100 font-medium">
-                  {achievement.rarity}
-                </span>
+                <LabelSpan label={achievement.rarity} />
               </div>
             </div>
             <p className="text-xs md:text-sm text-gray-600 dark:text-gray-200 mb-2 line-clamp-2">
