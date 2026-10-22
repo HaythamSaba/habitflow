@@ -37,7 +37,7 @@ export function AnalyticsPage() {
           icon={
             <BarChart3 className="w-4 h-4 lg:w-6 lg:h-6 text-blue-600 dark:text-blue-400" />
           }
-          iconBgColor="bg-blue-100 dark:bg-blue-900/30"
+          iconBgColor="bg-primary-100 dark:bg-primary-900/30"
         />
 
         <StatCard
@@ -47,7 +47,7 @@ export function AnalyticsPage() {
           icon={
             <TrendingUp className="w-4 h-4 lg:w-6 lg:h-6 text-green-600 dark:text-green-400" />
           }
-          iconBgColor="bg-green-100 dark:bg-green-900/30"
+          iconBgColor="bg-secondary-100 dark:bg-secondary-800/30"
         />
 
         <StatCard
@@ -58,7 +58,7 @@ export function AnalyticsPage() {
           icon={
             <Target className="w-4 h-4 lg:w-6 lg:h-6 text-purple-600 dark:text-purple-400" />
           }
-          iconBgColor="bg-purple-100 dark:bg-purple-900/50"
+          iconBgColor="bg-blue-100 dark:bg-blue-900/30"
         />
 
         <StatCard
@@ -68,7 +68,7 @@ export function AnalyticsPage() {
           icon={
             <Flame className="w-4 h-4 lg:w-6 lg:h-6 text-orange-600 dark:text-orange-400" />
           }
-          iconBgColor="bg-orange-100 dark:bg-orange-900/50"
+          iconBgColor="bg-purple-100 dark:bg-purple-900/30"
         />
       </div>
 

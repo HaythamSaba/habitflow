@@ -130,7 +130,7 @@ export function DashboardPage() {
           icon={
             <CheckCircle2 className="w-4 h-4 lg:w-6 lg:h-6 text-primary-600 dark:text-primary-400" />
           }
-          iconBgColor="bg-emerald-100 dark:bg-emerald-900/30"
+          iconBgColor="bg-primary-100 dark:bg-primary-900/30"
           isLoading={habitsLoading}
         />
 
@@ -152,7 +152,7 @@ export function DashboardPage() {
           icon={
             <TrendingUp className="w-4 h-4 lg:w-6 lg:h-6 text-yellow-600 dark:text-yellow-400" />
           }
-          iconBgColor="bg-yellow-100 dark:bg-yellow-800/30"
+          iconBgColor="bg-secondary-100 dark:bg-secondary-800/30"
           showEmoji={maxStreak > 0}
           emoji="🔥"
           isLoading={streakLoading}
