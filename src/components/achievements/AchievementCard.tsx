@@ -33,7 +33,7 @@ export function AchievementCard({
 
   return (
     <div
-      className={`relative rounded-xl p-3 sm:p-4 lg:p-6 border-2 transition-all duration-300 ${
+      className={`relative rounded-3xl p-3 sm:p-4 lg:p-6 border-2 transition-all duration-300 ${
         unlocked
           ? `${rarityColor} shadow-md hover:shadow-lg hover:scale-105`
           : "border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-950"
