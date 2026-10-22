@@ -1,37 +1,67 @@
-import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { HighlightStatCard } from "@/components/ui/HighlightStatCard";
 import LetsConnect from "@/components/ui/LetsConnect";
-import { MapPin, Sparkles, Code2, Zap, Target } from "lucide-react";
+import { MapPin, Sparkles, Code2, Zap, Target, ArrowRight } from "lucide-react";
 
 export function AboutPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950 p-4 sm:p-6">
       <div className="max-w-6xl mx-auto">
-        {/* Hero Section - Full Width */}
-        <div className="overflow-hidden mb-20">
-          <div className="group relative overflow-hidden rounded-t-[40px] rounded-l-[40px] bg-primary-500 p-8 sm:p-12 text-black min-h-65 sm:min-h-80">
-            {/* Decorative blurred background shapes */}
-            <div className="absolute top-10 right-10 w-72 h-72 bg-white/20 rounded-full blur-3xl opacity-40 pointer-events-none"></div>
-            <div className="absolute bottom-0 left-1/3 w-60 h-60 bg-primary-300 rounded-full blur-3xl opacity-30 pointer-events-none"></div>
+        {/* Hero Section - Full Width
+            Green panel (40px corners) with a "tab" dropping down on the right,
+            joined to the panel by an inverted corner on desktop. */}
+        <section aria-label="Introduction" className="mb-12 sm:mb-16">
+          {/* Vertical gradient that ends on exactly primary-500, the tab's
+              color, so the panel, inverted corner and tab join seamlessly */}
+          <div className="group relative overflow-hidden rounded-t-[40px] rounded-bl-[40px] lg:rounded-br-none rounded-br-[40px] bg-linear-to-b from-primary-400 to-primary-500 p-10 ">
+            {/* Dot-grid texture, fading out toward the bottom */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-60 bg-[radial-gradient(rgba(255,255,255,0.35)_1px,transparent_1px)] bg-size-[22px_22px] mask-[linear-gradient(to_bottom,black,transparent_75%)]"
+              aria-hidden="true"
+            />
+            {/* Soft light behind the portrait; kept off the bottom edge so
+                the panel's base color matches the tab exactly (no seam) */}
+            {/* <div
+              className="absolute top-0 right-0  w-96 h-96 rounded-full bg-white/25 blur-3xl pointer-events-none"
+              aria-hidden="true"
+            /> */}
+            <div className="relative flex flex-col items-center lg:items-start">
+              {/* Text: dark on green in both themes (~7:1 contrast) */}
+              <div className="pb-4 sm:pb-6 text-center md:text-left">
+                <p className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/25 backdrop-blur-sm ring-1 ring-white/40 text-sm font-medium text-gray-900 mb-5">
+                  👋 Hello, I&apos;m
+                </p>
 
-            {/* Subtle texture */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none"></div>
+                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-gray-900 dark:text-gray-900 mb-4">
+                  Haytham
+                </h1>
 
-            {/* Content */}
-            <div className="relative z-10">
-              <div className="inline-block px-4 py-1 bg-white/20 rounded-full text-sm font-medium mb-4 shadow-primary-500 shadow-lg">
-                👋 Hello, I&apos;m
+                <p className="text-xl sm:text-2xl leading-snug text-primary-950 max-w-md md:mx-0">
+                  Frontend Developer crafting{" "}
+                  {/* Yellow highlighter stroke under the key words */}
+                  <span className="bg-linear-to-r from-secondary-400 to-secondary-400 bg-no-repeat bg-size-[100%_35%] bg-position-[0_90%] px-0.5">
+                    beautiful, functional
+                  </span>{" "}
+                  web experiences
+                </p>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl text-gray-900 dark:text-gray-100 lg:text-6xl font-bold mb-4">
-                Haytham
-              </h1>
-
-              <p className="text-xl sm:text-2xl text-primary-900 dark:text-primary-100 mb-6 max-w-125">
-                Frontend Developer crafting beautiful, functional web
-                experiences
-              </p>
+              {/* Stack, from package.json */}
+              <ul
+                aria-label="Tech stack"
+                className="flex flex-wrap gap-2 mt-auto"
+              >
+                {["React", "TypeScript", "Supabase", "Tailwind CSS"].map(
+                  (tech) => (
+                    <li
+                      key={tech}
+                      className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm ring-1 ring-white/30 text-xs font-semibold text-gray-900"
+                    >
+                      {tech}
+                    </li>
+                  ),
+                )}
+              </ul>
             </div>
 
             {/* Decorative image frame */}
@@ -47,40 +77,64 @@ export function AboutPage() {
             </div>
           </div>
 
-          {/* Bottom section */}
-          <div className="relative flex flex-col lg:flex-row justify-between text-sm">
+          {/* Bottom row: chips on the left, green tab on the right */}
+          <div className="flex flex-col lg:flex-row text-sm">
             {/* Left side */}
-            <div className="flex flex-col justify-center sm:flex-row w-full lg:w-1/2 items-center sm:items-center gap-4 p-4 sm:p-8 rounded-bl-[40px] relative z-10">
-              {/* Corner mask — only needed on desktop where sections are side by side */}
-              <div className="hidden lg:block absolute w-11 h-11 top-0 right-0 bg-primary-500">
+            {/* lg:pr-12 keeps the chips clear of the 44px inverted corner */}
+            <div className="relative w-full lg:w-2/5 flex flex-wrap lg:flex-nowrap justify-center lg:justify-start items-center gap-2.5 lg:gap-2 p-5 sm:p-8 lg:pl-4 lg:pr-12">
+              {/* Inverted corner where the tab meets the panel (desktop) */}
+              <div
+                className="hidden lg:block absolute w-11 h-11 top-0 right-0 bg-primary-500"
+                aria-hidden="true"
+              >
                 <div
                   className="absolute w-11 h-11 bg-white dark:bg-gray-950"
                   style={{ borderTopRightRadius: "44px" }}
                 />
               </div>
-              <div className="flex items-center gap-2 dark:text-gray-100 px-4 py-2 rounded-full shadow-primary-500 shadow-lg">
-                <MapPin className="w-4 h-4" />
-                Ljubljana, Slovenia
-              </div>
 
-              <div className="flex items-center gap-2 dark:text-gray-100 px-4 py-2 rounded-full shadow-primary-500 shadow-lg">
-                <Sparkles className="w-4 h-4" />
+              <span className="flex items-center gap-2 px-4 lg:px-3 py-2 rounded-full whitespace-nowrap border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">
+                <MapPin
+                  className="w-4 h-4 text-primary-700 dark:text-primary-400"
+                  aria-hidden="true"
+                />
+                Ljubljana, Slovenia
+              </span>
+
+              <span className="flex items-center gap-2 px-4 lg:px-3 py-2 rounded-full whitespace-nowrap border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 font-medium z-10">
+                <span className="relative flex w-2.5 h-2.5" aria-hidden="true">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-primary-500 opacity-75 animate-ping" />
+                  <span className="relative inline-flex w-2.5 h-2.5 rounded-full bg-primary-600" />
+                </span>
                 Available for opportunities
-              </div>
+              </span>
             </div>
 
-            {/* Right side */}
-            <div className="flex items-center bg-primary-500 w-full lg:w-3/5 p-8 rounded-br-[40px] rounded-bl-[40px] relative z-10">
-              <div>
-                <Button variant="secondary">
-                  <a href="mailto:haythamsaba@gmail.com?subject=Let's Connect">
-                    Let's connect
-                  </a>
-                </Button>
+            {/* Right side: the tab */}
+            <div className="w-full lg:w-3/5 flex flex-col sm:flex-row items-center justify-between gap-4 bg-primary-500 px-8 py-6 sm:py-7 rounded-[28px] lg:rounded-t-none lg:rounded-b-[40px] mt-2 lg:mt-0">
+              <div className="text-center sm:text-left">
+                <p className="text-lg font-bold text-gray-900">
+                  Have a role or a project in mind?
+                </p>
+                <p className="text-sm text-primary-950/80">
+                  Let&apos;s talk about how I can help.
+                </p>
               </div>
+              {/* A real link styled as the yellow button (a link inside a
+                  button isn't clickable on the button's edges) */}
+              <a
+                href="mailto:haythamsaba@gmail.com?subject=Let's%20Connect"
+                className="group/cta btn btn-secondary btn-md shrink-0 rounded-xl min-h-11 font-semibold shadow-md"
+              >
+                Let&apos;s connect
+                <ArrowRight
+                  className="w-4 h-4 ml-2 transition-transform group-hover/cta:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </a>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Two Column Layout */}
         <div className="grid lg:grid-cols-3 gap-6">
