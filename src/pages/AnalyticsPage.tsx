@@ -35,7 +35,7 @@ export function AnalyticsPage() {
           title="Active Habits"
           description="Currently tracking"
           icon={
-            <BarChart3 className="w-4 h-4 lg:w-6 lg:h-6 text-blue-600 dark:text-blue-400" />
+            <BarChart3 className="w-4 h-4 lg:w-6 lg:h-6 text-primary-600 dark:text-primary-400" />
           }
           iconBgColor="bg-primary-100 dark:bg-primary-900/30"
         />
@@ -45,7 +45,7 @@ export function AnalyticsPage() {
           title="Completions"
           description="Last 30 days"
           icon={
-            <TrendingUp className="w-4 h-4 lg:w-6 lg:h-6 text-green-600 dark:text-green-400" />
+            <TrendingUp className="w-4 h-4 lg:w-6 lg:h-6 text-yellow-600 dark:text-yellow-400"  />
           }
           iconBgColor="bg-secondary-100 dark:bg-secondary-800/30"
         />
@@ -56,7 +56,7 @@ export function AnalyticsPage() {
           title="Avg Rate"
           description="Daily targets met, last 30 days"
           icon={
-            <Target className="w-4 h-4 lg:w-6 lg:h-6 text-purple-600 dark:text-purple-400" />
+            <Target className="w-4 h-4 lg:w-6 lg:h-6 text-blue-600 dark:text-blue-400" />
           }
           iconBgColor="bg-blue-100 dark:bg-blue-900/30"
         />
@@ -66,7 +66,7 @@ export function AnalyticsPage() {
           title="Best Streak"
           description="Longest streak"
           icon={
-            <Flame className="w-4 h-4 lg:w-6 lg:h-6 text-orange-600 dark:text-orange-400" />
+            <Flame className="w-4 h-4 lg:w-6 lg:h-6 text-purple-600 dark:text-purple-400" />
           }
           iconBgColor="bg-purple-100 dark:bg-purple-900/30"
         />
