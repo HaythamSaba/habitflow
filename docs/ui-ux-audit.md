@@ -21,7 +21,7 @@ Mark items as they are fixed so work can resume in a new session.
 | H3 | Keyboard and screen-reader access broken | M | Done |
 | H4 | Five inconsistent streak calculations | M | Done (daily rules for all frequencies; weekly/custom hidden for now, see N3) |
 | H5 | Analytics numbers misleading or wrong | M | Done (daily rules for all frequencies, like H4) |
-| H6 | Unfinished features visible in the UI | S each | Open (superseded by N2 and N3) |
+| H6 | Unfinished features visible in the UI | S each | Done (via N2 and N3) |
 | H7 | "Complete All" undermines motivation | S | Done (removed; no demo account yet) |
 | H8 | Enter on "Cancel" in delete confirmation deletes | S–M | Done (Delete now hard-deletes; Archive archives) |
 | H9 | Dark mode unfinished | S–M | Done |
@@ -46,7 +46,7 @@ Mark items as they are fixed so work can resume in a new session.
 | L7 | README accuracy | S | Done (LICENSE file decision pending) |
 | N1 | Dashboard isn't built around today's check-ins | M | Dropped (owner's decision: no UI/layout changes); "Still to unlock" bug fixed |
 | N2 | Controls that look real but do nothing | S | Done (Forgot password link removed, not wired: no reset page yet) |
-| N3 | Weekly/custom frequencies behave as daily | S | Open (decided: hide from selector) |
+| N3 | Weekly/custom frequencies behave as daily | S | Done (frequency field removed; weekly templates made daily) |
 | N4 | Same habit shows different completion % per page | S | Done |
 | N5 | No level-up moment, invisible streak risk, cluttered habit card | M | Done |
 | N6 | Primary button and habit-colored text fail contrast | S | Done (primary-700 / primary-800) |
@@ -328,6 +328,7 @@ Core loop as of this round: creating a habit is 2 taps plus typing (open the for
 ## Decisions (owner, 2026-10-16)
 
 - **N3, weekly/custom frequencies:** hide them for now (option a). Remove "weekly" and "custom" from the selector only; keep the code paths (schema enum, types, DB values) so they can return when their rules exist.
+  - Follow-up (2026-10-23): with only "daily" left, the Frequency field is removed from the habit form (the value stays registered as a hidden field, so existing weekly/custom habits keep theirs when edited; `FrequencySelector` is kept for later). The 5 weekly templates become daily with a target of 1; "Weekly Review" is renamed "Daily Review".
 - **N1, dashboard layout:** don't change the dashboard's UI or layout. The restructure is dropped. The only change made under N1 is a logic fix: the "Still to unlock" preview filtered locked achievements with `unlockedAchievements.includes(achievement.id)`, comparing objects to an id, so it listed every achievement (including unlocked ones) and its "+N" counted all of them. It now uses `lockedAchievements` from `useAchievements`.
 - **N2, Forgot password:** remove the link instead of wiring it. `resetPassword` redirects to `/reset-password`, which doesn't exist, so the email link would land on the 404 page. A full reset flow (request form plus a set-new-password page, and the URL added to Supabase's allowed redirect URLs) is M effort and left for later.
 - **N6, primary button color:** primary buttons use `primary-700` (#047857) for the background and `primary-800` (#065f46) for hover. `primary-500` stays for fills, rings and accents. Reason: white text on `primary-600` is about 3.8:1, below the 4.5:1 WCAG AA minimum for normal-size text; white on `primary-700` is about 5.5:1 and on `primary-800` about 7.6:1. (The round-2 audit reply had suggested `primary-600` was enough for 16px bold; that was wrong, since bold text only counts as large from about 18.7px.)

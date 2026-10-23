@@ -11,7 +11,6 @@ import { HabitFormData } from "@/constants/habits";
 import { Input } from "@/components/ui/Input";
 import { IconPicker } from "./IconPicker";
 import { ColorPicker } from "./ColorPicker";
-import { FrequencySelector } from "./FrequencySelector";
 import { TargetCounter } from "./TargetCounter";
 import { useCategories } from "@/hooks/useCategories";
 
@@ -158,8 +157,12 @@ export function HabitForm({
             )}
           </div>
 
-          {/* Frequency Selector */}
-          <FrequencySelector register={register} />
+          {/* Frequency: only "daily" is offered until weekly/custom rules
+              exist (streaks and rates treat every habit as daily). The field
+              stays registered, so new habits save as daily and an existing
+              weekly/custom habit keeps its value when edited.
+              FrequencySelector is kept for when the other options return. */}
+          <input type="hidden" {...register("frequency")} />
 
           {/* Target Counter */}
           <TargetCounter
