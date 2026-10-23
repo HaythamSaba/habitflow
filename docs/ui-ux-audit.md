@@ -32,7 +32,7 @@ Mark items as they are fixed so work can resume in a new session.
 | M5 | Mobile navigation and sidebar layout shift | M | Done |
 | M6 | Heatmap awkward on phones | S | Open (superseded by N8) |
 | M7 | Dashboard "today" numbers contradict each other | S | Done |
-| M8 | Inconsistent loading / error / success states | M | Partly done (atomic points needs a DB change, pending decision) |
+| M8 | Inconsistent loading / error / success states | M | Done (check_in / undo_check_in RPCs; the SQL in schema.sql must be applied in Supabase) |
 | M9 | `Input` breaks email fields on mobile | S | Done |
 | M10 | Contrast failures | S | Done (primary button fixed in N6) |
 | M11 | Links that reload the whole app | S | Done |

@@ -263,3 +263,79 @@ END;
 $$;
 
 GRANT EXECUTE ON FUNCTION public.increment_user_points(UUID, INTEGER) TO authenticated;
+
+-- Check in / undo a check-in, atomically with the points change.
+-- The completion row and the points update happen in one transaction, so a
+-- check-in can never be saved without its points (or the other way round).
+-- SECURITY INVOKER: the caller's RLS policies still apply. The user is always
+-- auth.uid(), and the 10 points are fixed here, not chosen by the client.
+-- Keep 10 in sync with POINTS_PER_COMPLETION in src/lib/points.ts.
+CREATE OR REPLACE FUNCTION public.check_in(p_habit_id UUID)
+RETURNS completions
+LANGUAGE plpgsql
+SECURITY INVOKER
+SET search_path = public
+AS $$
+DECLARE
+  new_row completions;
+BEGIN
+  IF auth.uid() IS NULL THEN
+    RAISE EXCEPTION 'Not authenticated';
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM habits WHERE id = p_habit_id AND user_id = auth.uid()
+  ) THEN
+    RAISE EXCEPTION 'Habit not found';
+  END IF;
+
+  INSERT INTO completions (habit_id, user_id)
+  VALUES (p_habit_id, auth.uid())
+  RETURNING * INTO new_row;
+
+  UPDATE user_stats
+  SET total_points = total_points + 10,
+      updated_at = NOW()
+  WHERE user_id = auth.uid();
+
+  IF NOT FOUND THEN
+    -- Rolls back the insert above too
+    RAISE EXCEPTION 'No stats row for this user';
+  END IF;
+
+  RETURN new_row;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION public.undo_check_in(p_completion_id UUID)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY INVOKER
+SET search_path = public
+AS $$
+BEGIN
+  IF auth.uid() IS NULL THEN
+    RAISE EXCEPTION 'Not authenticated';
+  END IF;
+
+  DELETE FROM completions
+  WHERE id = p_completion_id AND user_id = auth.uid();
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'Check-in not found';
+  END IF;
+
+  UPDATE user_stats
+  SET total_points = total_points - 10,
+      updated_at = NOW()
+  WHERE user_id = auth.uid();
+
+  IF NOT FOUND THEN
+    -- Rolls back the delete above too
+    RAISE EXCEPTION 'No stats row for this user';
+  END IF;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.check_in(UUID) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.undo_check_in(UUID) TO authenticated;

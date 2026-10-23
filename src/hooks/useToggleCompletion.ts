@@ -2,11 +2,7 @@ import { useEffect, useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "./useAuth";
 import { useTodayKey } from "./useTodayKey";
-import {
-  createCompletion,
-  deleteCompletion,
-  updateUserPoints,
-} from "@/lib/api";
+import { checkIn, undoCheckIn } from "@/lib/api";
 import {
   POINTS_PER_COMPLETION,
   calculateLevel,
@@ -22,28 +18,6 @@ import { toast } from "react-hot-toast";
 export type ToggleCompletionVariables =
   | { habit: Habit; action: "add" }
   | { habit: Habit; action: "remove"; completionId: string };
-
-/**
- * The check-in change was saved but the follow-up points update failed.
- * The two writes aren't atomic yet, so report this case separately instead
- * of telling the user the whole action failed.
- */
-class PointsSyncError extends Error {
-  readonly checkInAdded: boolean;
-
-  constructor(checkInAdded: boolean) {
-    super("Points update failed");
-    this.checkInAdded = checkInAdded;
-  }
-}
-
-async function syncPoints(userId: string, delta: number, checkInAdded: boolean) {
-  try {
-    await updateUserPoints(userId, delta);
-  } catch {
-    throw new PointsSyncError(checkInAdded);
-  }
-}
 
 type UserStatsCache = { total_points: number } & Record<string, unknown>;
 
@@ -73,17 +47,13 @@ export function useToggleCompletion() {
     ): Promise<Completion | null> => {
       if (!user) throw new Error("Not authenticated");
 
+      // One RPC each: the check-in and its points change succeed or fail
+      // together (one database transaction), so they can't drift apart
       if (variables.action === "add") {
-        const completion = (await createCompletion(
-          variables.habit.id,
-          user.id,
-        )) as Completion;
-        await syncPoints(user.id, POINTS_PER_COMPLETION, true);
-        return completion;
+        return checkIn(variables.habit.id);
       }
 
-      await deleteCompletion(variables.completionId, user.id);
-      await syncPoints(user.id, -POINTS_PER_COMPLETION, false);
+      await undoCheckIn(variables.completionId);
       return null;
     },
 
@@ -213,23 +183,12 @@ export function useToggleCompletion() {
     },
 
     onError: (error, _variables, context) => {
+      // The RPC is all-or-nothing, so on failure nothing changed on the
+      // server: roll back the check-in and the points together
       if (context) {
-        // Points never changed on the server in any failure case
         queryClient.setQueryData(statsKey, context.previousStats);
-        // A PointsSyncError means the check-in change itself was saved
-        if (!(error instanceof PointsSyncError)) {
-          queryClient.setQueryData(todayKey, context.previousToday);
-          queryClient.setQueryData(allKey, context.previousAll);
-        }
-      }
-
-      if (error instanceof PointsSyncError) {
-        toast.error(
-          error.checkInAdded
-            ? "Check-in saved, but your points couldn't be updated."
-            : "Check-in removed, but your points couldn't be updated.",
-        );
-        return;
+        queryClient.setQueryData(todayKey, context.previousToday);
+        queryClient.setQueryData(allKey, context.previousAll);
       }
       toast.error(`Failed to update habit: ${error.message}`);
     },

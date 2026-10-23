@@ -1,4 +1,4 @@
-import { Category } from "@/types";
+import { Category, Completion } from "@/types";
 import { supabase } from "./supabase";
 import { getLocalDayRange } from "./dates";
 export async function getAchievements() {
@@ -103,38 +103,25 @@ export async function updateHabit(
   return data;
 }
 
-export async function createCompletion(habitId: string, userId: string) {
-  try {
-    const { data, error } = await supabase
-      .from("completions")
-      .insert({
-        habit_id: habitId,
-        user_id: userId,
-        completed_at: new Date().toISOString(),
-        notes: null,
-        mood_rating: null,
-      })
-      .select();
+/**
+ * Check in once: saves the completion and adds its points in one database
+ * transaction (the check_in RPC in supabase/schema.sql), so a check-in is
+ * never saved without its points. The user comes from the session.
+ */
+export async function checkIn(habitId: string): Promise<Completion> {
+  const { data, error } = await supabase.rpc("check_in", {
+    p_habit_id: habitId,
+  });
 
-    if (error) {
-      console.error("Create completion error:", error);
-      throw new Error(error.message);
-    }
-
-    return data?.[0] || { habit_id: habitId, user_id: userId };
-  } catch (error) {
-    console.error("Create completion failed:", error);
-    throw error;
-  }
+  if (error) throw new Error(error.message);
+  return data as Completion;
 }
 
-// Undo a completion (delete it)
-export async function deleteCompletion(completionId: string, userId: string) {
-  const { error } = await supabase
-    .from("completions")
-    .delete()
-    .eq("id", completionId)
-    .eq("user_id", userId); // Security: only owner can delete
+/** Undo one check-in: deletes it and removes its points, atomically. */
+export async function undoCheckIn(completionId: string): Promise<void> {
+  const { error } = await supabase.rpc("undo_check_in", {
+    p_completion_id: completionId,
+  });
 
   if (error) throw new Error(error.message);
 }
