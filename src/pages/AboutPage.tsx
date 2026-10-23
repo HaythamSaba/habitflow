@@ -70,9 +70,9 @@ export function AboutPage() {
             {/* Profile image */}
             <div>
               <img
-                src="profile-picture-removebg-preview.png"
+                src="profile.webp"
                 alt="Profile Picture"
-                className="absolute hidden w-100 md:w-125 md:block md:left-[23%] lg:left-[45%] bottom-10 transform translate-x-1/2 translate-y-1/2 group-hover:translate-y-56 grayscale-75 group-hover:grayscale-0 transition duration-300 ease-in-out drop-shadow-2xl drop-shadow-black/80"
+                className="absolute scale-75 hidden w-100 md:block md:left-[23%] lg:left-[45%] bottom-14 transform translate-x-1/2 translate-y-1/2 group-hover:translate-y-45 grayscale-75 group-hover:grayscale-0 transition duration-300 ease-in-out drop-shadow-2xl drop-shadow-black/80"
               />
             </div>
           </div>
