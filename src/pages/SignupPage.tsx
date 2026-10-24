@@ -57,12 +57,15 @@ export function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-primary-100 dark:from-gray-950 dark:via-gray-900 dark:to-primary-950 flex flex-col items-center justify-center p-4 sm:p-6">
+    <div
+      className="min-h-screen bg-linear-to-r from-white to-primary-100
+            dark:bg-linear-to-r dark:from-gray-950 dark:to-primary-900 flex flex-col items-center justify-center p-4 sm:p-6"
+    >
       <div className="w-full max-w-md">
         <AuthBrand />
 
         {/* Card */}
-        <div className="rounded-3xl border border-gray-200 dark:border-gray-800 p-5 sm:p-6 lg:p-8 shadow-xl shadow-primary-200/50 dark:shadow-primary-950/50 bg-white dark:bg-gray-900 backdrop-blur-sm">
+        <div className="rounded-2xl border border-gray-200 dark:border-gray-800 p-5 sm:p-6 lg:p-8 shadow-xl shadow-primary-200 dark:shadow-primary-900 bg-white dark:bg-gray-950">
           {/* Card */}
           <HeaderCardForm
             Title="Create your account"
