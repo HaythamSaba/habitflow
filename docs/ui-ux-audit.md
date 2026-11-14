@@ -6,6 +6,8 @@ Notes: the repo runs React 19 (README says 18), and PostHog is not installed (on
 
 Round 2: 2026-10-16. A re-read of the source after most round-1 fixes landed, adding items N1–N16 (see [Round 2](#round-2-2026-10-16)). The live site was not clicked through and no build was run for this round. Where a round-2 item expands an open round-1 item, work from the N item.
 
+Round 3: 2026-11-14. A re-read of the source after rounds 1 and 2, adding items R1–R17 (see [Round 3](#round-3-2026-11-14)). The live site was not clicked through.
+
 ## Progress tracker
 
 Mark items as they are fixed so work can resume in a new session.
@@ -60,6 +62,23 @@ Mark items as they are fixed so work can resume in a new session.
 | N14 | Visual consistency across pages | S–M | Done (shared Card surface: rounded-3xl, gray border, p-4 sm:p-6) |
 | N15 | Achievements page doesn't point to the next goal | S | Done (locked sorted by progress; other parts not wanted by owner) |
 | N16 | Tab left open past midnight shows yesterday as today | S | Done |
+| R1 | A day can't be logged after it ends | M | Open |
+| R2 | The Habits tab has no check-off | S | Open |
+| R3 | Category badges and chips fail contrast | S | Open |
+| R4 | Achievement unlocks: weakest reward moment, fired from unsaved data | M | Open |
+| R5 | Dashboard habit card: tall on phones, delete is the only manage action | S–M | Open |
+| R6 | "Recent Achievements" aren't the most recent | S | Open |
+| R7 | Custom menus and filter toggles lack keyboard and screen-reader semantics | M | Open |
+| R8 | One missed day resets a streak, with no recovery | M–L | Open |
+| R9 | Templates: double toast and a redirect after every pick | S | Open |
+| R10 | Navigation labels differ; "Achievements" tab label likely overflows | S | Open |
+| R11 | Modal scroll lock targets the wrong element | S | Open |
+| R12 | Non-interactive cards scale on hover | S | Open |
+| R13 | Email confirmation page is off-brand | S | Open |
+| R14 | Typo in the Achievements skeleton class | S | Open |
+| R15 | Leftover frequency labels | S | Open |
+| R16 | Portfolio footer on every in-app page | S | Open |
+| R17 | No account deletion or data export | M | Open |
 
 ---
 
@@ -483,3 +502,137 @@ Core loop as of this round: creating a habit is 2 taps plus typing (open the for
 3. **Add the missing reward moments (N5) and fix button contrast (N6).** Level-up, streak-at-risk, and readable CTAs.
 
 **Quick wins:** N2, N3, N4, N6, N11, N12.
+
+---
+
+# Round 3 (2026-11-14)
+
+A re-read of the current source after rounds 1 and 2 (everything done except N8's tiles and palette). Covers routes, dashboard, check-in flow, habit cards and forms, onboarding, achievements, the Habits, Analytics, Templates and Settings pages, auth, shell and navigation, `index.css`, and the toast and celebration code. The live site was not clicked through. No Critical issues remain.
+
+Core loop as of this round: creating a habit is 2 taps plus typing ("New Habit", type a name, Enter); first run is 2 taps (pick starters, "Add"). Checking off is 1 tap, but only on the dashboard (see R2).
+
+## Not tracked as items (owner decisions)
+
+The re-read also found these, but they fall under decisions already made, so they're recorded here and not as R items:
+
+- **Dashboard repeats the same numbers** (part of the N1 decision: no dashboard UI or layout changes). Points appear 3 times (navbar `LevelBadge`, the `LevelProgress.tsx:36` chip, the "Total Points" `StatCard` at `DashboardPage.tsx:179`), level 3 times, today's % twice ("Today" stat card and `TodayProgress`), achievements 3 times (count card, Recent Achievements, "Still to unlock"). Possible fix if N1 is reopened: keep the card positions and swap duplicates for new information, e.g. "Perfect days this week 3/7" instead of "Total Points", "Longest streak" instead of "Today".
+- **Dashboard list toolbar** (N1, step 2): a full search box and three primary/outline status buttons above even a 3-habit list (`HabitList.tsx:47-122`).
+- **Header CTA is "Browse Templates"** (N1, step 5): `DashboardHeader.tsx:22`; templates are also promoted by Featured Templates, the sidebar "30+" badge, the empty states and the Habits page header.
+- **Also not re-raised:** demo account (C3), hamburger next to "More" and toast position (N9), chart text summaries and vertical bars (N7), heatmap tiles and palette (N8), `aria-pressed` on the Achievements filter chips (N15).
+
+## 🟠 High
+
+### R1. A day can't be logged after it ends
+- **Problem:** `check_in(p_habit_id)` in `src/supabase/schema.sql:273` always stamps `now()`, and `useToggleCompletion` only edits today. The heatmap cells and the 7-day bars in `src/components/habits/HabitOverviewCard.tsx` are read-only. A run done yesterday but not tapped before midnight ends the streak for good.
+- **Why it matters:** In Streaks, Habitica and Loop this is the most common way people lose a streak and quit. A reviewer who knows the category will look for it.
+- **Solution:** Add an optional `p_day date` to `check_in` (and `undo_check_in` if needed). Pass the user's local day from the client (`toDayKey`), since `current_date` is the server's date, and reject anything older than yesterday or in the future. Make yesterday tappable, e.g. a "Yesterday" toggle on the card or tapping a past cell in the 7-day bars.
+  ```sql
+  check_in(p_habit_id uuid, p_day date default current_date)
+  -- raise if p_day < (client today) - 1 or p_day > (client today)
+  ```
+- **Effort:** M
+
+### R2. The Habits tab has no check-off
+- **Problem:** The bottom tab "Habits" opens `src/pages/HabitsPage.tsx`, whose `HabitOverviewCard` has stats and a menu but no check-off control. The only check-off is in the dashboard list, which on phones sits below the header, level card, 4 stat cards, Today's Progress and the achievements card.
+- **Why it matters:** "Habits" is where a new user tries to tick a habit; finding no control there makes the app feel unfinished.
+- **Solution:** Put the existing `CompletionToggle` in the `HabitOverviewCard` header, wired like `src/components/habits/HabitCard.tsx:37-48`. No dashboard layout change.
+- **Effort:** S
+
+### R3. Category badges and chips fail contrast
+- **Problem:** `src/components/categories/CategoryBadge.tsx:17-21` and `src/components/categories/CategoryChips.tsx:51-56` draw the category color as text on a 15% tint of itself, and the selected chip is white on the solid color. With the palette in `src/lib/categoryConstants.ts`, amber `#f59e0b` is about 2:1 and emerald, cyan and teal about 2.5:1, at `text-xs`. N6 fixed this for habit colors but not categories.
+- **Why it matters:** Fails WCAG AA, on a badge shown on every habit card.
+- **Solution:** Same approach as N6: color stays in the tint and border, text becomes `text-gray-800 dark:text-gray-100`. Selected chip: dark text on the color, or a neutral selected style with a colored ring.
+- **Effort:** S
+
+### R4. Achievement unlocks: weakest reward moment, fired from unsaved data
+- **Problem:**
+  - `src/hooks/useCheckAchievements.ts:81-107` reacts to the completions cache, which `useToggleCompletion` updates optimistically. The unlock and its bonus points are written to the server before the check-in is confirmed, and stay if it fails.
+  - The unlock shows as a second toast (`src/lib/achievementNotification.tsx`) next to the check-in toast, with no confetti. Perfect day and level-up get one merged toast plus confetti (`src/hooks/useToggleCompletion.ts:154-182`).
+- **Why it matters:** The rarest reward gets the least ceremony, and rewards can come from check-ins that never saved, which a code reviewer will spot.
+- **Solution:** Run the achievement check after a check-in succeeds, from server data. Pass new unlocks into the check-in toast's `celebrations` and call `celebrate()` once. Optionally a short modal for rare and epic unlocks.
+- **Effort:** M
+
+### R5. Dashboard habit card: tall on phones, delete is the only manage action
+- **Problem:** In `src/components/habits/HabitCard.tsx:206-227`, Edit and Delete stack vertically on phones (`flex-col`, each `min-h-11`), so each row is about 116px tall. The red trash icon is one tap from the check-off control and, since H8, hard-deletes (after a confirm). Archive isn't offered on the dashboard.
+- **Why it matters:** Fewer habits fit on screen, and the most destructive action is the most visible one.
+- **Solution:** Replace the two buttons with the overflow menu `HabitOverviewCard` already uses (Edit / Archive / Delete). Rows drop to about 64px. Card internals only; the page layout doesn't change.
+- **Effort:** S–M
+
+## 🟡 Medium
+
+### R6. "Recent Achievements" aren't the most recent
+- **Problem:** `src/hooks/useAchievements.ts:39` builds `unlockedAchievements` by filtering the master list (catalog order), and `src/pages/DashboardPage.tsx:241` takes `.slice(0, 3)`, so it always shows the first three in catalog order.
+- **Solution:** Sort by `userAchievements[].unlocked_at`, newest first.
+- **Effort:** S
+
+### R7. Custom menus and filter toggles lack keyboard and screen-reader semantics
+- **Problem:**
+  - The account menu (`src/components/layout/Navbar.tsx:194`), the habit card menu (`HabitOverviewCard.tsx:111`) and the 3 filter dropdowns (`src/components/habits/HabitsFilterBar.tsx`) don't close on Escape, don't move focus into the menu or back to the trigger, and don't expose the selected option.
+  - Toggle filters `CategoryChips` and the status buttons in `src/components/habits/HabitList.tsx:85-120` have no `aria-pressed`. (The Achievements filter chips are excluded: declined under N15.)
+- **Solution:** One small `useMenu` hook (Escape closes, focus moves to the first item and returns to the trigger, `aria-haspopup`), and `aria-pressed` on the toggles.
+- **Effort:** M
+
+### R8. One missed day resets a streak, with no recovery
+- **Problem:** `src/lib/streaks.ts` has no grace day or streak freeze.
+- **Why it matters:** Duolingo and Finch use freezes because an all-or-nothing reset makes people quit after their first slip. It would also give points a use beyond levels.
+- **Solution:** A weekly "streak freeze" earned or bought with points, shown as a snowflake cell in the heatmap and 7-day bars. Build R1 first.
+- **Effort:** M–L
+
+### R9. Templates: double toast and a redirect after every pick
+- **Problem:** `src/pages/TemplatesPage.tsx:51` toasts "Habit created from template" on top of `src/hooks/useCreateHabit.ts:25` "Habit created", then navigates to the dashboard (`:52`). Adding a second template means going back.
+- **Solution:** One toast, stay on the gallery, offer "Go to today" inside the toast.
+- **Effort:** S
+
+### R10. Navigation labels differ; "Achievements" tab label likely overflows
+- **Problem:**
+  - The sidebar says "Dashboard / Analytics / About Us" (`src/components/layout/Sidebar.tsx:14-31`); the bottom bar says "Today / Stats" (`src/components/layout/BottomTabBar.tsx:10-15`).
+  - "Achievements" sits in a tab about 72–75px wide at 360–375px, so it likely clips or runs into "More". Verify at 360px.
+  - The account menu's "Profile" still goes to `/habits` (`Navbar.tsx:199`), left over from N2.
+- **Solution:** One set of names (e.g. Today, Habits, Stats, Awards); point "Profile" at Settings or remove it.
+- **Effort:** S
+
+## 🟢 Low
+
+### R11. Modal scroll lock targets the wrong element
+- **Problem:** `src/components/ui/Modal.tsx:43` locks `body`, but the page scrolls inside `<main>` (`src/components/layout/DashboardLayout.tsx:94`), so the page behind a modal can still scroll on touch.
+- **Solution:** `overscroll-contain` on the modal body, or lock `main`.
+- **Effort:** S
+
+### R12. Non-interactive cards scale on hover
+- **Problem:** `src/components/achievements/AchievementCard.tsx:38` (`hover:scale-105`) and unselected `CategoryChips` (`hover:scale-105`) grow on hover; the achievement card isn't clickable.
+- **Solution:** Shadow change only, or make the card a link.
+- **Effort:** S
+
+### R13. Email confirmation page is off-brand
+- **Problem:** `src/pages/EmailConfirmationPage.tsx:69` uses a different gradient (`bg-linear-to-br from-emerald-50 …`) and has no logo; login, signup and the loading page were aligned in recent commits.
+- **Solution:** Same background as login and signup, plus `AuthBrand`.
+- **Effort:** S
+
+### R14. Typo in the Achievements skeleton class
+- **Problem:** `src/pages/AchievementsPage.tsx:73` has `overflow-x-hidd  en`.
+- **Solution:** `overflow-x-hidden`.
+- **Effort:** S
+
+### R15. Leftover frequency labels
+- **Problem:** `HabitOverviewCard.tsx:222-236` spends a whole stat tile on "Target 1x / daily"; `HabitCard.tsx:144` still shows a "weekly" badge on legacy habits that behave as daily since N3.
+- **Solution:** Show the target only when it's above 1; hide the frequency badge while every habit uses daily rules.
+- **Effort:** S
+
+### R16. Portfolio footer on every in-app page
+- **Problem:** `src/components/layout/Footer.tsx` (location, social links, "Built as a portfolio project") renders inside `<main>` on every signed-in page; its icon links are 36px.
+- **Solution:** Move it to the About page and the login page, where it still reaches recruiters; 44px link targets.
+- **Effort:** S
+
+### R17. No account deletion or data export
+- **Problem:** `src/pages/SettingsPage.tsx` offers only name, theme, categories and logout.
+- **Why it matters:** Expected under GDPR (the app is built in the EU).
+- **Solution:** "Export my data" (habits and completions as JSON or CSV) and a confirmed "Delete account" backed by a server-side function.
+- **Effort:** M
+
+## Top 3 for a portfolio review (round 3)
+
+1. **Let people log yesterday (R1),** with streak freezes (R8) later. Shows an understanding of how habit apps lose users.
+2. **Check-off everywhere and a compact card (R2 + R5).** One tap from any habit view, denser rows on phones.
+3. **A real achievement moment (R4).** Unlock from saved data, merged into the single celebration toast with confetti.
+
+**Quick wins:** R3, R6, R9, R10, R13, R14.
