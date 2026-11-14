@@ -1,33 +1,51 @@
-import { useEffect, useState } from "react";
-import { useActivityHeatmap, WeekActivity } from "@/hooks/useActivityHeatmap";
+import { useEffect, useMemo, useRef, useState, KeyboardEvent } from "react";
+import {
+  useActivityHeatmap,
+  DayActivity,
+  WeekActivity,
+} from "@/hooks/useActivityHeatmap";
 import { format } from "date-fns";
 import { Calendar } from "lucide-react";
 import { useAllCompletions } from "@/hooks/useAllCompletions";
 import { useDashboardStreak } from "@/hooks/useDashboardStreak";
+import { useHabits } from "@/hooks/useHabits";
+import { useTheme } from "@/contexts/ThemeContext";
 import { Card } from "@/components/ui/Card";
+import { toDayKey } from "@/lib/dates";
+
+/** Cells never render smaller than this, so they stay tappable */
+const MIN_CELL_PX = 10;
 
 export function ActivityHeatmap() {
   const today = new Date().toDateString();
+  const { habits } = useHabits();
   const { completions } = useAllCompletions();
   // Same "Best Active Streak" as the dashboard (shared rules in lib/streaks.ts)
   const { maxStreak } = useDashboardStreak();
+  // Active habits, like the rest of Analytics. Memoized so hovering a day
+  // doesn't recompute the whole year.
+  const activeHabits = useMemo(
+    () => habits.filter((habit) => !habit.archived),
+    [habits],
+  );
   const { weeks, months } = useActivityHeatmap(
+    activeHabits,
     completions || [],
     365,
   );
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
-  const [hoveredDay, setHoveredDay] = useState<{
-    date: Date;
-    count: number;
-  } | null>(null);
+  const [hoveredDay, setHoveredDay] = useState<DayActivity | null>(null);
 
-  // Track dark mode
-  const [isDark, setIsDark] = useState(
-    document.documentElement.classList.contains("dark"),
-  );
+  // Keyboard: one cell is in the tab order at a time; arrow keys move it
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [focusKey, setFocusKey] = useState(() => toDayKey(new Date()));
 
   // Responsive cell size
   const [cellSize, setCellSize] = useState(12);
+  // Size the cells actually render at; day labels use it too so rows line up
+  const cellPx = Math.max(cellSize, MIN_CELL_PX);
 
   // Cell size updates
   useEffect(() => {
@@ -45,21 +63,6 @@ export function ActivityHeatmap() {
     updateCellSize();
     window.addEventListener("resize", updateCellSize);
     return () => window.removeEventListener("resize", updateCellSize);
-  }, []);
-
-  // Dark mode observer
-  useEffect(() => {
-    const checkDarkMode = () => {
-      setIsDark(document.documentElement.classList.contains("dark"));
-    };
-
-    const observer = new MutationObserver(checkDarkMode);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
-    return () => observer.disconnect();
   }, []);
 
   // Color levels
@@ -81,6 +84,16 @@ export function ActivityHeatmap() {
         };
 
     return colors[level as 1 | 2 | 3 | 4] || colors[1];
+  };
+
+  const handleGridKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const nextKey = getNextDayKey(weeks, focusKey, event.key);
+    if (!nextKey) return;
+    event.preventDefault();
+    setFocusKey(nextKey);
+    gridRef.current
+      ?.querySelector<HTMLButtonElement>(`[data-day="${nextKey}"]`)
+      ?.focus();
   };
 
   return (
@@ -157,13 +170,17 @@ export function ActivityHeatmap() {
 
             {/* Grid - RESPONSIVE */}
             <div className="flex gap-1">
-              {/* Day labels — rows run Sunday→Saturday (see useActivityHeatmap) */}
-              <div className="flex flex-col gap-2.5 md:gap-1 pb-4 justify-between pr-2 min-w-11 sm:min-w-11">
+              {/* Day labels — rows run Sunday→Saturday (see useActivityHeatmap).
+                  Same height and gap as the cells, so each label sits on its row. */}
+              <div
+                aria-hidden="true"
+                className="flex flex-col gap-2 md:gap-1 pb-4 pr-2 min-w-11 sm:min-w-11"
+              >
                 {DAY_LABELS.map((label) => (
                   <span
                     key={label}
-                    className="text-xs text-gray-600 dark:text-gray-400"
-                    style={{ height: cellSize }}
+                    className="flex items-center text-xs leading-none text-gray-600 dark:text-gray-400"
+                    style={{ height: cellPx }}
                   >
                     {label}
                   </span>
@@ -171,65 +188,78 @@ export function ActivityHeatmap() {
               </div>
 
               {/* Weeks */}
-              {weeks.map((week, weekIndex) => (
-                <div key={weekIndex} className="flex flex-col gap-2 md:gap-1">
-                  {week.days.map((day, dayIndex) =>
-                    !day.inRange ? (
-                      // Padding outside the year (incl. future days): keep the grid, show nothing
-                      <div
-                        key={dayIndex}
-                        aria-hidden="true"
-                        style={{
-                          width: cellSize,
-                          height: cellSize,
-                          minWidth: cellSize < 10 ? "10px" : "auto",
-                          minHeight: cellSize < 10 ? "10px" : "auto",
-                        }}
-                      />
-                    ) : (
-                    <div
-                      key={dayIndex}
-                      className={`
-                      rounded-sm cursor-pointer transition-all 
-                      hover:ring-2 hover:ring-primary-500 
-                      active:ring-2 active:ring-primary-600 
-                      duration-300 hover:ring-offset-0
-                      dark:hover:ring-offset-gray-800
-                        ${
-                          today === day.date.toDateString()
-                            ? "ring-2 ring-secondary-500 dark:ring-secondary-400 ring-offset-0 dark:ring-offset-gray-900"
-                            : ""
-                        }
-                      `}
-                      style={{
-                        width: cellSize,
-                        height: cellSize,
-                        backgroundColor: getColor(day.level, isDark), // completion level color
-                        minWidth: cellSize < 10 ? "10px" : "auto",
-                        minHeight: cellSize < 10 ? "10px" : "auto",
-                      }}
-                      onMouseEnter={() =>
-                        setHoveredDay({ date: day.date, count: day.count })
+              <div
+                ref={gridRef}
+                role="group"
+                aria-label="Activity calendar, last 365 days. Use the arrow keys to move between days."
+                className="flex gap-1"
+                onKeyDown={handleGridKeyDown}
+              >
+                {weeks.map((week, weekIndex) => (
+                  <div key={weekIndex} className="flex flex-col gap-2 md:gap-1">
+                    {week.days.map((day, dayIndex) => {
+                      if (!day.inRange) {
+                        // Padding outside the year (incl. future days): keep the grid, show nothing
+                        return (
+                          <div
+                            key={dayIndex}
+                            aria-hidden="true"
+                            style={{ width: cellPx, height: cellPx }}
+                          />
+                        );
                       }
-                      onMouseLeave={() => setHoveredDay(null)}
-                      onTouchStart={() =>
-                        setHoveredDay({ date: day.date, count: day.count })
-                      }
-                      onTouchEnd={() => {
-                        setTimeout(() => setHoveredDay(null), 2000);
-                      }}
-                      title={`${today === day.date.toDateString() ? "Today, " : ""}${format(day.date, "MMM d, yyyy")}: ${day.count} completions`}
-                    />
-                    ),
-                  )}
-                </div>
-              ))}
+
+                      const dayKey = toDayKey(day.date);
+                      const isToday = today === day.date.toDateString();
+                      return (
+                        <button
+                          key={dayIndex}
+                          type="button"
+                          data-day={dayKey}
+                          tabIndex={dayKey === focusKey ? 0 : -1}
+                          aria-label={describeDay(day, isToday)}
+                          className={`
+                          rounded-sm cursor-pointer transition-all
+                          hover:ring-2 hover:ring-primary-500
+                          active:ring-2 active:ring-primary-600
+                          duration-300 hover:ring-offset-0
+                          dark:hover:ring-offset-gray-800
+                          focus-visible:outline-2 focus-visible:outline-offset-2
+                          focus-visible:outline-primary-600 dark:focus-visible:outline-primary-300
+                            ${
+                              isToday
+                                ? "ring-2 ring-secondary-500 dark:ring-secondary-400 ring-offset-0 dark:ring-offset-gray-900"
+                                : ""
+                            }
+                          `}
+                          style={{
+                            width: cellPx,
+                            height: cellPx,
+                            backgroundColor: getColor(day.level, isDark), // % of targets met
+                          }}
+                          onMouseEnter={() => setHoveredDay(day)}
+                          onMouseLeave={() => setHoveredDay(null)}
+                          onFocus={() => {
+                            setFocusKey(dayKey);
+                            setHoveredDay(day);
+                          }}
+                          onBlur={() => setHoveredDay(null)}
+                          onTouchStart={() => setHoveredDay(day)}
+                          onTouchEnd={() => {
+                            setTimeout(() => setHoveredDay(null), 2000);
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Hover/touch details, below the calendar */}
+      {/* Hover/touch/focus details, below the calendar */}
       <div className="min-h-20 max-w-sm mb-4 max-h-20 p-3 bg-gray-50 dark:bg-primary-700 rounded-lg border border-gray-200 dark:border-gray-600">
         {hoveredDay ? (
           <div>
@@ -244,13 +274,16 @@ export function ActivityHeatmap() {
               </p>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-200">
-              {hoveredDay.count}{" "}
-              {hoveredDay.count === 1 ? "completion" : "completions"}
+              {formatDayStats(hoveredDay)}
             </p>
           </div>
         ) : (
           <p className="text-sm text-gray-600 dark:text-gray-200">
-            Hover over a day
+            {/* Touch screens can't hover */}
+            <span className="hidden [@media(hover:hover)]:inline">
+              Hover over a day
+            </span>
+            <span className="[@media(hover:hover)]:hidden">Tap a day</span>
           </p>
         )}
       </div>
@@ -319,6 +352,45 @@ export function ActivityHeatmap() {
 
 // Row labels, matching the Sunday-first weeks built by useActivityHeatmap
 const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+/** Days per arrow key: rows are weekdays, columns are weeks */
+const KEY_STEPS: Record<string, number> = {
+  ArrowUp: -1,
+  ArrowDown: 1,
+  ArrowLeft: -7,
+  ArrowRight: 7,
+};
+
+/** Day key the arrow/Home/End key moves to, or null if the key isn't handled */
+function getNextDayKey(
+  weeks: WeekActivity[],
+  currentKey: string,
+  key: string,
+): string | null {
+  const dayKeys = getDaysInRange(weeks).map((d) => toDayKey(d.date));
+  if (dayKeys.length === 0) return null;
+  if (key === "Home") return dayKeys[0];
+  if (key === "End") return dayKeys[dayKeys.length - 1];
+
+  const step = KEY_STEPS[key];
+  if (step === undefined) return null;
+  const index = Math.max(0, dayKeys.indexOf(currentKey));
+  const next = Math.min(dayKeys.length - 1, Math.max(0, index + step));
+  return dayKeys[next];
+}
+
+/** e.g. "3 completions · 75% of targets met" */
+function formatDayStats(day: DayActivity): string {
+  const completions = `${day.count} ${day.count === 1 ? "completion" : "completions"}`;
+  const targets =
+    day.rate === null ? "no habits yet" : `${day.rate}% of targets met`;
+  return `${completions} · ${targets}`;
+}
+
+function describeDay(day: DayActivity, isToday: boolean): string {
+  const date = format(day.date, "EEEE, MMMM d, yyyy");
+  return `${isToday ? "Today, " : ""}${date}: ${formatDayStats(day).replace(" · ", ", ")}`;
+}
 
 // Helper functions — all ignore padding cells outside the year
 function getDaysInRange(weeks: WeekActivity[]) {

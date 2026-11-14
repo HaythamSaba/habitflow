@@ -6,7 +6,25 @@ import {
   getHabitRate,
   getTodayProgress,
   isNewPerfectDay,
+  rateToHeatmapLevel,
 } from "./analytics";
+
+describe("rateToHeatmapLevel", () => {
+  it("is empty when nothing was met or no habit existed yet", () => {
+    expect(rateToHeatmapLevel(0)).toBe(0);
+    expect(rateToHeatmapLevel(null)).toBe(0);
+  });
+
+  it("steps up by quarters of the day's targets", () => {
+    expect(rateToHeatmapLevel(1)).toBe(1);
+    expect(rateToHeatmapLevel(25)).toBe(1);
+    expect(rateToHeatmapLevel(26)).toBe(2);
+    expect(rateToHeatmapLevel(50)).toBe(2);
+    expect(rateToHeatmapLevel(75)).toBe(3);
+    expect(rateToHeatmapLevel(76)).toBe(4);
+    expect(rateToHeatmapLevel(100)).toBe(4);
+  });
+});
 
 // Dates are built in LOCAL time, so these tests hold in any time zone
 const local = (y: number, m: number, d: number, h = 12) =>

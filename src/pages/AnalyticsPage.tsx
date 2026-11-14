@@ -63,8 +63,8 @@ export function AnalyticsPage() {
 
         <StatCard
           value={bestStreak}
-          title="Best Streak"
-          description="Longest streak"
+          title="Longest Streak"
+          description="Best habit, all time"
           icon={
             <Flame className="w-4 h-4 lg:w-6 lg:h-6 text-purple-600 dark:text-purple-400" />
           }

@@ -147,6 +147,20 @@ export function getDailyTargetTrend(
   });
 }
 
+export type HeatmapLevel = 0 | 1 | 2 | 3 | 4;
+
+/**
+ * Heatmap color level for a day's % of targets met: 0 = none (or no habits
+ * yet), then quarters: 1–25, 26–50, 51–75, 76–100.
+ */
+export function rateToHeatmapLevel(rate: number | null): HeatmapLevel {
+  if (rate === null || rate <= 0) return 0;
+  if (rate <= 25) return 1;
+  if (rate <= 50) return 2;
+  if (rate <= 75) return 3;
+  return 4;
+}
+
 export interface TodayProgress {
   /** Habits whose daily target is met today */
   completed: number;

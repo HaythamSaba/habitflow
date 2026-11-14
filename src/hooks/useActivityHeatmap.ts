@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Completion } from "@/types";
+import { Completion, Habit } from "@/types";
 import {
   startOfDay,
   eachDayOfInterval,
@@ -8,11 +8,20 @@ import {
   addDays,
   getDay,
 } from "date-fns";
+import {
+  getDailyTargetTrend,
+  HeatmapLevel,
+  rateToHeatmapLevel,
+} from "@/lib/analytics";
 
 export interface DayActivity {
   date: Date;
+  /** Check-ins that day (any habit) */
   count: number;
-  level: 0 | 1 | 2 | 3 | 4; // Activity level for color intensity
+  /** % of that day's targets met, same rules as the trend chart; null before any habit existed */
+  rate: number | null;
+  /** Color intensity, from `rate` */
+  level: HeatmapLevel;
   /** false for padding cells that fill out the first/last week (outside the range) */
   inRange: boolean;
 }
@@ -27,12 +36,25 @@ interface HeatmapData {
   maxCount: number;
 }
 
+/**
+ * @param habits Habits whose daily targets set each day's color (pass active habits,
+ *   like the rest of Analytics)
+ * @param completions Check-ins to count per day
+ */
 export function useActivityHeatmap(
+  habits: Pick<Habit, "id" | "target_count" | "created_at">[],
   completions: Completion[],
   daysToShow: number = 365,
 ): HeatmapData {
   return useMemo(() => {
     const today = startOfDay(new Date());
+
+    // % of targets met per day (lib/analytics.ts), keyed by yyyy-MM-dd
+    const rateByDay = new Map(
+      getDailyTargetTrend(habits, completions, daysToShow, today).map(
+        (point) => [point.dayKey, point.rate],
+      ),
+    );
     const startDate = subDays(today, daysToShow - 1);
 
     // Get all days in range
@@ -56,16 +78,9 @@ export function useActivityHeatmap(
     const dayActivities: DayActivity[] = allDays.map((date) => {
       const dateKey = format(date, "yyyy-MM-dd");
       const count = activityMap.get(dateKey) || 0;
+      const rate = rateByDay.get(dateKey) ?? null;
 
-      // Calculate level (0-4) based on count
-      let level: 0 | 1 | 2 | 3 | 4 = 0;
-      if (count === 0) level = 0;
-      else if (count <= 3) level = 1;
-      else if (count <= 6) level = 2;
-      else if (count <= 9) level = 3;
-      else level = 4;
-
-      return { date, count, level, inRange: true };
+      return { date, count, rate, level: rateToHeatmapLevel(rate), inRange: true };
     });
 
     // Organize into weeks (Sunday-Saturday; row 0 is Sunday)
@@ -78,6 +93,7 @@ export function useActivityHeatmap(
       currentWeek.push({
         date: subDays(dayActivities[0].date, firstDayOfWeek - i),
         count: 0,
+        rate: null,
         level: 0,
         inRange: false,
       });
@@ -94,6 +110,7 @@ export function useActivityHeatmap(
           currentWeek.push({
             date: addDays(lastDate, 1),
             count: 0,
+            rate: null,
             level: 0,
             inRange: false,
           });
@@ -118,5 +135,5 @@ export function useActivityHeatmap(
     });
 
     return { weeks, months, maxCount };
-  }, [completions, daysToShow]);
+  }, [habits, completions, daysToShow]);
 }

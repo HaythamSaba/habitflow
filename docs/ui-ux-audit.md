@@ -51,7 +51,7 @@ Mark items as they are fixed so work can resume in a new session.
 | N5 | No level-up moment, invisible streak risk, cluttered habit card | M | Done |
 | N6 | Primary button and habit-colored text fail contrast | S | Done (primary-700 / primary-800) |
 | N7 | Charts hard to read, trend dips every morning | S–M | Done (today marked in progress, fixed 0–100% bar scale; vertical bars and no chart text summaries by owner's decision) |
-| N8 | Heatmap busy and awkward on phones | S–M | Open |
+| N8 | Heatmap busy and awkward on phones | S–M | Partly done (touch hint, streak names, label alignment, useTheme, colored by % of target, keyboard access; phone layout fine per owner; tiles/palette not done) |
 | N9 | Mobile shell rough edges | S–M | Done (h-dvh, merged celebration toasts; hamburger and toast position kept by owner's decision) |
 | N10 | Navbar and sidebar remount on every page change | S–M | Done |
 | N11 | Loading buttons lose their label | S | Done |
