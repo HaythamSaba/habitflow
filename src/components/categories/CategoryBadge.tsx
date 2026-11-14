@@ -12,11 +12,12 @@ export function CategoryBadge({ category, size = "sm" }: CategoryBadgeProps) {
   };
 
   return (
+    // Neutral text: category colors like amber and emerald are 2–2.5:1 as
+    // text on their own tint. The tint and border carry the color (as N6).
     <span
-      className={`inline-flex items-center gap-0.5 sm:gap-1 rounded-full font-medium max-w-30 sm:max-w-40 ${sizeClasses[size]}`}
+      className={`inline-flex items-center gap-0.5 sm:gap-1 rounded-full font-medium max-w-30 sm:max-w-40 text-gray-800 dark:text-gray-100 ${sizeClasses[size]}`}
       style={{
         backgroundColor: `${category.color}15`,
-        color: category.color,
         border: `1px solid ${category.color}40`,
       }}
     >
