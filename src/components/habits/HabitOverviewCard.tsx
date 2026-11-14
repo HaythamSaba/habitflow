@@ -17,6 +17,9 @@ import {
 import { format } from "date-fns";
 import { useAllCompletions } from "@/hooks/useAllCompletions";
 import { HABIT_ICONS } from "@/constants/habits";
+import { useHabitCheckIn } from "@/hooks/useHabitCheckIn";
+import { POINTS_PER_COMPLETION } from "@/lib/points";
+import { CompletionToggle } from "./CompletionToggle";
 
 interface HabitOverviewCardProps {
   habit: Habit;
@@ -35,6 +38,8 @@ export function HabitOverviewCard({
 }: HabitOverviewCardProps) {
   const { categories } = useCategories();
   const { completions } = useAllCompletions();
+  // Same check-off as the dashboard list, so the Habits tab can tick habits too
+  const { completionCount, toggle } = useHabitCheckIn(habit);
 
   const { completionRate, currentStreak, last7Days } = useHabitStats(
     habit,
@@ -66,6 +71,17 @@ export function HabitOverviewCard({
         {/* Header */}
         <div className="flex items-center justify-between mb-3 lg:mb-4">
           <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+            {/* Archived habits can't be checked off */}
+            {!habit.archived && (
+              <CompletionToggle
+                habitName={habit.name}
+                color={habit.color}
+                count={completionCount}
+                target={habit.target_count}
+                points={POINTS_PER_COMPLETION}
+                onToggle={toggle}
+              />
+            )}
             <div
               className="w-9 h-9 sm:w-10 sm:h-10 lg:w-12 lg:h-12 flex items-center justify-center rounded-lg sm:rounded-xl text-xl shrink-0 shadow-lg"
               style={{

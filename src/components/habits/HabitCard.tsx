@@ -3,9 +3,8 @@ import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { lightenColor } from "@/lib/utils";
 import { POINTS_PER_COMPLETION } from "@/lib/points";
-import { useToggleCompletion } from "@/hooks/useToggleCompletion";
+import { useHabitCheckIn } from "@/hooks/useHabitCheckIn";
 import { CompletionToggle } from "./CompletionToggle";
-import { useCompletions } from "@/hooks/useCompletions";
 import { HABIT_ICONS } from "@/constants/habits";
 import { useHabitStreak } from "@/hooks/useHabitStreak";
 import Spinner from "../ui/Spinner";
@@ -22,30 +21,16 @@ interface HabitCardProps {
 export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
   const { theme } = useTheme();
   const { categories } = useCategories();
-  const { getHabitCompletionCount, getHabitCompletionIds } = useCompletions();
-  const toggleCompletion = useToggleCompletion();
+  const {
+    completionCount,
+    isFullyCompleted,
+    isPending: isLoading,
+    toggle: handleToggle,
+  } = useHabitCheckIn(habit);
 
-  const completionCount = getHabitCompletionCount(habit.id);
-  const isFullyCompleted = completionCount >= habit.target_count;
   const isPartiallyCompleted =
     completionCount > 0 && completionCount < habit.target_count;
-  const isLoading = toggleCompletion.isPending;
   const habitCategory = categories.find((cat) => cat.id === habit.category_id);
-
-  // Below the target a tap adds a check-in; at the target it removes the
-  // newest one (an Undo toast follows either way). Returns whether it acted.
-  const handleToggle = () => {
-    if (isLoading) return false;
-    if (!isFullyCompleted) {
-      toggleCompletion.mutate({ habit, action: "add" });
-      return true;
-    }
-    // Today's completions are ordered newest first
-    const [newestId] = getHabitCompletionIds(habit.id);
-    if (!newestId) return false;
-    toggleCompletion.mutate({ habit, action: "remove", completionId: newestId });
-    return true;
-  };
 
   const {
     currentStreak,

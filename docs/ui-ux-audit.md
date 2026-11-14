@@ -63,7 +63,7 @@ Mark items as they are fixed so work can resume in a new session.
 | N15 | Achievements page doesn't point to the next goal | S | Done (locked sorted by progress; other parts not wanted by owner) |
 | N16 | Tab left open past midnight shows yesterday as today | S | Done |
 | R1 | A day can't be logged after it ends | M | Open |
-| R2 | The Habits tab has no check-off | S | Open |
+| R2 | The Habits tab has no check-off | S | Done (CompletionToggle on Habits-page cards, shared useHabitCheckIn hook; hidden for archived) |
 | R3 | Category badges and chips fail contrast | S | Done (neutral text; color in tint, border and selected ring) |
 | R4 | Achievement unlocks: weakest reward moment, fired from unsaved data | M | Open |
 | R5 | Dashboard habit card: tall on phones, delete is the only manage action | S–M | Open |
