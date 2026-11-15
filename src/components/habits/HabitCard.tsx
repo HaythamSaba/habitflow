@@ -1,10 +1,9 @@
 import { Habit } from "@/types";
-import { Pencil, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/Button";
 import { lightenColor } from "@/lib/utils";
 import { POINTS_PER_COMPLETION } from "@/lib/points";
 import { useHabitCheckIn } from "@/hooks/useHabitCheckIn";
 import { CompletionToggle } from "./CompletionToggle";
+import { HabitActionsMenu } from "./HabitActionsMenu";
 import { HABIT_ICONS } from "@/constants/habits";
 import { useHabitStreak } from "@/hooks/useHabitStreak";
 import Spinner from "../ui/Spinner";
@@ -16,9 +15,15 @@ interface HabitCardProps {
   habit: Habit;
   onEdit: (habit: Habit) => void;
   onDelete: (habitId: string) => void;
+  onArchive: (habitId: string) => void;
 }
 
-export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
+export function HabitCard({
+  habit,
+  onEdit,
+  onDelete,
+  onArchive,
+}: HabitCardProps) {
   const { theme } = useTheme();
   const { categories } = useCategories();
   const {
@@ -187,29 +192,15 @@ export function HabitCard({ habit, onEdit, onDelete }: HabitCardProps) {
           )}
         </div>
 
-        {/* Action buttons */}
-        <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 shrink-0">
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => onEdit(habit)}
-            disabled={isLoading}
-            className="min-h-11 min-w-11 flex items-center justify-center"
-            aria-label={`Edit ${habit.name}`}
-          >
-            <Pencil className="w-4 h-4" />
-          </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => onDelete(habit.id)}
-            disabled={isLoading}
-            aria-label={`Delete ${habit.name}`}
-            className="min-h-11 min-w-11 flex items-center justify-center text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
-          >
-            <Trash2 className="w-4 h-4" />
-          </Button>
-        </div>
+        {/* One ⋮ menu instead of stacked Edit/Delete buttons: keeps the row
+            short on phones and puts Delete a step away from the check-off */}
+        <HabitActionsMenu
+          habit={habit}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          onArchive={onArchive}
+          disabled={isLoading}
+        />
       </div>
     </div>
   );

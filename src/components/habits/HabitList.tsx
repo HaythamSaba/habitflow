@@ -10,9 +10,15 @@ interface HabitListProps {
   habits: Habit[];
   onEdit: (habit: Habit) => void;
   onDelete: (habitId: string) => void;
+  onArchive: (habitId: string) => void;
 }
 
-export function HabitList({ habits, onEdit, onDelete }: HabitListProps) {
+export function HabitList({
+  habits,
+  onEdit,
+  onDelete,
+  onArchive,
+}: HabitListProps) {
   const [statusFilter, setStatusFilter] = useState<
     "all" | "completed" | "incomplete"
   >("all");
@@ -137,6 +143,7 @@ export function HabitList({ habits, onEdit, onDelete }: HabitListProps) {
               habit={habit}
               onEdit={onEdit}
               onDelete={onDelete}
+              onArchive={onArchive}
             />
           ))}
         </div>

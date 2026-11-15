@@ -2,23 +2,14 @@ import { Habit } from "@/types";
 import { useCategories } from "@/hooks/useCategories";
 import { useHabitStats } from "@/hooks/useHabitStats";
 import { CategoryBadge } from "../categories/CategoryBadge";
-import { useMenu } from "@/hooks/useMenu";
-import {
-  Archive,
-  Calendar,
-  Edit2,
-  Flame,
-  MoreVertical,
-  Trash2,
-  TrendingUp,
-  RotateCcw,
-} from "lucide-react";
+import { Calendar, Flame, TrendingUp } from "lucide-react";
 import { format } from "date-fns";
 import { useAllCompletions } from "@/hooks/useAllCompletions";
 import { HABIT_ICONS } from "@/constants/habits";
 import { useHabitCheckIn } from "@/hooks/useHabitCheckIn";
 import { POINTS_PER_COMPLETION } from "@/lib/points";
 import { CompletionToggle } from "./CompletionToggle";
+import { HabitActionsMenu } from "./HabitActionsMenu";
 
 interface HabitOverviewCardProps {
   habit: Habit;
@@ -48,14 +39,6 @@ export function HabitOverviewCard({
   // Sparkline bars are scaled to the daily target
   const target = Math.max(1, habit.target_count || 1);
   const daysOnTarget = last7Days.filter((day) => day.count >= target).length;
-
-  const menu = useMenu();
-  // Close first so focus returns to the ⋮ button (and to it again when an
-  // edit or confirm dialog that opens next is closed)
-  const pick = (action: () => void) => {
-    menu.close();
-    action();
-  };
 
   const category = categories.find((c) => c.id === habit.category_id);
 
@@ -116,68 +99,13 @@ export function HabitOverviewCard({
           </div>
 
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-            <div className="relative" {...menu.wrapperProps}>
-              <button
-                {...menu.triggerProps}
-                type="button"
-                className="p-1.5 sm:p-2 min-h-11 min-w-11 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                aria-label={`More actions for ${habit.name}`}
-              >
-                <MoreVertical className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-400" />
-              </button>
-              {menu.isOpen && (
-                <div
-                  {...menu.menuProps}
-                  className="absolute top-full right-0 mt-2 w-44 sm:w-48 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 shadow-2xl overflow-hidden z-10"
-                >
-                  <button
-                    type="button"
-                    role="menuitem"
-                    tabIndex={-1}
-                    onClick={() => pick(() => onEdit(habit))}
-                    className="w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-gray-700 dark:text-gray-300 cursor-pointer"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                    Edit Habit
-                  </button>
-                  {habit.archived
-                    ? onRestore && (
-                        <button
-                          type="button"
-                          role="menuitem"
-                          tabIndex={-1}
-                          onClick={() => pick(() => onRestore(habit.id))}
-                          className="w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-gray-700 dark:text-gray-300 cursor-pointer"
-                        >
-                          <RotateCcw className="w-4 h-4" />
-                          Restore
-                        </button>
-                      )
-                    : onArchive && (
-                        <button
-                          type="button"
-                          role="menuitem"
-                          tabIndex={-1}
-                          onClick={() => pick(() => onArchive(habit.id))}
-                          className="w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-gray-700 dark:text-gray-300 cursor-pointer"
-                        >
-                          <Archive className="w-4 h-4" />
-                          Archive
-                        </button>
-                      )}
-                  <button
-                    type="button"
-                    role="menuitem"
-                    tabIndex={-1}
-                    onClick={() => pick(() => onDelete(habit.id))}
-                    className="w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-2 text-red-600 dark:text-red-400 cursor-pointer"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                    Delete
-                  </button>
-                </div>
-              )}
-            </div>
+            <HabitActionsMenu
+              habit={habit}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onArchive={onArchive}
+              onRestore={onRestore}
+            />
           </div>
         </div>
 

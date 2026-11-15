@@ -6,6 +6,7 @@ import { EditHabitModal } from "./EditHabitModal";
 import { HabitList } from "./HabitList";
 import { useHabits } from "@/hooks/useHabits";
 import { useDeleteHabit } from "@/hooks/useDeleteHabit";
+import { useArchiveHabit } from "@/hooks/useArchiveHabit";
 import { Habit } from "@/types";
 import { HabitCardSkeleton } from "./HabitCardSkeleton";
 import { useNavigate } from "react-router-dom";
@@ -29,6 +30,7 @@ export default function HabitsContainer({
     refetch,
   } = useHabits();
   const deleteHabit = useDeleteHabit();
+  const archiveHabit = useArchiveHabit();
 
   const activeHabits = allHabits.filter((habit) => !habit.archived);
 
@@ -116,6 +118,7 @@ export default function HabitsContainer({
             habits={habits}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            onArchive={(habitId) => archiveHabit.mutate(habitId)}
           />
         </div>
       ) : (
