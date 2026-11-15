@@ -14,10 +14,19 @@ import { showCheckInToast } from "@/lib/checkInToasts";
 import { Completion, Habit } from "@/types";
 import { toast } from "react-hot-toast";
 
-/** What to do, decided by the caller from what the user sees */
+/**
+ * What to do, decided by the caller from what the user sees. `completedAt`
+ * is set only for a missed day logged late (yesterday, audit R1); without it
+ * the check-in is for now.
+ */
 export type ToggleCompletionVariables =
-  | { habit: Habit; action: "add" }
-  | { habit: Habit; action: "remove"; completionId: string };
+  | { habit: Habit; action: "add"; completedAt?: string }
+  | {
+      habit: Habit;
+      action: "remove";
+      completionId: string;
+      completedAt?: string;
+    };
 
 type UserStatsCache = { total_points: number } & Record<string, unknown>;
 
@@ -50,7 +59,7 @@ export function useToggleCompletion() {
       // One RPC each: the check-in and its points change succeed or fail
       // together (one database transaction), so they can't drift apart
       if (variables.action === "add") {
-        return checkIn(variables.habit.id);
+        return checkIn(variables.habit.id, variables.completedAt);
       }
 
       await undoCheckIn(variables.completionId);
@@ -70,25 +79,31 @@ export function useToggleCompletion() {
       const previousStats = queryClient.getQueryData<UserStatsCache>(statsKey);
 
       const tempId = `temp-${crypto.randomUUID()}`;
+      // A late log for yesterday isn't part of today's list
+      const isPastDay = !!variables.completedAt;
       let update: (list: Completion[]) => Completion[];
       if (variables.action === "add") {
         const now = new Date().toISOString();
+        const completedAt = variables.completedAt ?? now;
         const optimistic: Completion = {
           id: tempId,
           habit_id: variables.habit.id,
           user_id: userId ?? "",
-          completed_at: now,
+          completed_at: completedAt,
           notes: null,
           mood_rating: null,
           created_at: now,
         };
         // Newest first, matching the server's ordering
-        update = (list) => [optimistic, ...list];
+        update = (list) =>
+          [optimistic, ...list].sort((a, b) =>
+            b.completed_at.localeCompare(a.completed_at),
+          );
       } else {
         update = (list) => list.filter((c) => c.id !== variables.completionId);
       }
 
-      const nextToday = update(previousToday);
+      const nextToday = isPastDay ? previousToday : update(previousToday);
       queryClient.setQueryData<Completion[]>(todayKey, nextToday);
       queryClient.setQueryData<Completion[]>(allKey, (old) =>
         old ? update(old) : old,
@@ -140,14 +155,18 @@ export function useToggleCompletion() {
         queryClient.setQueryData<Completion[]>(allKey, swap);
       }
 
+      // Undo keeps the day: undoing a late log for yesterday removes that
+      // one, and undoing its removal logs yesterday again
+      const { completedAt } = variables;
       const undo: ToggleCompletionVariables | null =
         variables.action === "remove"
-          ? { habit: variables.habit, action: "add" }
+          ? { habit: variables.habit, action: "add", completedAt }
           : completion?.id
             ? {
                 habit: variables.habit,
                 action: "remove",
                 completionId: completion.id,
+                completedAt,
               }
             : null;
 
@@ -172,6 +191,7 @@ export function useToggleCompletion() {
         habitName: variables.habit.name,
         added: variables.action === "add",
         points: POINTS_PER_COMPLETION,
+        isYesterday: !!completedAt,
         onUndo: undo ? () => mutateRef.current(undo) : undefined,
         celebrations,
       });

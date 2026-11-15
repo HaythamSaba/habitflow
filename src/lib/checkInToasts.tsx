@@ -6,6 +6,8 @@ interface CheckInToastOptions {
   /** true when a check-in was added, false when one was removed */
   added: boolean;
   points: number;
+  /** The change was for yesterday (a missed day logged late) */
+  isYesterday?: boolean;
   /** Omitted when the change can't be undone (e.g. the saved row has no id) */
   onUndo?: () => void;
   /**
@@ -24,10 +26,12 @@ export function showCheckInToast({
   habitName,
   added,
   points,
+  isYesterday = false,
   onUndo,
   celebrations = [],
 }: CheckInToastOptions) {
   const isCelebrating = celebrations.length > 0;
+  const forDay = isYesterday ? " for yesterday" : "";
 
   toast(
     (t) => (
@@ -36,11 +40,12 @@ export function showCheckInToast({
         <span className="text-sm">
           {added ? (
             <>
-              <strong>{habitName}</strong> checked in · +{points} pts
+              <strong>{habitName}</strong> checked in{forDay} · +{points} pts
             </>
           ) : (
             <>
-              Removed a <strong>{habitName}</strong> check-in · −{points} pts
+              Removed a <strong>{habitName}</strong> check-in{forDay} · −
+              {points} pts
             </>
           )}
           {celebrations.map((line) => (

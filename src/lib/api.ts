@@ -108,9 +108,14 @@ export async function updateHabit(
  * transaction (the check_in RPC in supabase/schema.sql), so a check-in is
  * never saved without its points. The user comes from the session.
  */
-export async function checkIn(habitId: string): Promise<Completion> {
+export async function checkIn(
+  habitId: string,
+  /** Omit for now; pass a timestamp to log a missed day (yesterday) */
+  completedAt?: string,
+): Promise<Completion> {
   const { data, error } = await supabase.rpc("check_in", {
     p_habit_id: habitId,
+    ...(completedAt ? { p_completed_at: completedAt } : {}),
   });
 
   if (error) throw new Error(error.message);

@@ -1,8 +1,10 @@
 import { Habit } from "@/types";
 import { useMenu } from "@/hooks/useMenu";
+import { YesterdayCheckIn } from "@/hooks/useHabitCheckIn";
 import {
   Archive,
   Edit2,
+  History,
   MoreVertical,
   RotateCcw,
   Trash2,
@@ -14,7 +16,17 @@ interface HabitActionsMenuProps {
   onDelete: (habitId: string) => void;
   onArchive?: (habitId: string) => void;
   onRestore?: (habitId: string) => void;
+  /** Log or remove yesterday's check-in; omit (or null) to hide the item */
+  yesterday?: YesterdayCheckIn | null;
   disabled?: boolean;
+}
+
+/** "Check in for yesterday", with progress for multi-count habits */
+function yesterdayLabel({ count, target, isFullyCompleted }: YesterdayCheckIn) {
+  const progress = target > 1 ? ` (${count}/${target})` : "";
+  return isFullyCompleted
+    ? `Remove yesterday's check-in${progress}`
+    : `Check in for yesterday${progress}`;
 }
 
 const ITEM_CLASS =
@@ -31,6 +43,7 @@ export function HabitActionsMenu({
   onDelete,
   onArchive,
   onRestore,
+  yesterday,
   disabled = false,
 }: HabitActionsMenuProps) {
   const menu = useMenu();
@@ -55,7 +68,7 @@ export function HabitActionsMenu({
       {menu.isOpen && (
         <div
           {...menu.menuProps}
-          className="absolute top-full right-0 mt-2 w-44 sm:w-48 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 shadow-2xl overflow-hidden z-10"
+          className="absolute top-full right-0 mt-2 w-60 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 shadow-2xl overflow-hidden z-10"
         >
           <button
             type="button"
@@ -67,6 +80,19 @@ export function HabitActionsMenu({
             <Edit2 className="w-4 h-4" />
             Edit Habit
           </button>
+          {/* A missed day can still be logged until the end of the next day */}
+          {yesterday && !habit.archived && (
+            <button
+              type="button"
+              role="menuitem"
+              tabIndex={-1}
+              onClick={() => pick(yesterday.toggle)}
+              className={NEUTRAL_ITEM_CLASS}
+            >
+              <History className="w-4 h-4 shrink-0" />
+              {yesterdayLabel(yesterday)}
+            </button>
+          )}
           {habit.archived
             ? onRestore && (
                 <button

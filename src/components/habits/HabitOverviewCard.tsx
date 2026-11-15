@@ -29,7 +29,7 @@ export function HabitOverviewCard({
   const { categories } = useCategories();
   const { completions } = useAllCompletions();
   // Same check-off as the dashboard list, so the Habits tab can tick habits too
-  const { completionCount, toggle } = useHabitCheckIn(habit);
+  const { completionCount, toggle, yesterday } = useHabitCheckIn(habit);
 
   const { completionRate, currentStreak, last7Days } = useHabitStats(
     habit,
@@ -105,6 +105,7 @@ export function HabitOverviewCard({
               onDelete={onDelete}
               onArchive={onArchive}
               onRestore={onRestore}
+              yesterday={yesterday}
             />
           </div>
         </div>

@@ -270,7 +270,18 @@ GRANT EXECUTE ON FUNCTION public.increment_user_points(UUID, INTEGER) TO authent
 -- SECURITY INVOKER: the caller's RLS policies still apply. The user is always
 -- auth.uid(), and the 10 points are fixed here, not chosen by the client.
 -- Keep 10 in sync with POINTS_PER_COMPLETION in src/lib/points.ts.
-CREATE OR REPLACE FUNCTION public.check_in(p_habit_id UUID)
+--
+-- p_completed_at lets a missed day be logged afterwards (audit R1). The
+-- client sends local noon of yesterday; the server doesn't know the user's
+-- time zone, so it only enforces a window wide enough for any zone:
+-- not in the future, at most 48 hours back, and not before the habit existed.
+-- The old one-argument version is dropped so the call isn't ambiguous.
+DROP FUNCTION IF EXISTS public.check_in(UUID);
+
+CREATE OR REPLACE FUNCTION public.check_in(
+  p_habit_id UUID,
+  p_completed_at TIMESTAMPTZ DEFAULT NOW()
+)
 RETURNS completions
 LANGUAGE plpgsql
 SECURITY INVOKER
@@ -278,19 +289,34 @@ SET search_path = public
 AS $$
 DECLARE
   new_row completions;
+  habit_created_at TIMESTAMPTZ;
 BEGIN
   IF auth.uid() IS NULL THEN
     RAISE EXCEPTION 'Not authenticated';
   END IF;
 
-  IF NOT EXISTS (
-    SELECT 1 FROM habits WHERE id = p_habit_id AND user_id = auth.uid()
-  ) THEN
+  SELECT created_at INTO habit_created_at
+  FROM habits WHERE id = p_habit_id AND user_id = auth.uid();
+
+  IF NOT FOUND THEN
     RAISE EXCEPTION 'Habit not found';
   END IF;
 
-  INSERT INTO completions (habit_id, user_id)
-  VALUES (p_habit_id, auth.uid())
+  -- One minute of slack for clock differences between client and server
+  IF p_completed_at > NOW() + INTERVAL '1 minute' THEN
+    RAISE EXCEPTION 'Check-in can''t be in the future';
+  END IF;
+
+  IF p_completed_at < NOW() - INTERVAL '48 hours' THEN
+    RAISE EXCEPTION 'Only today and yesterday can be checked in';
+  END IF;
+
+  IF p_completed_at < habit_created_at THEN
+    RAISE EXCEPTION 'Check-in is before the habit was created';
+  END IF;
+
+  INSERT INTO completions (habit_id, user_id, completed_at)
+  VALUES (p_habit_id, auth.uid(), p_completed_at)
   RETURNING * INTO new_row;
 
   UPDATE user_stats
@@ -337,5 +363,5 @@ BEGIN
 END;
 $$;
 
-GRANT EXECUTE ON FUNCTION public.check_in(UUID) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.check_in(UUID, TIMESTAMPTZ) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.undo_check_in(UUID) TO authenticated;

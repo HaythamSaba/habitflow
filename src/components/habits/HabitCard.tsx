@@ -31,6 +31,7 @@ export function HabitCard({
     isFullyCompleted,
     isPending: isLoading,
     toggle: handleToggle,
+    yesterday,
   } = useHabitCheckIn(habit);
 
   const isPartiallyCompleted =
@@ -199,6 +200,7 @@ export function HabitCard({
           onEdit={onEdit}
           onDelete={onDelete}
           onArchive={onArchive}
+          yesterday={yesterday}
           disabled={isLoading}
         />
       </div>

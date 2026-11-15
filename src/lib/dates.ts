@@ -20,6 +20,27 @@ export function previousDayKey(dayKey: string): string {
 }
 
 /**
+ * Timestamp for a check-in logged late for yesterday (audit R1), or null if
+ * the habit didn't exist yet yesterday.
+ *
+ * Local noon, so a late log can't count toward early-bird or night-owl
+ * achievements. If the habit was created yesterday after noon, its creation
+ * time is used instead: the server rejects check-ins before the habit existed.
+ */
+export function yesterdayCheckInTime(
+  habitCreatedAt: string,
+  now: Date = new Date(),
+): string | null {
+  const yesterday = previousDayKey(toDayKey(now));
+  const createdAt = parseISO(habitCreatedAt);
+  if (toDayKey(createdAt) > yesterday) return null;
+
+  const noon = parseISO(yesterday);
+  noon.setHours(12, 0, 0, 0);
+  return (createdAt > noon ? createdAt : noon).toISOString();
+}
+
+/**
  * Start and end of the local day containing `date`, as UTC ISO timestamps
  * suitable for filtering a timestamptz column.
  */
