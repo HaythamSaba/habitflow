@@ -1,9 +1,8 @@
 import { Habit } from "@/types";
-import { useState, useRef } from "react";
 import { useCategories } from "@/hooks/useCategories";
 import { useHabitStats } from "@/hooks/useHabitStats";
 import { CategoryBadge } from "../categories/CategoryBadge";
-import { useClickOutside } from "@/hooks/useClickOutside";
+import { useMenu } from "@/hooks/useMenu";
 import {
   Archive,
   Calendar,
@@ -50,10 +49,13 @@ export function HabitOverviewCard({
   const target = Math.max(1, habit.target_count || 1);
   const daysOnTarget = last7Days.filter((day) => day.count >= target).length;
 
-  const [showMenu, setShowMenu] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-
-  useClickOutside(menuRef, () => setShowMenu(false));
+  const menu = useMenu();
+  // Close first so focus returns to the ⋮ button (and to it again when an
+  // edit or confirm dialog that opens next is closed)
+  const pick = (action: () => void) => {
+    menu.close();
+    action();
+  };
 
   const category = categories.find((c) => c.id === habit.category_id);
 
@@ -114,23 +116,25 @@ export function HabitOverviewCard({
           </div>
 
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-            <div className="relative" ref={menuRef}>
+            <div className="relative" {...menu.wrapperProps}>
               <button
+                {...menu.triggerProps}
                 type="button"
-                onClick={() => setShowMenu(!showMenu)}
                 className="p-1.5 sm:p-2 min-h-11 min-w-11 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 aria-label={`More actions for ${habit.name}`}
-                aria-expanded={showMenu}
               >
                 <MoreVertical className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-400" />
               </button>
-              {showMenu && (
-                <div className="absolute top-full right-0 mt-2 w-44 sm:w-48 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 shadow-2xl overflow-hidden z-10">
+              {menu.isOpen && (
+                <div
+                  {...menu.menuProps}
+                  className="absolute top-full right-0 mt-2 w-44 sm:w-48 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 shadow-2xl overflow-hidden z-10"
+                >
                   <button
-                    onClick={() => {
-                      onEdit(habit);
-                      setShowMenu(false);
-                    }}
+                    type="button"
+                    role="menuitem"
+                    tabIndex={-1}
+                    onClick={() => pick(() => onEdit(habit))}
                     className="w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-gray-700 dark:text-gray-300 cursor-pointer"
                   >
                     <Edit2 className="w-4 h-4" />
@@ -139,10 +143,10 @@ export function HabitOverviewCard({
                   {habit.archived
                     ? onRestore && (
                         <button
-                          onClick={() => {
-                            onRestore(habit.id);
-                            setShowMenu(false);
-                          }}
+                          type="button"
+                          role="menuitem"
+                          tabIndex={-1}
+                          onClick={() => pick(() => onRestore(habit.id))}
                           className="w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-gray-700 dark:text-gray-300 cursor-pointer"
                         >
                           <RotateCcw className="w-4 h-4" />
@@ -151,10 +155,10 @@ export function HabitOverviewCard({
                       )
                     : onArchive && (
                         <button
-                          onClick={() => {
-                            onArchive(habit.id);
-                            setShowMenu(false);
-                          }}
+                          type="button"
+                          role="menuitem"
+                          tabIndex={-1}
+                          onClick={() => pick(() => onArchive(habit.id))}
                           className="w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-gray-700 dark:text-gray-300 cursor-pointer"
                         >
                           <Archive className="w-4 h-4" />
@@ -162,10 +166,10 @@ export function HabitOverviewCard({
                         </button>
                       )}
                   <button
-                    onClick={() => {
-                      onDelete(habit.id);
-                      setShowMenu(false);
-                    }}
+                    type="button"
+                    role="menuitem"
+                    tabIndex={-1}
+                    onClick={() => pick(() => onDelete(habit.id))}
                     className="w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-2 text-red-600 dark:text-red-400 cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4" />

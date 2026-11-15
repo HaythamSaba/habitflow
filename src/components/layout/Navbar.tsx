@@ -8,8 +8,8 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "../ui/Button";
-import { useEffect, useRef, useState } from "react";
-import { useClickOutside } from "@/hooks/useClickOutside";
+import { useEffect, useState } from "react";
+import { useMenu } from "@/hooks/useMenu";
 import { LevelBadge } from "@/components/ui/LevelBadge";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -27,8 +27,8 @@ export default function Navbar({
 }) {
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
-  const [isShowDropdown, setIsShowDropdown] = useState(false);
-  const dropdownWrapperRef = useRef<HTMLDivElement>(null);
+  const accountMenu = useMenu();
+  const isShowDropdown = accountMenu.isOpen;
 
   // The navbar stays mounted between pages (layout route), so close the
   // account menu whenever the page changes, e.g. after picking Settings
@@ -36,12 +36,16 @@ export default function Navbar({
   const [shownPath, setShownPath] = useState(pathname);
   if (pathname !== shownPath) {
     setShownPath(pathname);
-    setIsShowDropdown(false);
+    accountMenu.close({ restoreFocus: false });
   }
 
-  useClickOutside(dropdownWrapperRef, () => {
-    setIsShowDropdown(false);
-  });
+  // Focus goes back to the menu button before navigating, so it isn't lost
+  // when the menu unmounts
+  const goTo = (path: string) => {
+    accountMenu.close();
+    navigate(path);
+  };
+
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // The navbar stays mounted, so keep the shown time current: tick at the
@@ -163,18 +167,16 @@ export default function Navbar({
               >
                 <Settings className="w-5 h-5 text-gray-600 dark:text-gray-400" />
               </button>
-              <div ref={dropdownWrapperRef} className="relative">
+              <div {...accountMenu.wrapperProps} className="relative">
                 <button
+                  {...accountMenu.triggerProps}
                   type="button"
                   className={`flex items-center justify-between gap-1 md:gap-4 cursor-pointer p-2 rounded-full transition-colors ${
                     isShowDropdown
                       ? "bg-primary-100 dark:bg-gray-700"
                       : "hover:bg-primary-100 dark:hover:bg-gray-700/50"
                   }`}
-                  onClick={() => setIsShowDropdown((show) => !show)}
                   aria-label={`Account menu for ${displayName}`}
-                  aria-expanded={isShowDropdown}
-                  aria-controls="account-menu"
                 >
                   <span
                     className="bg-primary-500 rounded-full text-white p-2 font-bold text-sm md:text-base"
@@ -193,17 +195,34 @@ export default function Navbar({
 
                 {isShowDropdown && (
                   <div
-                    id="account-menu"
+                    {...accountMenu.menuProps}
                     className="flex flex-col items-start absolute right-0 top-14 mt-2 w-44 md:w-36 rounded-xl shadow-lg py-1 glass-card-no-border dark:bg-gray-800 dark:text-gray-100 p-1"
                   >
-                    <Button variant="ghost" size="sm" onClick={() => navigate("/habits")}>
+                    <Button
+                      role="menuitem"
+                      tabIndex={-1}
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => goTo("/habits")}
+                    >
                       Profile
                     </Button>
-                    <Button variant="ghost" size="sm" onClick={() => navigate("/settings")}>
+                    <Button
+                      role="menuitem"
+                      tabIndex={-1}
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => goTo("/settings")}
+                    >
                       Settings
                     </Button>
-                    <div className="border-t border-gray-200 dark:border-gray-700 my-2 w-full" />
+                    <div
+                      role="separator"
+                      className="border-t border-gray-200 dark:border-gray-700 my-2 w-full"
+                    />
                     <Button
+                      role="menuitem"
+                      tabIndex={-1}
                       variant="ghost"
                       className="text-danger-500 dark:text-danger-400"
                       size="sm"

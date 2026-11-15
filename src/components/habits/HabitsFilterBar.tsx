@@ -1,7 +1,7 @@
-import { useState, useRef } from "react";
+import { ReactNode } from "react";
 import { Search, ChevronDown, SlidersHorizontal } from "lucide-react";
 import { Category } from "@/types";
-import { useClickOutside } from "@/hooks/useClickOutside";
+import { useMenu } from "@/hooks/useMenu";
 import { Card } from "@/components/ui/Card";
 
 interface HabitsFilterBarProps {
@@ -20,6 +20,49 @@ interface HabitsFilterBarProps {
   onClearAllFilters: () => void;
 }
 
+const TRIGGER_CLASS =
+  "flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-3 min-h-11 rounded-xl bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-all text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap";
+
+interface MenuOptionProps {
+  isSelected: boolean;
+  onSelect: () => void;
+  className?: string;
+  children: ReactNode;
+}
+
+/** One choice in a filter dropdown; aria-checked exposes the current pick. */
+function MenuOption({
+  isSelected,
+  onSelect,
+  className = "",
+  children,
+}: MenuOptionProps) {
+  return (
+    <button
+      type="button"
+      role="menuitemradio"
+      aria-checked={isSelected}
+      tabIndex={-1}
+      onClick={onSelect}
+      className={`w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${className} ${
+        isSelected
+          ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
+          : "text-gray-700 dark:text-gray-300"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+const STATUS_LABELS = { all: "All", active: "Active", archived: "Archived" };
+const SORT_LABELS = {
+  name: "Name",
+  date: "Newest",
+  streak: "Streak",
+  rate: "Rate",
+};
+
 export function HabitsFilterBar({
   searchQuery,
   onSearchChange,
@@ -35,19 +78,31 @@ export function HabitsFilterBar({
   onSortChange,
   onClearAllFilters,
 }: HabitsFilterBarProps) {
-  const [showStatusDropdown, setShowStatusDropdown] = useState(false);
-  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
-  const [showSortDropdown, setShowSortDropdown] = useState(false);
-
-  const dropDownRef = useRef<HTMLDivElement>(null);
-  useClickOutside(dropDownRef, () => {
-    setShowStatusDropdown(false);
-    setShowCategoryDropdown(false);
-    setShowSortDropdown(false);
-  });
+  // Each dropdown has its own menu; opening one counts as a click outside
+  // the others, so they close
+  const statusMenu = useMenu();
+  const categoryMenu = useMenu();
+  const sortMenu = useMenu();
 
   const hasActiveFilters =
     searchQuery || selectedCategory || statusFilter !== "active";
+
+  const selectedCategoryData = categories.find(
+    (c) => c.id === selectedCategory,
+  );
+
+  const statusOptions = [
+    { value: "active", label: `Active (${activeCount})` },
+    { value: "archived", label: `Archived (${archivedCount})` },
+    { value: "all", label: `All (${totalCount})` },
+  ] as const;
+
+  const sortOptions = [
+    { value: "name", label: "Name (A-Z)" },
+    { value: "date", label: "Newest First" },
+    { value: "streak", label: "Current Streak" },
+    { value: "rate", label: "Completion Rate" },
+  ] as const;
 
   return (
     <Card className="p-3 sm:p-4 lg:p-6 shadow-xl relative z-20">
@@ -67,75 +122,38 @@ export function HabitsFilterBar({
 
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           {/* Filters group */}
-          <div
-            className="flex items-center gap-2 sm:gap-3 flex-wrap shrink-0"
-            ref={dropDownRef}
-          >
-            {/* Status Filter — FIX: added `relative` so dropdown anchors to this div */}
-            <div className="relative">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap shrink-0">
+            {/* Status Filter — `relative` so the dropdown anchors to this div */}
+            <div className="relative" {...statusMenu.wrapperProps}>
               <button
+                {...statusMenu.triggerProps}
                 type="button"
-                aria-expanded={showStatusDropdown}
-                onClick={() => {
-                  setShowStatusDropdown(!showStatusDropdown);
-                  setShowCategoryDropdown(false);
-                  setShowSortDropdown(false);
-                }}
-                className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-3 min-h-11 rounded-xl bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-all text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                aria-label={`Status: ${STATUS_LABELS[statusFilter]}`}
+                className={TRIGGER_CLASS}
               >
                 <SlidersHorizontal className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                <span>
-                  {statusFilter === "all"
-                    ? "All"
-                    : statusFilter === "active"
-                      ? "Active"
-                      : "Archived"}
-                </span>
+                <span>{STATUS_LABELS[statusFilter]}</span>
                 <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
               </button>
 
-              {showStatusDropdown && (
+              {statusMenu.isOpen && (
                 <div className="absolute top-full left-0 mt-2 w-44 sm:w-48 z-50">
-                  <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl overflow-hidden">
-                    <button
-                      onClick={() => {
-                        onStatusFilterChange("active");
-                        setShowStatusDropdown(false);
-                      }}
-                      className={`w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                        statusFilter === "active"
-                          ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
-                          : "text-gray-700 dark:text-gray-300"
-                      }`}
-                    >
-                      Active ({activeCount})
-                    </button>
-                    <button
-                      onClick={() => {
-                        onStatusFilterChange("archived");
-                        setShowStatusDropdown(false);
-                      }}
-                      className={`w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                        statusFilter === "archived"
-                          ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
-                          : "text-gray-700 dark:text-gray-300"
-                      }`}
-                    >
-                      Archived ({archivedCount})
-                    </button>
-                    <button
-                      onClick={() => {
-                        onStatusFilterChange("all");
-                        setShowStatusDropdown(false);
-                      }}
-                      className={`w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                        statusFilter === "all"
-                          ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
-                          : "text-gray-700 dark:text-gray-300"
-                      }`}
-                    >
-                      All ({totalCount})
-                    </button>
+                  <div
+                    {...statusMenu.menuProps}
+                    className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl overflow-hidden"
+                  >
+                    {statusOptions.map((option) => (
+                      <MenuOption
+                        key={option.value}
+                        isSelected={statusFilter === option.value}
+                        onSelect={() => {
+                          onStatusFilterChange(option.value);
+                          statusMenu.close();
+                        }}
+                      >
+                        {option.label}
+                      </MenuOption>
+                    ))}
                   </div>
                 </div>
               )}
@@ -143,60 +161,49 @@ export function HabitsFilterBar({
 
             {/* Category Filter */}
             {categories.length > 0 && (
-              <div className="relative">
+              <div className="relative" {...categoryMenu.wrapperProps}>
                 <button
+                  {...categoryMenu.triggerProps}
                   type="button"
-                  aria-expanded={showCategoryDropdown}
-                  onClick={() => {
-                    setShowCategoryDropdown(!showCategoryDropdown);
-                    setShowStatusDropdown(false);
-                    setShowSortDropdown(false);
-                  }}
-                  className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-3 min-h-11 rounded-xl bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-all text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                  aria-label={`Category: ${selectedCategoryData?.name ?? "All"}`}
+                  className={TRIGGER_CLASS}
                 >
                   <span className="max-w-20 sm:max-w-none truncate">
-                    {selectedCategory
-                      ? categories.find((c) => c.id === selectedCategory)
-                          ?.icon +
-                        " " +
-                        categories.find((c) => c.id === selectedCategory)?.name
+                    {selectedCategoryData
+                      ? `${selectedCategoryData.icon} ${selectedCategoryData.name}`
                       : "Category"}
                   </span>
                   <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                 </button>
 
-                {showCategoryDropdown && (
+                {categoryMenu.isOpen && (
                   <div className="absolute top-full left-0 mt-2 w-48 sm:w-56 z-40">
-                    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl overflow-hidden max-h-64 sm:max-h-80 overflow-y-auto">
-                      <button
-                        onClick={() => {
+                    <div
+                      {...categoryMenu.menuProps}
+                      className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl overflow-hidden max-h-64 sm:max-h-80 overflow-y-auto"
+                    >
+                      <MenuOption
+                        isSelected={!selectedCategory}
+                        onSelect={() => {
                           onCategoryChange(null);
-                          setShowCategoryDropdown(false);
+                          categoryMenu.close();
                         }}
-                        className={`w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                          !selectedCategory
-                            ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
-                            : "text-gray-700 dark:text-gray-300"
-                        }`}
                       >
                         All Categories
-                      </button>
+                      </MenuOption>
                       {categories.map((category) => (
-                        <button
+                        <MenuOption
                           key={category.id}
-                          onClick={() => {
+                          isSelected={selectedCategory === category.id}
+                          onSelect={() => {
                             onCategoryChange(category.id);
-                            setShowCategoryDropdown(false);
+                            categoryMenu.close();
                           }}
-                          className={`w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 ${
-                            selectedCategory === category.id
-                              ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
-                              : "text-gray-700 dark:text-gray-300"
-                          }`}
+                          className="flex items-center gap-2"
                         >
-                          <span>{category.icon}</span>
+                          <span aria-hidden="true">{category.icon}</span>
                           <span className="truncate">{category.name}</span>
-                        </button>
+                        </MenuOption>
                       ))}
                     </div>
                   </div>
@@ -205,85 +212,38 @@ export function HabitsFilterBar({
             )}
 
             {/* Sort Filter */}
-            <div className="relative">
+            <div className="relative" {...sortMenu.wrapperProps}>
               <button
+                {...sortMenu.triggerProps}
                 type="button"
-                aria-expanded={showSortDropdown}
-                onClick={() => {
-                  setShowSortDropdown(!showSortDropdown);
-                  setShowStatusDropdown(false);
-                  setShowCategoryDropdown(false);
-                }}
-                className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-3 min-h-11 rounded-xl bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-all text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap"
+                aria-label={`Sort: ${SORT_LABELS[sortBy]}`}
+                className={TRIGGER_CLASS}
               >
                 <span className="hidden sm:inline">Sort: </span>
                 <span className="text-primary-600 dark:text-primary-400">
-                  {sortBy === "name"
-                    ? "Name"
-                    : sortBy === "date"
-                      ? "Newest"
-                      : sortBy === "streak"
-                        ? "Streak"
-                        : "Rate"}
+                  {SORT_LABELS[sortBy]}
                 </span>
                 <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
               </button>
 
-              {showSortDropdown && (
+              {sortMenu.isOpen && (
                 <div className="absolute top-full right-0 mt-2 w-44 sm:w-48 z-40">
-                  <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl overflow-hidden">
-                    <button
-                      onClick={() => {
-                        onSortChange("name");
-                        setShowSortDropdown(false);
-                      }}
-                      className={`w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                        sortBy === "name"
-                          ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
-                          : "text-gray-700 dark:text-gray-300"
-                      }`}
-                    >
-                      Name (A-Z)
-                    </button>
-                    <button
-                      onClick={() => {
-                        onSortChange("date");
-                        setShowSortDropdown(false);
-                      }}
-                      className={`w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                        sortBy === "date"
-                          ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
-                          : "text-gray-700 dark:text-gray-300"
-                      }`}
-                    >
-                      Newest First
-                    </button>
-                    <button
-                      onClick={() => {
-                        onSortChange("streak");
-                        setShowSortDropdown(false);
-                      }}
-                      className={`w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                        sortBy === "streak"
-                          ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
-                          : "text-gray-700 dark:text-gray-300"
-                      }`}
-                    >
-                      Current Streak
-                    </button>
-                    <button
-                      onClick={() => {
-                        onSortChange("rate");
-                        setShowSortDropdown(false);
-                      }}
-                      className={`w-full text-left px-4 py-3 min-h-11 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                        sortBy === "rate"
-                          ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold"
-                          : "text-gray-700 dark:text-gray-300"
-                      }`}
-                    >
-                      Completion Rate
-                    </button>
+                  <div
+                    {...sortMenu.menuProps}
+                    className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl overflow-hidden"
+                  >
+                    {sortOptions.map((option) => (
+                      <MenuOption
+                        key={option.value}
+                        isSelected={sortBy === option.value}
+                        onSelect={() => {
+                          onSortChange(option.value);
+                          sortMenu.close();
+                        }}
+                      >
+                        {option.label}
+                      </MenuOption>
+                    ))}
                   </div>
                 </div>
               )}
@@ -317,8 +277,7 @@ export function HabitsFilterBar({
             {selectedCategory && (
               <span className="inline-flex items-center gap-1 pl-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 text-xs sm:text-sm max-w-37.5 sm:max-w-none">
                 <span className="truncate">
-                  {categories.find((c) => c.id === selectedCategory)?.icon}{" "}
-                  {categories.find((c) => c.id === selectedCategory)?.name}
+                  {selectedCategoryData?.icon} {selectedCategoryData?.name}
                 </span>
                 <button
                   type="button"

@@ -81,8 +81,13 @@ export function HabitList({ habits, onEdit, onDelete }: HabitListProps) {
 
       {/* Status Filters */}
       {searchFilteredHabits.length > 0 && (
-        <div className="flex gap-2 justify-center flex-wrap">
+        <div
+          role="group"
+          aria-label="Filter by status"
+          className="flex gap-2 justify-center flex-wrap"
+        >
           <Button
+            aria-pressed={statusFilter === "all"}
             variant={statusFilter === "all" ? "primary" : "outline"}
             size="sm"
             onClick={() => setStatusFilter("all")}
@@ -91,6 +96,7 @@ export function HabitList({ habits, onEdit, onDelete }: HabitListProps) {
             All ({searchFilteredHabits.length})
           </Button>
           <Button
+            aria-pressed={statusFilter === "completed"}
             variant={statusFilter === "completed" ? "primary" : "outline"}
             size="sm"
             onClick={() => setStatusFilter("completed")}
@@ -105,6 +111,7 @@ export function HabitList({ habits, onEdit, onDelete }: HabitListProps) {
             )
           </Button>
           <Button
+            aria-pressed={statusFilter === "incomplete"}
             variant={statusFilter === "incomplete" ? "primary" : "outline"}
             size="sm"
             onClick={() => setStatusFilter("incomplete")}

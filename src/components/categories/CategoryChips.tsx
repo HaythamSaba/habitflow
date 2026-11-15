@@ -15,8 +15,14 @@ export function CategoryChips({
   habitCounts = {},
 }: CategoryChipsProps) {
   return (
-    <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide -mx-1 pr-4 py-1 overflow-hidden">
+    <div
+      role="group"
+      aria-label="Filter by category"
+      className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide -mx-1 pr-4 py-1 overflow-hidden"
+    >
       <button
+        type="button"
+        aria-pressed={selectedCategoryId === null}
         onClick={() => onSelectCategory(null)}
         className={`inline-flex items-center gap-1 sm:gap-2 py-1.5 sm:py-2 px-3 sm:px-4 min-h-11 rounded-full font-medium text-xs sm:text-sm transition-all whitespace-nowrap shrink-0 ${
           selectedCategoryId === null
@@ -47,6 +53,8 @@ export function CategoryChips({
         return (
           <button
             key={category.id}
+            type="button"
+            aria-pressed={isSelected}
             onClick={() => onSelectCategory(category.id)}
             className={`inline-flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 min-h-11 rounded-full font-medium text-xs sm:text-sm transition-all whitespace-nowrap shrink-0 ${
               isSelected
