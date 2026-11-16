@@ -3,6 +3,8 @@ import { createHabit } from "@/lib/api";
 import { useAuth } from "./useAuth";
 import toast from "react-hot-toast";
 
+export const HABIT_CREATED_TOAST_ID = "habit-created";
+
 export function useCreateHabit() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
@@ -22,7 +24,8 @@ export function useCreateHabit() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["habits"] });
-      toast.success("Habit created");
+      // Fixed id so a caller can replace this toast instead of stacking one
+      toast.success("Habit created", { id: HABIT_CREATED_TOAST_ID });
     },
     onError: (error: Error) => {
       toast.error(`Failed to create habit: ${error.message}`);

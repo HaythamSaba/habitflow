@@ -4,6 +4,7 @@ import { TemplateGallery } from "@/components/templates/TemplateGallery";
 import { CreateHabitModal } from "@/components/habits/CreateHabitModal";
 import { HabitTemplate } from "@/types";
 import { useCategories } from "@/hooks/useCategories";
+import { HABIT_CREATED_TOAST_ID } from "@/hooks/useCreateHabit";
 import toast from "react-hot-toast";
 import PageHeader from "@/components/ui/PageHeader";
 
@@ -47,9 +48,27 @@ export function TemplatesPage() {
     setSelectedTemplate(null);
   };
 
+  // Replace useCreateHabit's toast (same id) with one that offers a way to
+  // today, and stay on the gallery so another template can be added
   const handleHabitCreated = () => {
-    toast.success("Habit created from template");
-    navigate("/dashboard");
+    toast.success(
+      (t) => (
+        <span className="flex items-center gap-3">
+          <span className="text-sm">Habit created</span>
+          <button
+            type="button"
+            onClick={() => {
+              toast.dismiss(t.id);
+              navigate("/dashboard");
+            }}
+            className="shrink-0 rounded-lg px-2 py-1 text-sm font-semibold text-primary-700 hover:bg-primary-50 dark:text-primary-300 dark:hover:bg-primary-900/40"
+          >
+            Go to today
+          </button>
+        </span>
+      ),
+      { id: HABIT_CREATED_TOAST_ID, duration: 5000 },
+    );
   };
 
   return (
