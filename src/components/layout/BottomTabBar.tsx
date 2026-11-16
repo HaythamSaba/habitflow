@@ -7,11 +7,12 @@ import {
   Trophy,
 } from "lucide-react";
 
+// Same names as the Sidebar; short enough to fit five tabs at 360px
 const tabs = [
   { path: "/dashboard", icon: LayoutDashboard, label: "Today" },
   { path: "/habits", icon: SquareCheckBig, label: "Habits" },
   { path: "/analytics", icon: ChartSpline, label: "Stats" },
-  { path: "/achievements", icon: Trophy, label: "Achievements" },
+  { path: "/achievements", icon: Trophy, label: "Awards" },
 ];
 
 const tabClass =

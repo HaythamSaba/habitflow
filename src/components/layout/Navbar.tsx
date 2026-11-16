@@ -203,7 +203,7 @@ export default function Navbar({
                       tabIndex={-1}
                       variant="ghost"
                       size="sm"
-                      onClick={() => goTo("/habits")}
+                      onClick={() => goTo("/settings")}
                     >
                       Profile
                     </Button>

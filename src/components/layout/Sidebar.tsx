@@ -12,10 +12,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 
 const navItems = [
-  { path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+  // Same names as the BottomTabBar
+  { path: "/dashboard", icon: LayoutDashboard, label: "Today" },
   { path: "/habits", icon: SquareCheckBig, label: "Habits" },
-  { path: "/achievements", icon: Trophy, label: "Achievements" },
-  { path: "/analytics", icon: ChartSpline, label: "Analytics" },
+  { path: "/achievements", icon: Trophy, label: "Awards" },
+  { path: "/analytics", icon: ChartSpline, label: "Stats" },
   { path: "/settings", icon: Settings, label: "Settings" },
   {
     path: "/templates",

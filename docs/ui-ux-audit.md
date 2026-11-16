@@ -71,7 +71,7 @@ Mark items as they are fixed so work can resume in a new session.
 | R7 | Custom menus and filter toggles lack keyboard and screen-reader semantics | M | Done (shared useMenu hook: focus in/out, arrow keys, menu roles, aria-checked; aria-pressed on toggles) |
 | R8 | One missed day resets a streak, with no recovery | M–L | Open |
 | R9 | Templates: double toast and a redirect after every pick | S | Done (one toast with "Go to today", stays on the gallery) |
-| R10 | Navigation labels differ; "Achievements" tab label likely overflows | S | Open |
+| R10 | Navigation labels differ; "Achievements" tab label likely overflows | S | Done (Today / Habits / Stats / Awards in both navs; page headings unchanged; Profile goes to Settings) |
 | R11 | Modal scroll lock targets the wrong element | S | Open |
 | R12 | Non-interactive cards scale on hover | S | Open |
 | R13 | Email confirmation page is off-brand | S | Open |
