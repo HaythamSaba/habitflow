@@ -74,7 +74,7 @@ Mark items as they are fixed so work can resume in a new session.
 | R10 | Navigation labels differ; "Achievements" tab label likely overflows | S | Done (Today / Habits / Stats / Awards in both navs; page headings unchanged; Profile goes to Settings) |
 | R11 | Modal scroll lock targets the wrong element | S | Open |
 | R12 | Non-interactive cards scale on hover | S | Open |
-| R13 | Email confirmation page is off-brand | S | Open |
+| R13 | Email confirmation page is off-brand | S | Done (login/signup background plus AuthBrand) |
 | R14 | Typo in the Achievements skeleton class | S | Open |
 | R15 | Leftover frequency labels | S | Open |
 | R16 | Portfolio footer on every in-app page | S | Open |

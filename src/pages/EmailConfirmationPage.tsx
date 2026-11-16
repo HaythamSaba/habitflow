@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { ArrowRight, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { AuthBrand } from "@/components/auth/AuthBrand";
 import { supabase } from "@/lib/supabase";
 import toast from "react-hot-toast";
 
@@ -66,10 +67,13 @@ export function EmailConfirmationPage() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-primary-100 
-      dark:from-gray-950 dark:via-gray-900 dark:to-primary-950 
-      flex items-center justify-center p-4">
+    // Same background and brand header as the login and signup pages
+    <div
+      className="min-h-screen bg-linear-to-r from-white to-primary-100
+            dark:bg-linear-to-r dark:from-gray-950 dark:to-primary-900 flex flex-col items-center justify-center p-4 sm:p-6"
+    >
       <div className="w-full max-w-md">
+        <AuthBrand />
 
         {/* Content */}
         <div className="text-center mb-6">
