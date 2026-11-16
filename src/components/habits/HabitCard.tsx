@@ -131,12 +131,8 @@ export function HabitCard({
               </span>
             )}
 
-            {/* Frequency badge: daily is the default, so only show others */}
-            {habit.frequency !== "daily" && (
-              <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded capitalize shrink-0">
-                {habit.frequency}
-              </span>
-            )}
+            {/* No frequency badge: every habit uses daily rules since N3,
+                so a "weekly" label on legacy habits would be misleading */}
 
             {/* Category Badge */}
             {habitCategory && (

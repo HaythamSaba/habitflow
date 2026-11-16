@@ -152,7 +152,11 @@ export function HabitOverviewCard({
             </div>
           </div>
 
-          <div className="flex-1 grid grid-cols-2 gap-2 sm:gap-3">
+          {/* One column when the Target tile is hidden, so Streak isn't left
+              beside an empty cell */}
+          <div
+            className={`flex-1 grid gap-2 sm:gap-3 ${target > 1 ? "grid-cols-2" : "grid-cols-1"}`}
+          >
             {/* Streak */}
             <div className="bg-linear-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-lg sm:rounded-xl p-2 sm:p-3 border border-orange-200 dark:border-orange-800">
               <div className="flex items-center gap-1 sm:gap-2 mb-0.5 sm:mb-1">
@@ -168,21 +172,25 @@ export function HabitOverviewCard({
                 days
               </p>
             </div>
-            {/* Frequency */}
-            <div className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-lg sm:rounded-xl p-2 sm:p-3 border border-blue-200 dark:border-blue-800">
-              <div className="flex items-center gap-1 sm:gap-2 mb-0.5 sm:mb-1">
-                <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500 shrink-0" />
-                <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
-                  Target
-                </span>
+            {/* Daily target: only worth a tile when it's more than once a
+                day. Every habit uses daily rules since N3, so the stored
+                frequency isn't shown. */}
+            {target > 1 && (
+              <div className="bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-lg sm:rounded-xl p-2 sm:p-3 border border-blue-200 dark:border-blue-800">
+                <div className="flex items-center gap-1 sm:gap-2 mb-0.5 sm:mb-1">
+                  <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500 shrink-0" />
+                  <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+                    Target
+                  </span>
+                </div>
+                <p className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 dark:text-gray-100">
+                  {target}x
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  per day
+                </p>
               </div>
-              <p className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 dark:text-gray-100">
-                {habit.target_count}x
-              </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">
-                {habit.frequency}
-              </p>
-            </div>
+            )}
           </div>
         </div>
 
