@@ -67,7 +67,7 @@ Mark items as they are fixed so work can resume in a new session.
 | R3 | Category badges and chips fail contrast | S | Done (neutral text; color in tint, border and selected ring) |
 | R4 | Achievement unlocks: weakest reward moment, fired from unsaved data | M | Open |
 | R5 | Dashboard habit card: tall on phones, delete is the only manage action | S–M | Done (shared HabitActionsMenu ⋮ with Edit / Archive / Delete on both cards) |
-| R6 | "Recent Achievements" aren't the most recent | S | Open |
+| R6 | "Recent Achievements" aren't the most recent | S | Done (unlocked list sorted by unlocked_at, newest first) |
 | R7 | Custom menus and filter toggles lack keyboard and screen-reader semantics | M | Done (shared useMenu hook: focus in/out, arrow keys, menu roles, aria-checked; aria-pressed on toggles) |
 | R8 | One missed day resets a streak, with no recovery | M–L | Open |
 | R9 | Templates: double toast and a redirect after every pick | S | Open |

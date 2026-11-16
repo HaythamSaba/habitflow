@@ -35,9 +35,20 @@ export function useAchievements() {
   // Extract unlocked achievement IDs
   const unlockedIds = userAchievements?.map((ua) => ua.achievement_id) || [];
 
-  // Separate locked and unlocked
-  const unlockedAchievements =
-    allAchievements?.filter((a) => unlockedIds.includes(a.id)) || [];
+  // When each achievement was unlocked, for newest-first ordering
+  const unlockedAtById = new Map(
+    (userAchievements ?? []).map((ua) => [
+      ua.achievement_id,
+      ua.unlocked_at ? Date.parse(ua.unlocked_at) : 0,
+    ]),
+  );
+
+  // Separate locked and unlocked (unlocked: most recently unlocked first)
+  const unlockedAchievements = (
+    allAchievements?.filter((a) => unlockedAtById.has(a.id)) ?? []
+  ).sort(
+    (a, b) => (unlockedAtById.get(b.id) ?? 0) - (unlockedAtById.get(a.id) ?? 0),
+  );
   const lockedAchievements =
     allAchievements?.filter((a) => !unlockedIds.includes(a.id)) || [];
 
