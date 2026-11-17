@@ -7,9 +7,12 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useUpdateUserInfo } from "@/hooks/useUpdateUserInfo";
-import { LogOut, Settings2, User } from "lucide-react";
+import { DeleteAccountDialog } from "@/components/settings/DeleteAccountDialog";
+import { buildUserExport, downloadJson, exportFileName } from "@/lib/account";
+import { Download, LogOut, Settings2, Trash2, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 type SettingsFormData = {
   name: string;
@@ -31,6 +34,25 @@ export function SettingsPage() {
   } = useForm<SettingsFormData>();
 
   const currentName = watch("name");
+
+  const [isExporting, setIsExporting] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
+  const handleExport = async () => {
+    if (!user) return;
+    setIsExporting(true);
+    try {
+      const data = await buildUserExport(user);
+      downloadJson(exportFileName(), data);
+      toast.success("Your data was downloaded");
+    } catch (error) {
+      toast.error(
+        `Couldn't export your data: ${error instanceof Error ? error.message : "unknown error"}`,
+      );
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   const handleLogout = () => {
     setIsLoggingOut(true);
@@ -169,13 +191,12 @@ export function SettingsPage() {
           </div>
         </SectionCard>
 
-        {/* Account: logging out is the only account action so far, so this
-            sits beside Preferences rather than in a full-width danger zone */}
+        {/* Account: logout, data export and account deletion (R17) */}
         <SectionCard
           title="Account"
           icon={<LogOut className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" />}
         >
-          <div className="space-y-3 sm:space-y-4">
+          <div className="space-y-3 sm:space-y-4 divide-y divide-gray-200 dark:divide-gray-800">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 py-2 sm:py-3">
               <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
                 <LogOut className="w-4 h-4 text-gray-500 dark:text-gray-400 shrink-0" />
@@ -192,8 +213,56 @@ export function SettingsPage() {
                 Logout
               </Button>
             </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 py-2 sm:py-3">
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <Download className="w-4 h-4 text-gray-500 dark:text-gray-400 shrink-0" />
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    Export my data
+                  </h3>
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 sm:mt-1">
+                  Habits, check-ins, categories and achievements as a JSON file
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                isLoading={isExporting}
+                loadingText="Preparing…"
+                onClick={handleExport}
+                className="min-h-11 w-full sm:w-auto shrink-0"
+              >
+                Export
+              </Button>
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 py-2 sm:py-3">
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <Trash2 className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    Delete account
+                  </h3>
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 sm:mt-1">
+                  Permanently removes your account and all of its data
+                </p>
+              </div>
+              <Button
+                variant="danger"
+                onClick={() => setIsDeleteOpen(true)}
+                className="min-h-11 w-full sm:w-auto shrink-0"
+              >
+                Delete…
+              </Button>
+            </div>
           </div>
         </SectionCard>
+        <DeleteAccountDialog
+          isOpen={isDeleteOpen}
+          onClose={() => setIsDeleteOpen(false)}
+        />
       </div>
     </div>
   );

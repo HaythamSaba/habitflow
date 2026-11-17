@@ -365,3 +365,27 @@ $$;
 
 GRANT EXECUTE ON FUNCTION public.check_in(UUID, TIMESTAMPTZ) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.undo_check_in(UUID) TO authenticated;
+
+-- Delete the signed-in user's account (audit R17, Settings → Account).
+-- Deleting the auth.users row cascades to every user table above (profile,
+-- stats, habits, completions, categories, user_achievements).
+-- SECURITY DEFINER because users can't delete from auth.users themselves.
+-- It takes no argument and only ever deletes auth.uid(), so it can't be
+-- pointed at someone else's account.
+CREATE OR REPLACE FUNCTION public.delete_my_account()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  IF auth.uid() IS NULL THEN
+    RAISE EXCEPTION 'Not authenticated';
+  END IF;
+
+  DELETE FROM auth.users WHERE id = auth.uid();
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.delete_my_account() FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.delete_my_account() TO authenticated;

@@ -5,6 +5,8 @@ import toast from "react-hot-toast";
 import { useAuthStore } from "@/store/authstore";
 import { useQueryClient } from "@tanstack/react-query";
 
+export const SIGNED_OUT_TOAST_ID = "signed-out";
+
 export function useAuth() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -62,7 +64,9 @@ export function useAuth() {
       if (event === "SIGNED_IN") {
         // toast.success("Welcome back!");
       } else if (event === "SIGNED_OUT") {
-        toast.success("Logged out successfully");
+        // Fixed id: deleting the account (useDeleteAccount) also signs out,
+        // and replaces this with its own "Account deleted" toast
+        toast.success("Logged out successfully", { id: SIGNED_OUT_TOAST_ID });
       } else if (event === "USER_UPDATED") {
         toast.success("Profile updated");
       }

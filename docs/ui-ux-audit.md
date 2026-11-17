@@ -78,7 +78,7 @@ Mark items as they are fixed so work can resume in a new session.
 | R14 | Typo in the Achievements skeleton class | S | Done |
 | R15 | Leftover frequency labels | S | Done (Target tile only when above 1, Streak spans the row otherwise; frequency badge removed) |
 | R16 | Portfolio footer on every in-app page | S | Done (About and login pages only; About link dropped; 44px links) |
-| R17 | No account deletion or data export | M | Open |
+| R17 | No account deletion or data export | M | Done (Settings → Account: JSON export of all user tables, paged; "Delete account" behind type-DELETE, via delete_my_account() RPC — run the new SQL in Supabase) |
 
 ---
 
