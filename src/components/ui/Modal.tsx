@@ -38,16 +38,33 @@ export function Modal({
       }
     }
 
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape)
-      document.body.style.overflow = 'hidden'
-    }
+    if (!isOpen) return
+
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [isOpen, onClose])
+
+  // Lock scrolling behind the modal. In the app the page scrolls inside
+  // <main> (DashboardLayout), not body, so lock both. Restore the previous
+  // values rather than clearing them, so a modal opened over another one
+  // (e.g. a confirm dialog) doesn't unlock the page when it closes.
+  useEffect(() => {
+    if (!isOpen) return
+
+    const targets = [document.body, document.querySelector('main')].filter(
+      (el): el is HTMLElement => el !== null,
+    )
+    const previous = targets.map((el) => el.style.overflow)
+    targets.forEach((el) => {
+      el.style.overflow = 'hidden'
+    })
 
     return () => {
-      document.removeEventListener('keydown', handleEscape)
-      document.body.style.overflow = 'unset'
+      targets.forEach((el, i) => {
+        el.style.overflow = previous[i]
+      })
     }
-  }, [isOpen, onClose])
+  }, [isOpen])
 
   const sizeClasses = {
     sm: 'sm:max-w-md',
@@ -110,7 +127,9 @@ export function Modal({
               </div>
             )}
 
-            <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-3 sm:py-4">
+            {/* overscroll-contain: reaching the end of a long form doesn't
+                hand the scroll on to the page behind */}
+            <div className="flex-1 overflow-y-auto overscroll-contain px-4 sm:px-6 py-3 sm:py-4">
               {children}
             </div>
 

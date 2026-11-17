@@ -72,7 +72,7 @@ Mark items as they are fixed so work can resume in a new session.
 | R8 | One missed day resets a streak, with no recovery | M–L | Open |
 | R9 | Templates: double toast and a redirect after every pick | S | Done (one toast with "Go to today", stays on the gallery) |
 | R10 | Navigation labels differ; "Achievements" tab label likely overflows | S | Done (Today / Habits / Stats / Awards in both navs; page headings unchanged; Profile goes to Settings) |
-| R11 | Modal scroll lock targets the wrong element | S | Open |
+| R11 | Modal scroll lock targets the wrong element | S | Done (locks body and main, restores previous values; overscroll-contain on the modal body) |
 | R12 | Non-interactive cards scale on hover | S | Open |
 | R13 | Email confirmation page is off-brand | S | Done (login/signup background plus AuthBrand) |
 | R14 | Typo in the Achievements skeleton class | S | Open |
