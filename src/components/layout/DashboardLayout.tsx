@@ -4,7 +4,6 @@ import { Loader2 } from "lucide-react";
 import Navbar from "./Navbar";
 import { useAuth } from "@/hooks/useAuth";
 import SideBar from "./Sidebar";
-import { Footer } from "./Footer";
 import { ScrollToTop } from "../ui/ScrollToTop";
 import { BottomTabBar } from "./BottomTabBar";
 import { ErrorBoundary } from "../ui/ErrorBoundary";
@@ -119,7 +118,6 @@ export function DashboardLayout() {
               </Suspense>
             </ErrorBoundary>
           </div>
-          <Footer />
         </main>
 
         <ScrollToTop containerRef={mainRef} />

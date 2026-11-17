@@ -6,8 +6,10 @@ import {
   ExternalLink,
   Contact,
 } from "lucide-react";
-import { Link } from "react-router-dom";
-
+/**
+ * Portfolio footer (author, social links, source). Shown on the About and
+ * login pages only, not on every in-app page.
+ */
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
@@ -47,7 +49,7 @@ export function Footer() {
             <div className="flex items-center gap-3">
               <a
                 href="mailto:haythamsaba@gmail.com"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-primary-100 dark:hover:bg-primary-900/30 hover:text-primary-600 dark:hover:text-primary-400 transition-all hover:scale-110"
+                className="w-11 h-11 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-primary-100 dark:hover:bg-primary-900/30 hover:text-primary-600 dark:hover:text-primary-400 transition-all hover:scale-110"
                 title="Email me"
               >
                 <Mail className="w-4 h-4" />
@@ -56,7 +58,7 @@ export function Footer() {
                 href="https://www.linkedin.com/in/haytham-saba-401148278/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-110"
+                className="w-11 h-11 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-110"
                 title="LinkedIn"
               >
                 <Linkedin className="w-4 h-4" />
@@ -65,7 +67,7 @@ export function Footer() {
                 href="https://github.com/HaythamSaba/habitflow"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition-all hover:scale-110"
+                className="w-11 h-11 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition-all hover:scale-110"
                 title="GitHub"
               >
                 <Github className="w-4 h-4" />
@@ -74,7 +76,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 href="https://haytham-saba.vercel.app/"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-primary-100 dark:hover:bg-primary-900/30 hover:text-primary-600 dark:hover:text-primary-400 transition-all hover:scale-110"
+                className="w-11 h-11 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-primary-100 dark:hover:bg-primary-900/30 hover:text-primary-600 dark:hover:text-primary-400 transition-all hover:scale-110"
                 title="Contact"
               >
                 <Contact className="w-4 h-4" />
@@ -92,16 +94,11 @@ export function Footer() {
             </p>
 
             <div className="flex items-center gap-4 text-xs">
-              <Link
-                to="/about"
-                className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors flex items-center gap-1"
-              >
-                About
-                <ExternalLink className="w-3 h-3" />
-              </Link>
+              {/* No "About" link: the footer only appears on the About page
+                  and the login page, where /about needs a sign-in */}
               <a
                 href="mailto:haythamsaba@gmail.com?subject=HabitFlow%20Feedback"
-                className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors flex items-center gap-1"
+                className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors inline-flex items-center gap-1 min-h-11"
               >
                 Send Feedback
                 <ExternalLink className="w-3 h-3" />
@@ -110,7 +107,7 @@ export function Footer() {
                 href="https://github.com/HaythamSaba/habitflow"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors flex items-center gap-1"
+                className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors inline-flex items-center gap-1 min-h-11"
               >
                 Source Code
                 <ExternalLink className="w-3 h-3" />

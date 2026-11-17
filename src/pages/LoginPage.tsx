@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { ArrowRight } from "lucide-react";
 import { AuthBrand, AuthFeatures } from "@/components/auth/AuthBrand";
 import HeaderCardForm from "@/components/ui/HeaderCardForm";
+import { Footer } from "@/components/layout/Footer";
 
 const loginSchema = z.object({
   email: z
@@ -40,87 +41,92 @@ export function LoginPage() {
   };
 
   return (
+    // Footer sits full width at the bottom; the login content stays centred
+    // in the space above it
     <div
       className="min-h-screen bg-linear-to-r from-white to-primary-100
-            dark:bg-linear-to-r dark:from-gray-950 dark:to-primary-900 flex flex-col items-center justify-center p-4 sm:p-6"
+            dark:bg-linear-to-r dark:from-gray-950 dark:to-primary-900 flex flex-col"
     >
-      <div className="w-full max-w-md">
-        <AuthBrand />
+      <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-6">
+        <div className="w-full max-w-md">
+          <AuthBrand />
 
-        {/* Card */}
-        <div className="rounded-2xl border border-gray-200 dark:border-gray-800 p-5 sm:p-6 lg:p-8 shadow-xl shadow-primary-200 dark:shadow-primary-900 bg-white dark:bg-gray-950">
-          {/* Header */}
-          <HeaderCardForm
-            Title="Welcome back"
-            Description="Log in to check off today's habits"
-          />
-
-          {/* Form */}
-          {/* noValidate: zod shows the errors, not the browser's native bubbles */}
-          <form
-            noValidate
-            onSubmit={handleSubmit(onSubmit)}
-            className="space-y-4 sm:space-y-5"
-          >
-            {/* Email Input */}
-            <Input
-              label="Email Address"
-              type="email"
-              autoComplete="email"
-              placeholder="you@example.com"
-              error={errors.email?.message}
-              {...register("email")}
-              disabled={isLoading}
+          {/* Card */}
+          <div className="rounded-2xl border border-gray-200 dark:border-gray-800 p-5 sm:p-6 lg:p-8 shadow-xl shadow-primary-200 dark:shadow-primary-900 bg-white dark:bg-gray-950">
+            {/* Header */}
+            <HeaderCardForm
+              Title="Welcome back"
+              Description="Log in to check off today's habits"
             />
 
-            {/* Password Input */}
-            <Input
-              label="Password"
-              type="password"
-              autoComplete="current-password"
-              placeholder="Enter your password"
-              error={errors.password?.message}
-              {...register("password")}
-              disabled={isLoading}
-            />
-
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              variant="primary"
-              size="lg"
-              className="w-full min-h-11 sm:min-h-12"
-              isLoading={isLoading}
-              rightIcon={<ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />}
+            {/* Form */}
+            {/* noValidate: zod shows the errors, not the browser's native bubbles */}
+            <form
+              noValidate
+              onSubmit={handleSubmit(onSubmit)}
+              className="space-y-4 sm:space-y-5"
             >
-              Log In
-            </Button>
-          </form>
+              {/* Email Input */}
+              <Input
+                label="Email Address"
+                type="email"
+                autoComplete="email"
+                placeholder="you@example.com"
+                error={errors.email?.message}
+                {...register("email")}
+                disabled={isLoading}
+              />
 
-          {/* Divider */}
-          <div className="relative my-6 sm:my-8">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200 dark:border-gray-700"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">
-                Don't have an account?
-              </span>
-            </div>
-          </div>
+              {/* Password Input */}
+              <Input
+                label="Password"
+                type="password"
+                autoComplete="current-password"
+                placeholder="Enter your password"
+                error={errors.password?.message}
+                {...register("password")}
+                disabled={isLoading}
+              />
 
-          {/* Sign Up Link */}
-          <div className="text-center">
-            <Link
-              to="/signup"
-              className="text-sm sm:text-base text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium hover:underline transition-colors"
-            >
-              Create a free account →
-            </Link>
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                className="w-full min-h-11 sm:min-h-12"
+                isLoading={isLoading}
+                rightIcon={<ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />}
+              >
+                Log In
+              </Button>
+            </form>
+
+            {/* Divider */}
+            <div className="relative my-6 sm:my-8">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200 dark:border-gray-700"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">
+                  Don't have an account?
+                </span>
+              </div>
+            </div>
+
+            {/* Sign Up Link */}
+            <div className="text-center">
+              <Link
+                to="/signup"
+                className="text-sm sm:text-base text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium hover:underline transition-colors"
+              >
+                Create a free account →
+              </Link>
+            </div>
           </div>
         </div>
+        <AuthFeatures />
       </div>
-      <AuthFeatures />
+      <Footer />
     </div>
   );
 }
