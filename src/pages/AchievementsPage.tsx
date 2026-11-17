@@ -70,7 +70,7 @@ export function AchievementsPage() {
     // Skeleton mirrors the real layout so the page doesn't jump when data arrives
     return (
       <div
-        className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidd  en p-4 sm:p-6"
+        className="space-y-4 md:space-y-6 lg:space-y-8 overflow-x-hidden p-4 sm:p-6"
         aria-busy="true"
       >
         <span className="sr-only">Loading achievements…</span>

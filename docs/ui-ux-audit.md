@@ -75,7 +75,7 @@ Mark items as they are fixed so work can resume in a new session.
 | R11 | Modal scroll lock targets the wrong element | S | Done (locks body and main, restores previous values; overscroll-contain on the modal body) |
 | R12 | Non-interactive cards scale on hover | S | Done (shadow-only hover on achievement cards and unselected category chips) |
 | R13 | Email confirmation page is off-brand | S | Done (login/signup background plus AuthBrand) |
-| R14 | Typo in the Achievements skeleton class | S | Open |
+| R14 | Typo in the Achievements skeleton class | S | Done |
 | R15 | Leftover frequency labels | S | Done (Target tile only when above 1, Streak spans the row otherwise; frequency badge removed) |
 | R16 | Portfolio footer on every in-app page | S | Open |
 | R17 | No account deletion or data export | M | Open |
