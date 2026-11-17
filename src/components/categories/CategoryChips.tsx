@@ -59,7 +59,9 @@ export function CategoryChips({
             className={`inline-flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 min-h-11 rounded-full font-medium text-xs sm:text-sm transition-all whitespace-nowrap shrink-0 ${
               isSelected
                 ? "text-gray-900 dark:text-gray-50 shadow-md ring-2 ring-offset-2 dark:ring-offset-gray-900"
-                : "text-gray-800 dark:text-gray-100 hover:scale-105"
+                : // Shadow instead of scale: a scaled chip overlaps its
+                  // neighbours and gets clipped by the scrolling row
+                  "text-gray-800 dark:text-gray-100 hover:shadow-md"
             }`}
             style={
               {
