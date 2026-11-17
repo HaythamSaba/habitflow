@@ -1,4 +1,12 @@
-import { endOfDay, format, parseISO, startOfDay, subDays } from "date-fns";
+import {
+  addDays,
+  endOfDay,
+  format,
+  parseISO,
+  startOfDay,
+  startOfISOWeek,
+  subDays,
+} from "date-fns";
 
 /**
  * Day handling for HabitFlow. A "day" is always the user's LOCAL calendar day:
@@ -17,6 +25,16 @@ export function toDayKey(date: Date | string): string {
 export function previousDayKey(dayKey: string): string {
   // parseISO reads a date-only string as local midnight
   return toDayKey(subDays(parseISO(dayKey), 1));
+}
+
+/** Day key for the local day after `dayKey` (DST-safe calendar arithmetic). */
+export function nextDayKey(dayKey: string): string {
+  return toDayKey(addDays(parseISO(dayKey), 1));
+}
+
+/** Day key of the Monday that starts the week containing `dayKey`. */
+export function weekStartKey(dayKey: string): string {
+  return toDayKey(startOfISOWeek(parseISO(dayKey)));
 }
 
 /**

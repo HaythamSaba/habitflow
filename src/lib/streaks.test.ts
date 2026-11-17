@@ -4,6 +4,7 @@ import {
   calculateLongestStreak,
   getBestStreaks,
   getCompletedDayKeys,
+  getFrozenDayKeys,
   getHabitStreaks,
 } from "./streaks";
 
@@ -115,6 +116,74 @@ describe("longest streak", () => {
     const completions = [24, 25, 26, 31].map((d) => check("read", local(2026, 10, d)))
       .concat([1, 2].map((d) => check("read", local(2026, 11, d))));
     expect(longest(completions)).toBe(3);
+  });
+});
+
+describe("streak freezes (one per habit per Mon–Sun week)", () => {
+  // November 2026: Mon 2–Sun 8 is one week, Mon 9–Sun 15 the next
+  const START = "2026-11-01";
+  const novemberDays = (days: number[]) =>
+    days.map((d) => check("read", local(2026, 11, d)));
+  const at = (day: number, hour = 18) => local(2026, 11, day, hour);
+  const streaks = (days: number[], today: Date, start = START) =>
+    getHabitStreaks(daily, novemberDays(days), today, start);
+  const frozen = (days: number[], today: Date, start = START) =>
+    [
+      ...getFrozenDayKeys(
+        getCompletedDayKeys(daily, novemberDays(days)),
+        today,
+        start,
+      ),
+    ].sort();
+
+  it("bridges a single missed day without adding it to the count", () => {
+    expect(frozen([2, 3, 4, 6, 7], at(7))).toEqual(["2026-11-05"]);
+    expect(streaks([2, 3, 4, 6, 7], at(7)).current).toBe(5);
+  });
+
+  it("keeps the streak alive when yesterday was missed and today isn't done yet", () => {
+    expect(frozen([3, 4, 5], at(7))).toEqual(["2026-11-06"]);
+    expect(streaks([3, 4, 5], at(7)).current).toBe(3);
+  });
+
+  it("never freezes today, which isn't missed yet", () => {
+    expect(frozen([5, 6], at(7))).toEqual([]);
+    expect(streaks([5, 6], at(7)).current).toBe(2);
+  });
+
+  it("allows only one freeze per week", () => {
+    expect(frozen([2, 4, 6], at(6))).toEqual(["2026-11-03"]);
+    expect(streaks([2, 4, 6], at(6)).current).toBe(1);
+  });
+
+  it("gives a new freeze each week", () => {
+    expect(frozen([6, 8, 10], at(10))).toEqual(["2026-11-07", "2026-11-09"]);
+    expect(streaks([6, 8, 10], at(10)).current).toBe(3);
+  });
+
+  it("doesn't bridge two missed days in a row", () => {
+    expect(frozen([2, 3, 6], at(6))).toEqual([]);
+    expect(streaks([2, 3, 6], at(6)).current).toBe(1);
+  });
+
+  it("isn't used up by a gap it can't bridge", () => {
+    // 3–4 missed (streak breaks), so the week's freeze is still there for 6
+    expect(frozen([2, 5, 7], at(7))).toEqual(["2026-11-06"]);
+    expect(streaks([2, 5, 7], at(7)).current).toBe(2);
+  });
+
+  it("doesn't apply before the feature's start day", () => {
+    expect(frozen([2, 4, 5], at(5), "2026-11-05")).toEqual([]);
+    expect(streaks([2, 4, 5], at(5), "2026-11-05").current).toBe(2);
+  });
+
+  it("bridges the longest streak too, without counting the frozen day", () => {
+    expect(streaks([2, 3, 5, 6], at(20)).longest).toBe(4);
+  });
+
+  it("is released when the missed day is logged late", () => {
+    expect(frozen([2, 3, 4, 5, 6, 7], at(7))).toEqual([]);
+    expect(streaks([2, 3, 4, 5, 6, 7], at(7)).current).toBe(6);
   });
 });
 

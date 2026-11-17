@@ -69,7 +69,7 @@ Mark items as they are fixed so work can resume in a new session.
 | R5 | Dashboard habit card: tall on phones, delete is the only manage action | S–M | Done (shared HabitActionsMenu ⋮ with Edit / Archive / Delete on both cards) |
 | R6 | "Recent Achievements" aren't the most recent | S | Done (unlocked list sorted by unlocked_at, newest first) |
 | R7 | Custom menus and filter toggles lack keyboard and screen-reader semantics | M | Done (shared useMenu hook: focus in/out, arrow keys, menu roles, aria-checked; aria-pressed on toggles) |
-| R8 | One missed day resets a streak, with no recovery | M–L | Open |
+| R8 | One missed day resets a streak, with no recovery | M–L | Done (automatic: 1 free freeze per habit per Mon–Sun week, bridges one missed day without counting it, from 2026-11-17 on; computed in lib/streaks.ts, no DB; snowflake in the Habits-page 7-day bars; not bought with points, by owner's decision; not shown in the all-habits heatmap, since a freeze is per habit) |
 | R9 | Templates: double toast and a redirect after every pick | S | Done (one toast with "Go to today", stays on the gallery) |
 | R10 | Navigation labels differ; "Achievements" tab label likely overflows | S | Done (Today / Habits / Stats / Awards in both navs; page headings unchanged; Profile goes to Settings) |
 | R11 | Modal scroll lock targets the wrong element | S | Done (locks body and main, restores previous values; overscroll-contain on the modal body) |

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { format, subDays } from 'date-fns';
 import { Habit, Completion } from '@/types';
-import { getHabitStreaks } from '@/lib/streaks';
+import { getHabitFrozenDayKeys, getHabitStreaks } from '@/lib/streaks';
 import { getHabitRate } from '@/lib/analytics';
 import { toDayKey } from '@/lib/dates';
 
@@ -14,6 +14,8 @@ export interface SparklineDay {
   fullLabel: string;
   count: number;
   isToday: boolean;
+  /** A streak freeze covered this missed day (lib/streaks.ts) */
+  isFrozen: boolean;
 }
 
 // ────────────────────────────────────────────
@@ -32,7 +34,10 @@ export function useHabitStats(habit: Habit, allCompletions: Completion[]) {
       completionRate: getHabitRate(habit, habitCompletions),
       // Shared rules, see lib/streaks.ts
       currentStreak: getHabitStreaks(habit, habitCompletions).current,
-      last7Days: getLast7Days(habitCompletions),
+      last7Days: getLast7Days(
+        habitCompletions,
+        getHabitFrozenDayKeys(habit, habitCompletions),
+      ),
       totalCompletions: habitCompletions.length,
     };
   }, [habit, allCompletions]);
@@ -41,7 +46,10 @@ export function useHabitStats(habit: Habit, allCompletions: Completion[]) {
 // ────────────────────────────────────────────
 // HELPER: Check-ins per local day, oldest first, ending today
 // ────────────────────────────────────────────
-function getLast7Days(completions: Completion[]): SparklineDay[] {
+function getLast7Days(
+  completions: Completion[],
+  frozenDays: Set<string>,
+): SparklineDay[] {
   const counts = new Map<string, number>();
   for (const completion of completions) {
     const day = toDayKey(completion.completed_at);
@@ -58,6 +66,7 @@ function getLast7Days(completions: Completion[]): SparklineDay[] {
       fullLabel: format(day, 'EEE, MMM d'),
       count: counts.get(dayKey) ?? 0,
       isToday: i === 6,
+      isFrozen: frozenDays.has(dayKey),
     };
   });
 }

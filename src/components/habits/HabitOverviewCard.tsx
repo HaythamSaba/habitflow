@@ -2,7 +2,7 @@ import { Habit } from "@/types";
 import { useCategories } from "@/hooks/useCategories";
 import { useHabitStats } from "@/hooks/useHabitStats";
 import { CategoryBadge } from "../categories/CategoryBadge";
-import { Calendar, Flame, TrendingUp } from "lucide-react";
+import { Calendar, Flame, Snowflake, TrendingUp } from "lucide-react";
 import { format } from "date-fns";
 import { useAllCompletions } from "@/hooks/useAllCompletions";
 import { HABIT_ICONS } from "@/constants/habits";
@@ -39,6 +39,10 @@ export function HabitOverviewCard({
   // Sparkline bars are scaled to the daily target
   const target = Math.max(1, habit.target_count || 1);
   const daysOnTarget = last7Days.filter((day) => day.count >= target).length;
+  const frozenDays = last7Days.filter((day) => day.isFrozen);
+  const frozenSummary = frozenDays.length
+    ? `; streak freeze used on ${frozenDays.map((day) => day.fullLabel).join(", ")}`
+    : "";
 
   const category = categories.find((c) => c.id === habit.category_id);
 
@@ -209,10 +213,26 @@ export function HabitOverviewCard({
               look the same and 1/3 is a third. Extra check-ins are capped. */}
           <div
             role="img"
-            aria-label={`Last 7 days: daily target met on ${daysOnTarget} of 7 days`}
+            aria-label={`Last 7 days: daily target met on ${daysOnTarget} of 7 days${frozenSummary}`}
             className="flex items-end gap-0.5 sm:gap-1 h-8 sm:h-10 lg:h-12"
           >
             {last7Days.map((day) => {
+              // A missed day covered by the week's streak freeze (R8)
+              if (day.isFrozen) {
+                return (
+                  <div
+                    key={day.dayKey}
+                    className="flex-1 flex items-end justify-center"
+                    title={`${day.fullLabel}: missed, but a streak freeze kept your streak`}
+                  >
+                    <Snowflake
+                      className="w-3 h-3 sm:w-4 sm:h-4 text-sky-500 dark:text-sky-400"
+                      aria-hidden="true"
+                    />
+                  </div>
+                );
+              }
+
               const progress = Math.min(day.count / target, 1);
               return (
                 <div
